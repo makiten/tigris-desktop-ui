@@ -19,7 +19,7 @@ const vuexLocalStorage = new VuexPersist({
   // filter: mutation => (true)
 })
 
-const defaultLocale = 'pt_br'
+const defaultLocale = 'en_us'
 const fallbackLocale = 'en_us'
 const debug = process.env.NODE_ENV !== 'production'
 const store = new Vuex.Store({

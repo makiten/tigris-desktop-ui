@@ -219,7 +219,7 @@
                 </button>
               </div>
             </div>
-            <exam @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
+            <exam @close="$refs.exam.close()" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
           </div>
         </q-layout>
       </q-modal>
@@ -354,10 +354,11 @@ export default {
       }
       this.$refs[name].open()
     },
-    removeCard (type, msg, index) {
+    removeCard (type, msg, id) {
       if (type === 'positive') {
+        const index = this.courses.findIndex(c => { return c.id === id })
         this.courses.splice(index, 1)
-        this.$emit('course-change')
+        // this.$emit('course-change')
       }
       this.sendToast(type, msg)
     },

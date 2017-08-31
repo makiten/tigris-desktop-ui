@@ -47,8 +47,10 @@ export default {
   'buttons': {
     'add': 'Add {n}',
     'cancel': 'Cancel',
+    'draft': 'Save as Draft',
     'delete': 'Delete{item}',
     'edit': 'Edit{item}',
+    'publish': 'Publish',
     'save': 'Save'
   },
   'labels': {

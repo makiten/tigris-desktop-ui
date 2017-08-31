@@ -84,8 +84,9 @@ export default {
     },
     addUser () {
       this.tigris.user.create(null, {fields: {email: this.form.email}, role: this.form.group}).then(r => {
-        if (r.data.result.length > 0) {
-          const userId = r.data.result[0].id
+        console.log(r.data)
+        if (typeof r.data.result.id !== 'undefined') {
+          const userId = r.data.result.id
           this.tigris.util.invite({id: userId, email: this.form.email}).then(t => {
             const token = t.data.token
             const data = {

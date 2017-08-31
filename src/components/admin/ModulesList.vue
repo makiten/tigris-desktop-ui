@@ -60,7 +60,7 @@
       <module-detail :action="action" :auth="auth" :course="course" :module="currentModule" :tigris="tigris" @save="sendToast" @close="switchViewTo" @keyup.esc="switchViewTo('list', '')" />
     </template>
     <template v-else-if="view === 'quiz'">
-      <question @save="sendToast" @close="switchViewTo" :action="action" :module="currentModule" :partial="false" :quiz="currentQuiz" :tigris="tigris" />
+      <question @save="sendToast" @close="switchViewTo" :action="action" :module="currentModule" :partial="false" :tigris="tigris" />
     </template>
   </div>
 </template>
@@ -95,8 +95,14 @@ export default {
   },
   methods: {
     _onCreated () {
-      this.getModules(this.tigris).then(list => {
+      const tigris = this.tigris
+      this.getModules(tigris).then(list => {
         this.modules = list
+        this.modules.forEach(m => {
+          this.getQuiz(tigris, m).then(quiz => {
+            m.quiz = quiz
+          })
+        })
       })
     },
     add () {
@@ -114,13 +120,20 @@ export default {
         return r.data
       })
     },
-    quiz (module) {
-      this.tigris.quiz.retrieve(null, module.id, true).then(r => {
-        const action = (r.data === '') ? 'add' : 'edit'
-        this.currentQuiz = r.data
-        this.currentModule = module
-        this.switchViewTo('quiz', action)
+    getQuiz (tigris, module) {
+      return tigris.quiz.retrieve(null, module.id, true).then(r => {
+        return r.data
       })
+    },
+    quiz (module) {
+      var action
+      if (typeof module.quiz !== 'undefined') {
+        action = 'edit'
+      } else {
+        action = 'add'
+      }
+      this.currentModule = module
+      this.switchViewTo('quiz', action)
     },
     remove (module) {},
     search (terms, done) {

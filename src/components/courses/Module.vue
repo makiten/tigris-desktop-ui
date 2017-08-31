@@ -5,10 +5,10 @@
         <p>
           <i>my_location</i>
           <template v-if="view === 'quiz'">
-            {{ $t('content.courses.module.status.quiz', { title: course.title, module: module.title }), '' }}
+            {{ $t('content.courses.module.actions.quiz', { title: course.title, module: module.title }), '' }}
           </template>
           <template v-else>
-            {{ $t('content.courses.module.status.module', { title: course.title, module: module.title }), '' }}
+            {{ $t('content.courses.module.actions.read', { title: course.title, module: module.title }), '' }}
           </template>
         </p>
       </div>
@@ -90,7 +90,8 @@ export default {
             const moduleSlug = this.$route.params.moduleName.toLowerCase()
             this.getModule(tigris, c.id, moduleSlug).then(m => {
               this.module = m
-              if (!(typeof n === 'undefined' && n === null)) {
+              if (!(typeof n === 'undefined' || n === null)) {
+                console.log(n)
                 const progress = n.progress
                 progress.modules = {current: {id: m.id, slug: m.slug}}
                 const data = {fields: {progress: progress}}
@@ -106,6 +107,7 @@ export default {
                 }
                 const data = {fields: {progress: progress}}
                 this.addEnrollment(tigris, data).then(r => {
+                  console.log(r)
                   tigris.user.retrieve(this.auth.id, r.data.result).then(enrollment => {
                     this.enrollment = enrollment
                   })

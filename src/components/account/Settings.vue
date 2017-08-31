@@ -17,7 +17,7 @@
             </div>
           </div>
           <div>
-            <button @click="updateUser" class="secondary big round" v-if="!$v.user.$error">
+            <button @click="updateUser" class="secondary big round" v-if="!$v.user.$error || !$v.user.$dirty">
               {{ $t('content.modals.account.settings.forms.username.button') }}
             </button>
             <button @click="updateUser" class="secondary big round" disabled v-else>
@@ -39,8 +39,16 @@
                  @input="$v.password.new_password.$touch()"
                  :class="{'has-error': $v.password.new_password.$error}">
               <label class="form__label" for="password1">{{ $t('content.modals.account.settings.forms.password.fields.password1.label') }}</label>
-              <small class="form-group__message has-error" v-if="!$v.password.new_password.required">{{ $t('content.modals.account.settings.forms.password.fields.password1.error.required') }}</small>
-              <small class="form-group__message has-error" v-if="!$v.password.new_password.minLength">{{ $t('content.modals.account.settings.forms.password.fields.password1.error.minLength') }}</small>
+              <small
+                 class="form-group__message has-error"
+                 v-if="!$v.password.new_password.required && $v.password.new_password.$dirty">
+                {{ $t('content.modals.account.settings.forms.password.fields.password1.error.required') }}
+              </small>
+              <small
+                 class="form-group__message has-error"
+                 v-if="!$v.password.new_password.minLength && $v.password.new_password.$dirty">
+                {{ $t('content.modals.account.settings.forms.password.fields.password1.error.minLength') }}
+              </small>
             </div>
           </div>
           <div class="auto form-group" :class="{'form-group--error': $v.password.confirm_password.$error}">
@@ -53,11 +61,15 @@
                  @input="$v.password.confirm_password.$touch()"
                  :class="{'has-error': $v.password.confirm_password.$error}">
               <label class="form__label" for="password2">{{ $t('content.modals.account.settings.forms.password.fields.password2.label') }}</label>
-              <small class="form-group__message has-error" v-if="!$v.password.confirm_password.sameAs">{{ $t('content.modals.account.settings.forms.password.fields.password2.error.sameAs') }}</small>
+              <small
+                 class="form-group__message has-error"
+                 v-if="!$v.password.confirm_password.sameAsPassword && $v.password.confirm_password.$dirty">
+                {{ $t('content.modals.account.settings.forms.password.fields.password2.error.sameAs') }}
+              </small>
             </div>
           </div>
           <div>
-            <button class="big round secondary" @click="updatePassword" v-if="!$v.password.$error">
+            <button class="big round secondary" @click="updatePassword" v-if="!$v.password.$error || !$v.password.$dirty">
               {{ $t('content.modals.account.settings.forms.password.button') }}
             </button>
             <button class="big round secondary" disabled v-else>
@@ -98,7 +110,7 @@ export default {
         minLength: minLength(8)
       },
       confirm_password: {
-        sameAsPassword: sameAs('password.new_password')
+        sameAsPassword: sameAs('new_password')
       }
     }
   },
@@ -114,10 +126,13 @@ export default {
       if (!(this.password.new_password === '' || this.password.confirm_password === '')) {
         const data = {fields: {password: this.password.new_password}, action: ''}
         this.tigris.user.update(this.auth.id, null, data).then(r => {
-          for (var f in this.password) {
-            this.password[f] = ''
-          }
           if (r.data) {
+            for (var f in this.password) {
+              this.password[f] = ''
+            }
+            this.$v.password.$reset()
+            this.$v.password.new_password.$reset()
+            this.$v.password.confirm_password.$reset()
             this.$emit('refresh')
             this.$emit('toast', 'positive', this.$t('content.modals.account.settings.toast.success'))
           } else {
@@ -130,6 +145,8 @@ export default {
       const data = {fields: {shortname: this.user.shortname}, action: ''}
       this.tigris.user.update(this.auth.id, null, data).then(r => {
         if (r.data) {
+          this.$v.user.$reset()
+          this.$v.user.shortname.$reset()
           this.$emit('refresh')
           this.$emit('toast', 'positive', this.$t('content.modals.account.settings.toast.success'))
         } else {

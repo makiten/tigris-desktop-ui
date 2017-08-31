@@ -174,7 +174,7 @@ import TMultipleChoice from './partials/TMultipleChoice'
 
 export default {
   name: 'question',
-  props: ['action', 'module', 'order', 'partial', 'quiz', 'tigris'],
+  props: ['action', 'module', 'order', 'partial', 'testQuestion', 'tigris'],
   data () {
     return {
       answers: [{value: '', message: ''}],
@@ -197,6 +197,7 @@ export default {
         value: ''
       },
       question: '',
+      quiz: {},
       view: 'fitb'
     }
   },
@@ -209,7 +210,12 @@ export default {
       deep: true
     },
     quiz (val) {
-      this._onCreated()
+      // this._onCreated()
+    },
+    testQuestion (val) {
+      if (val.data.choices.length > 0) {
+        this._onCreated()
+      }
     }
   },
   created () {
@@ -234,8 +240,16 @@ export default {
     _onCreated () {
       if (this.action === 'add') {
         this.answers = this._createAnswerVar(this.counts[this.view])
-      } else if (typeof this.quiz.data !== 'undefined') {
+      } else if (typeof this.module !== 'undefined') {
+        this.quiz = this.module.quiz
         this._prepareForm(this.quiz)
+      } else {
+        if (typeof this.testQuestion !== 'undefined') {
+          this.quiz = this.testQuestion
+          this._prepareForm(this.quiz)
+        } else {
+          this.answers = this._createAnswerVar(this.counts[this.view])
+        }
       }
     },
     __processFillInTheBlank (quiz) {
@@ -357,7 +371,7 @@ export default {
           choices = [...this.answers.keys()]
           choices.splice(idx, 1)
           choices.forEach(c => {
-            data.messages.incorrect[c.toString()] = {
+            data.messages.incorrect[(c + 1).toString()] = {
               heading: this.$t('assessments.messages.incorrect.heading'),
               message: this.answers[c].message
             }
@@ -388,10 +402,10 @@ export default {
     },
     addQuiz () {
       const data = {
-        'course-id': module.course_id,
-        'module-id': module.id,
+        'course-id': this.module.course_id,
+        'module-id': this.module.id,
         status: 1,
-        details: {data: this._prepareData()}
+        details: this._prepareData()
       }
       this.tigris.quiz.create(data).then(r => {
         if (r.data.result === 1) {
@@ -408,8 +422,7 @@ export default {
       this.$emit('close', 'list', '')
     },
     deleteQuestion () {
-      const data = {details: {status: -1}}
-      this.tigris.quiz.update(this.quiz.id, data).then(r => {
+      this.tigris.quiz.destroy(this.quiz.id).then(r => {
         if (r.data.result === 1) {
           this.$emit('close', 'list', '')
           this.$emit('save', 'positive', this.$t('results.success.message'))
@@ -424,7 +437,10 @@ export default {
       this.answers.pop()
     },
     resetAnswers () {
-      if (this.action === 'edit' && typeof this.quiz !== 'undefined' && this.quiz.data.type === this.view) {
+      if (this.action === 'edit' &&
+          typeof this.quiz !== 'undefined' &&
+          this.quiz.data.type === this.view &&
+          this.quiz.data.choices.length > 0) {
         this._prepareForm(this.quiz)
       } else {
         this.answers = this._createAnswerVar(this.counts[this.view])

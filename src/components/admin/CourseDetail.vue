@@ -189,7 +189,7 @@ export default {
             }
           }
         } else {
-          this.form = this.blankForm
+          this.form = this._.cloneDeep(this.blankForm)
         }
       }
       // this.tigris.course.retrieve().then(tigris => {})
@@ -198,7 +198,9 @@ export default {
       form.creator = this.auth.id
       const data = {course: form}
       return tigris.course.create(data).then(r => {
-        return r.data
+        return tigris.course.retrieve({ type: 4, query: form.slug }).then(r => {
+          return r.data
+        })
       })
     },
     updateCourse (tigris, form) {
@@ -233,21 +235,21 @@ export default {
     },
     saveCourse (quit) {
       if (this.action === 'add') {
-        this.addCourse(this.tigris, this.form).then(r => {
-          Object.values(this.form).forEach(x => '')
-          const course = r
-          if (typeof r !== 'undefined') {
-            this.$emit('add', 'positive', this.$t('content.admin.course.detail.toasts.positive', {c: course.title}), course)
+        this.addCourse(this.tigris, this.form).then(course => {
+          if (typeof course !== 'undefined') {
+            this.form = this._.cloneDeep(this.blankForm)
+            this.$v.form.$reset()
+            this.$emit('add', 'positive', this.$t('content.admin.course.toasts.positive', {c: course.title}), course)
           } else {
-            this.$emit('add', 'negative', this.$t('content.admin.course.detail.toasts.negative', {c: course.title}), course)
+            this.$emit('add', 'negative', this.$t('content.admin.course.toasts.negative', {c: course.title}), course)
           }
         })
       } else {
         this.updateCourse(this.tigris, this.form).then(r => {
           if (r === 1) {
-            this.$emit('save', 'positive', this.$t('content.admin.course.detail.toasts.positive', {c: this.course.title}))
+            this.$emit('save', 'positive', this.$t('content.admin.course.toasts.positive', {c: this.course.title}))
           } else {
-            this.$emit('save', 'negative', this.$t('content.admin.course.detail.toasts.negative', {c: this.course.title}))
+            this.$emit('save', 'negative', this.$t('content.admin.course.toasts.negative', {c: this.course.title}))
           }
         })
       }

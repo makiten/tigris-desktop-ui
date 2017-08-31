@@ -76,9 +76,9 @@ export default {
       this.$emit('open', 'exam', 'test', 'course', this.course)
     },
     remove () {
-      this.tigris.course.update(this.course.id, {course: {status: -1}}).then(r => {
-        if (r.data.status === -1) {
-          this.$emit('delete', 'positive', this.$t('content.admin.course.toasts.positive', {c: this.course.title}, this.index))
+      this.tigris.course.destroy(this.course.id).then(r => {
+        if (r.data.result === 1) {
+          this.$emit('delete', 'positive', this.$t('content.admin.course.toasts.positive', {c: this.course.title}, this.course.id))
         } else {
           this.$emit('delete', 'negative', this.$t('content.admin.course.toasts.negative', {c: this.course.title}))
         }

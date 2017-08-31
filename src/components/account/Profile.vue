@@ -70,6 +70,7 @@ export default {
       this.tigris.user.update(this.auth.id, null, data).then(r => {
         // this.modal.close()
         if (r.data) {
+          this.$emit('refresh')
           this.$emit('toast', 'positive', this.$t('content.modals.account.profile.toast.success'))
         } else {
           this.$emit('toast', 'negative', this.$t('content.modals.account.profile.toast.failure'))

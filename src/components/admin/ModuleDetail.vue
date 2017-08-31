@@ -120,6 +120,15 @@ export default {
         is_active: true,
         creator: ''
       },
+      blankForm: {
+        title: '',
+        order_index: 0,
+        description: '',
+        content: '',
+        slug: '',
+        is_active: true,
+        creator: ''
+      },
       uploadUrl: 'https://azure.microsoft.com'
     }
   },
@@ -157,7 +166,7 @@ export default {
     _onCreated (tigris) {
       if (typeof this.module !== 'undefined') {
         if (this.action === 'add') {
-          Object.values(this.form).forEach(x => { x = '' })
+          this.form = this._.cloneDeep(this.blankForm)
         } else {
           for (var k in this.module) {
             if (this.form.hasOwnProperty(k)) {
@@ -173,8 +182,6 @@ export default {
       form.order_index = 1
       const data = {module: form}
       return tigris.module.create(this.course.id, data).then(r => {
-        Object.values(this.form).forEach(x => { x = '' })
-        Object.values(this.$v.form).forEach(x => { x.$reset() })
         return r.data.result
       })
     },
@@ -209,8 +216,15 @@ export default {
     },
     saveModule (quit) {
       if (this.action === 'add') {
-        this.addModule(this.tigris, this.form).then(r => {
-          Object.values(this.form).forEach(x => '')
+        this.addModule(this.tigris, this.form).then(module => {
+          if (typeof module !== 'undefined') {
+            this.form = this._.cloneDeep(this.blankForm)
+            this.$v.form.title.$reset()
+            this.$v.form.slug.$reset()
+            this.$emit('save', 'positive', this.$t('content.admin.module.detail.toasts.positive', {m: this.module.title}))
+          } else {
+            this.$emit('save', 'negative', this.$t('content.admin.module.detail.toasts.negative', {m: this.module.title}))
+          }
         })
       } else {
         this.updateModule(this.tigris, this.form).then(r => {

@@ -10,19 +10,31 @@
           </label>
         </div>
       </div>
-      <template v-if="questions.length > 0" v-for="(question, index) in questions">
-        <question @reset="resetQuestions" @save="saveQuestion" @send-toast="sendToast" :action="action" :partial="true" :quiz="question" :order="index" />
+      <template v-if="questions.length > 0">
+        <template v-for="(question, index) in questions">
+          <question @reset="resetQuestions" @save="saveQuestion" @send-toast="sendToast" :action="'edit'" :partial="true" :testQuestion="question" :order="index" />
+        </template>
       </template>
-      <template v-for="n in count" v-else>
-        <question @reset="resetQuestions" @save="saveQuestion" @send-toast="sendToast" :action="action" :partial="true" :order="n - 1" />
+      <template v-if="count > questions.length">
+        <template v-for="n in (count - questions.length)">
+          <question @reset="resetQuestions" @save="saveQuestion" @send-toast="sendToast" :action="'add'" :partial="true" :order="questions.length + n - 1" />
+        </template>
       </template>
       <div class="row large-gutter">
-        <div>
-          <button class="secondary big round" @click="addTest(false)" v-if="test.id === 0">
-            {{ $t('buttons.add', {n: $t('labels.test', {}, 1)}) }}
+        <div v-if="test.id === 0">
+          <button class="secondary big round" @click="addTest(false)">
+            {{ $t('buttons.draft')  }}
           </button>
-          <button class="secondary big round" @click="updateTest(false)" v-else>
+          <button class="secondary big round" @click="addTest(save)">
+            {{ $t('buttons.publish') }}
+          </button>
+        </div>
+        <div v-else>
+          <button class="secondary big round" @click="updateTest(false)">
             {{ $t('buttons.save', {n: $t('labels.test', {}, 1)}) }}
+          </button>
+          <button class="secondary big round" @click="updateTest(true)">
+            {{ $t('buttons.publish') }}
           </button>
         </div>
       </div>
@@ -48,6 +60,16 @@ export default {
   },
   computed: {},
   watch: {
+    count (val) {
+      if (this.test.id !== 0) {
+        if (this.count < this.questions.length) {
+          this.questions.pop()
+        } else if (this.count === this.questions.length) {
+          this.questions = []
+          this._onCreated()
+        }
+      }
+    },
     course (val) {
       this._onCreated()
     },
@@ -103,18 +125,25 @@ export default {
       this.questions.push(question)
     },
     addTest (publish) {
+      var questions = []
+      this.questions.forEach(q => {
+        questions.push(q.data)
+      })
       const data = {
         'course-id': this.course.id,
         status: Number(publish),
         details: {
           length: 180000,
           instructions: '',
-          questions: this.questions
+          questions: questions
         }
       }
       this.tigris.test.create(data).then(r => {
         if (r.data.result === 1) {
           this.$emit('send-toast', 'positive', this.$t('result.success.message'))
+          if (publish) {
+            this.$emit('close')
+          }
         } else {
           this.$emit('send-toast', 'negative', this.$t('result.failure.message'))
         }
@@ -126,8 +155,13 @@ export default {
     resetQuestions () {
       this.questions = []
     },
-    saveQuestion (question, index) {
-      const exists = typeof this.questions[index] !== 'undefined'
+    saveQuestion (data, index) {
+      const question = {
+        'course-id': this.course.id,
+        status: 1,
+        data: data
+      }
+      const exists = this.questions[index] !== null
       if (exists) {
         this.questions[index] = question
       } else {
@@ -140,19 +174,26 @@ export default {
       })
     },
     updateTest (publish) {
+      var questions = []
+      this.questions.forEach(q => {
+        questions.push(q.data)
+      })
       const data = {
         details: {
           status: Number(publish),
           data: {
             length: 180000,
             instructions: '',
-            questions: this.questions
+            questions: questions
           }
         }
       }
       this.tigris.test.update(this.test.id, data).then(r => {
         if (r.data.result === 1) {
           this.$emit('send-toast', 'positive', this.$t('result.success.message'))
+          if (publish) {
+            this.$emit('close')
+          }
         } else {
           this.$emit('send-toast', 'negative', this.$t('result.failure.message'))
         }

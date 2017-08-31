@@ -197,18 +197,22 @@ export default {
         this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
         this.$store.commit({ type: 'token/initialize', token: tigris._token })
         this.tigris = tigris
-        this.getUserCourses().then(courses => {
-          this.courses = courses
-          this.getRecommendedCourses().then(r => {
-            this.courses.recommended = r
-            this.INTERVAL_2e4$getUserNotifications().then(notifications => {
-              this.notifications = notifications
-              if (Loading.isActive()) {
-                Loading.hide()
-              }
+        if (typeof this.auth.id !== 'undefined') {
+          this.getUserCourses().then(courses => {
+            this.courses = courses
+            this.getRecommendedCourses().then(r => {
+              this.courses.recommended = r
+              this.INTERVAL_2e4$getUserNotifications().then(notifications => {
+                this.notifications = notifications
+                if (Loading.isActive()) {
+                  Loading.hide()
+                }
+              })
             })
           })
-        })
+        } else {
+          this.logout()
+        }
       }).catch(e => {
         if (process.env.NODE_ENV !== 'production') {
           console.error(e)
@@ -256,12 +260,7 @@ export default {
       popover.close()
     },
     refreshAuth () {
-      this._onCreated(this.auth.id, this.token).catch(e => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(e)
-        }
-        this.logout()
-      })
+      this._onCreated(this.auth.id, this.token)
     },
     sendToast (type, statement) {
       Toast.create[type]({
