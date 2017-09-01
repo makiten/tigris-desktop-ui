@@ -49,7 +49,7 @@
       <div class="row large-gutter">
         <div class="auto">
           <div class="stacked-label">
-            <t-fill-in-the-blank @set="updateFillInTheBlankModel" v-model="answers[0].value" :index="0" />
+            <t-fill-in-the-blank @set="updateFillInTheBlankModel" v-model="answers[0].value" :index="0" :value="answers[0].value" />
             <label>
               {{ $t('assessments.answer.label') }}
             </label>
@@ -197,7 +197,7 @@ export default {
         value: ''
       },
       question: '',
-      quiz: {},
+      quiz: null,
       view: 'fitb'
     }
   },
@@ -209,13 +209,19 @@ export default {
       },
       deep: true
     },
+    module (val) {
+      this.quiz = val
+    },
     quiz (val) {
-      // this._onCreated()
+      this._prepareForm(this.quiz)
     },
     testQuestion (val) {
-      if (val.data.choices.length > 0) {
+      this.quiz = val
+      /*
+      if (this.testQuestion.data.choices.length > 0) {
         this._onCreated()
       }
+      */
     }
   },
   created () {
@@ -240,16 +246,6 @@ export default {
     _onCreated () {
       if (this.action === 'add') {
         this.answers = this._createAnswerVar(this.counts[this.view])
-      } else if (typeof this.module !== 'undefined') {
-        this.quiz = this.module.quiz
-        this._prepareForm(this.quiz)
-      } else {
-        if (typeof this.testQuestion !== 'undefined') {
-          this.quiz = this.testQuestion
-          this._prepareForm(this.quiz)
-        } else {
-          this.answers = this._createAnswerVar(this.counts[this.view])
-        }
       }
     },
     __processFillInTheBlank (quiz) {
@@ -270,8 +266,8 @@ export default {
         }
       }
       const count = Object.keys(quiz.data.choices).length
-      this.counts.ma = count
-      var answers = this._createAnswerVar(count)
+      this.counts.ma = (count > 1) ? count : this.counts.ma
+      var answers = this._createAnswerVar(this.counts.ma)
       const choices = quiz.data.choices
       Object.keys(choices).forEach(i => {
         answers[parseInt(i) - 1] = {
@@ -280,8 +276,16 @@ export default {
           checked: quiz.data.answer.indexOf(parseInt(i)) >= 0
         }
       })
-      this.ma.correct = answers.find(a => { return a.checked }).message
-      this.ma.incorrect = answers.find(a => { return !a.checked }).message
+      if (answers.find(a => { return a.checked })) {
+        this.ma.correct = answers.find(a => { return a.checked }).message
+      } else {
+        this.ma.correct = ''
+      }
+      if (answers.find(a => { return !a.checked })) {
+        this.ma.incorrect = answers.find(a => { return !a.checked }).message
+      } else {
+        this.ma.incorrect = ''
+      }
       this.answers = answers
     },
     __processMultipleChoice (quiz) {
@@ -293,8 +297,8 @@ export default {
         }
       }
       const count = Object.keys(quiz.data.choices).length
-      this.counts.mc = count
-      var answers = this._createAnswerVar(count)
+      this.counts.mc = (count > 1) ? count : this.counts.mc
+      var answers = this._createAnswerVar(this.counts.mc)
       const choices = quiz.data.choices
       Object.keys(choices).forEach(i => {
         answers[parseInt(i) - 1] = {
@@ -425,12 +429,12 @@ export default {
       this.tigris.quiz.destroy(this.quiz.id).then(r => {
         if (r.data.result === 1) {
           this.$emit('close', 'list', '')
-          this.$emit('save', 'positive', this.$t('results.success.message'))
+          this.$emit('save', 'positive', this.$t('result.success.message'))
         } else {
-          this.$emit('save', 'negative', this.$t('results.failure.message'))
+          this.$emit('save', 'negative', this.$t('result.failure.message'))
         }
       }).catch(e => {
-        this.$emit('save', 'negative', this.$t('results.failure.message'))
+        this.$emit('save', 'negative', this.$t('result.failure.message'))
       })
     },
     removeQuestions () {
@@ -438,7 +442,8 @@ export default {
     },
     resetAnswers () {
       if (this.action === 'edit' &&
-          typeof this.quiz !== 'undefined' &&
+          !!this.quiz &&
+          !!this.quiz.data &&
           this.quiz.data.type === this.view &&
           this.quiz.data.choices.length > 0) {
         this._prepareForm(this.quiz)

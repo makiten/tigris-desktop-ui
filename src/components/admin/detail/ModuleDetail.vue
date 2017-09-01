@@ -4,7 +4,7 @@
       <button class="big" @click="$emit('close', 'list', '')">
         <i>keyboard_arrow_left</i>
       </button>
-      <span v-if="action === 'edit' && typeof module !== 'undefined' && module !== null">{{ $t('content.admin.module.detail.edit.heading', {n: module.title}) }}</span>
+      <span v-if="action === 'edit' && module">{{ $t('content.admin.module.detail.edit.heading', {n: module.title}) }}</span>
       <span v-else>{{ $t('content.admin.module.detail.new.heading') }}</span>
     </h3>
 
@@ -87,9 +87,6 @@
           <button class="secondary big round" @click="saveModule(true)">
             {{ $t('content.admin.module.detail.form.buttons.quit') }}
           </button>
-          <button class="primary big round" @click="nextStep()">
-            {{ $t('content.admin.module.detail.form.buttons.add_modules') }}
-          </button>
           <button class="tertiary big round" @click="cancel">
             {{ $t('buttons.cancel') }}
           </button>
@@ -164,7 +161,7 @@ export default {
   },
   methods: {
     _onCreated (tigris) {
-      if (typeof this.module !== 'undefined') {
+      if (this.module) {
         if (this.action === 'add') {
           this.form = this._.cloneDeep(this.blankForm)
         } else {
@@ -200,7 +197,7 @@ export default {
       if (touchMap.has($v)) {
         clearTimeout(touchMap.get($v))
       }
-      touchMap.set($v, setTimeout($v.$touch, 1500))
+      touchMap.set($v, setTimeout($v.$touch, 500))
     },
     doesSlugNotExist (tigris, slug) {
       return tigris.module.retrieve(this.course.id, null, {slug: slug}).then(r => {
@@ -217,26 +214,24 @@ export default {
     saveModule (quit) {
       if (this.action === 'add') {
         this.addModule(this.tigris, this.form).then(module => {
-          if (typeof module !== 'undefined') {
-            this.form = this._.cloneDeep(this.blankForm)
-            this.$v.form.title.$reset()
-            this.$v.form.slug.$reset()
-            this.$emit('save', 'positive', this.$t('content.admin.module.detail.toasts.positive', {m: this.module.title}))
-          } else {
-            this.$emit('save', 'negative', this.$t('content.admin.module.detail.toasts.negative', {m: this.module.title}))
+          this.form = this._.cloneDeep(this.blankForm)
+          this.$v.form.$reset()
+          this.$emit('save-module', 'positive', this.$t('result.success.message'), module.id)
+          if (quit) {
+            this.$emit('close', 'list', '')
           }
+        }).catch(e => {
+          this.$emit('save-module', 'negative', this.$t('result.failure.message'))
         })
       } else {
         this.updateModule(this.tigris, this.form).then(r => {
-          if (r === 1) {
-            this.$emit('save', 'positive', this.$t('content.admin.module.detail.toasts.positive', {m: this.module.title}))
-          } else {
-            this.$emit('save', 'negative', this.$t('content.admin.module.detail.toasts.negative', {m: this.module.title}))
+          this.$emit('save-module', 'positive', this.$t('result.success.message'), this.module.id)
+          if (quit) {
+            this.$emit('close', 'list', '')
           }
+        }).catch(e => {
+          this.$emit('save-module', 'negative', this.$t('result.failure.message'))
         })
-      }
-      if (quit) {
-        this.$emit('close', 'list', '')
       }
     }
   },

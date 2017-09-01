@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import CourseDetail from './CourseDetail'
-import ModuleDetail from './ModuleDetail'
+import CourseDetail from '../detail/CourseDetail'
+import ModuleDetail from '../detail/ModuleDetail'
 
 export default {
   name: 'admin-course-card',

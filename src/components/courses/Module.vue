@@ -91,12 +91,14 @@ export default {
             this.getModule(tigris, c.id, moduleSlug).then(m => {
               this.module = m
               if (!(typeof n === 'undefined' || n === null)) {
-                console.log(n)
                 const progress = n.progress
                 progress.modules = {current: {id: m.id, slug: m.slug}}
                 const data = {fields: {progress: progress}}
                 this.updateEnrollment(tigris, n.id, data).then(r => {
-                  this.enrollment = r
+                  if (r.result === 1) {
+                    n.progress = progress
+                    this.enrollment = n
+                  }
                 })
               } else {
                 const progress = {
@@ -105,10 +107,9 @@ export default {
                     completed: []
                   }
                 }
-                const data = {fields: {progress: progress}}
+                const data = {fields: {course_id: c.id, progress: progress}}
                 this.addEnrollment(tigris, data).then(r => {
-                  console.log(r)
-                  tigris.user.retrieve(this.auth.id, r.data.result).then(enrollment => {
+                  tigris.user.retrieve(this.auth.id, r.result).then(enrollment => {
                     this.enrollment = enrollment
                   })
                 })

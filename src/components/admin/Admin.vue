@@ -106,19 +106,11 @@
             </div>
           </div>
           <div class="row gutter wrap">
-            <div class="width-1of5" v-for="role in roles">
-              <div class="card role-card">
-                <div class="card-title bg-primary text-white">
-                  {{ role.name }}
-                  <button class="big" @click="openModal('groupModal', 'edit', 'role', role)">
-                    <i>edit</i>
-                  </button>
-                </div>
-                <div class="card-content">
-                  <p>{{ role.description }}</p>
-                </div>
-              </div>
-            </div>
+            <template v-for="role in roles">
+              <transition-group name="fade" tag="div" class="width-1of5">
+                <role-card @delete="removeCard" @modal-open="openModal('groupModal', 'edit', 'role', role)" v-bind:key="role" :role="role" />
+              </transition-group>
+            </template>
           </div>
           <!--<p>{{ $t('content.admin.accordions.users.roles.content') }}</p>-->
           <!--<h5>{{ $t('content.admin.accordions.users.permissions.label') }}</h5>-->
@@ -126,103 +118,12 @@
         </div>
       </div>
 
-      <q-modal ref="groupModal" :content-css="{minWidth: '80vw', minHeight: '64vh'}">
-        <q-layout>
-          <div class="full-width scroll">
-            <div class="row">
-              <div class="auto text-right">
-                <button @click="$refs.groupModal.close()">
-                  <i class="text-primary">close</i>
-                </button>
-              </div>
-            </div>
-            <role-detail @add="addRole" @edit="editRole" :action="action" :auth="auth" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
-          </div>
-        </q-layout>
-      </q-modal>
-
-      <q-modal ref="modulesList" class="maximized">
-        <q-layout>
-          <div class="full-width scroll">
-            <div class="row">
-              <div class="auto text-right">
-                <button @click="$refs.modulesList.close()">
-                  <i class="text-primary">close</i>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <modules-list :auth="auth" :course="toEdit.course" :modal="$refs.modulesList" :tigris="tigris" :view="'list'" />
-            </div>
-          </div>
-        </q-layout>
-      </q-modal>
-
-      <q-modal ref="courseDetail" class="maximized">
-        <q-layout>
-          <div class="full-width scroll">
-            <div class="row">
-              <div class="auto text-right">
-                <button @click="$refs.courseDetail.close()">
-                  <i class="text-primary">close</i>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <course-detail @add="addCard" :action="action" :auth="auth" :course="toEdit.course" :modal="$refs.courseDetail" :tigris="tigris" />
-            </div>
-          </div>
-        </q-layout>
-      </q-modal>
-
-      <q-modal ref="inviteUser" :content-css="{minWidth: '40vw', minHeight: '55vh'}">
-        <q-layout>
-          <div class="full-width scroll">
-            <div class="row">
-              <div class="auto text-right">
-                <button @click="$refs.inviteUser.close()">
-                  <i class="text-primary">close</i>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <invite-user @send-toast="sendToast" :modal="$refs.inviteUser" :tigris="tigris" />
-            </div>
-          </div>
-        </q-layout>
-      </q-modal>
-
-      <q-modal ref="userDetail" :content-css="{minWidth: '80vw', minHeight: '60vh'}">
-        <q-layout>
-          <div class="full-width scroll">
-            <div class="row">
-              <div class="auto text-right">
-                <button @click="$refs.userDetail.close()">
-                  <i class="text-primary">close</i>
-                </button>
-              </div>
-            </div>
-            <div class="row">
-              <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" :modal="$refs.userDetail" :tigris="tigris" />
-            </div>
-          </div>
-        </q-layout>
-      </q-modal>
-
-      <q-modal ref="exam" class="maximized">
-        <q-layout>
-          <div class="full-width scroll">
-            <div class="row">
-              <div class="auto text-right">
-                <button @click="$refs.exam.close()">
-                  <i class="text-primary">close</i>
-                </button>
-              </div>
-            </div>
-            <exam @close="$refs.exam.close()" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
-          </div>
-        </q-layout>
-      </q-modal>
+      <role-detail ref="groupModal" @add="addRole" @edit="editRole" :action="action" :auth="auth" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
+      <modules-list :auth="auth" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
+      <course-detail @add="addCard" @open="openModal" @delete="removeCard" :action="action" :auth="auth" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
+      <invite-user @send-toast="sendToast" ref="inviteUser" :tigris="tigris" />
+      <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" :modal="$refs.userDetail" :tigris="tigris" />
+      <exam ref="exam" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
     </div>
   </div>
 </template>
@@ -231,12 +132,13 @@
 import { Tigris } from '../../api'
 import { mapActions, mapGetters } from 'vuex'
 import { Utils, Toast } from 'quasar'
-import CourseCard from './CourseCard'
-import CourseDetail from './CourseDetail'
+import CourseCard from './card/CourseCard'
+import CourseDetail from './detail/CourseDetail'
 import Exam from './assessments/Exam'
-import ModulesList from './ModulesList'
+import ModulesList from './list/ModulesList'
 import InviteUser from './InviteUser'
-import RoleDetail from './RoleDetail'
+import RoleCard from './card/RoleCard'
+import RoleDetail from './detail/RoleDetail'
 import UserDetail from './detail/UserDetail'
 
 export default {
@@ -246,6 +148,7 @@ export default {
     return {
       action: '',
       courses: [],
+      moduleView: 'list',
       roles: [],
       terms: {
         course: '',
@@ -354,10 +257,10 @@ export default {
       }
       this.$refs[name].open()
     },
-    removeCard (type, msg, id) {
+    removeCard (type, msg, id, cardType = 'courses') {
       if (type === 'positive') {
-        const index = this.courses.findIndex(c => { return c.id === id })
-        this.courses.splice(index, 1)
+        const index = this[cardType].findIndex(c => { return c.id === id })
+        this[cardType].splice(index, 1)
         // this.$emit('course-change')
       }
       this.sendToast(type, msg)
@@ -386,6 +289,13 @@ export default {
       Toast.create[type]({
         html: msg
       })
+    },
+    switchViewOrClose (view) {
+      if (this.moduleView === 'list') {
+        this.$refs.modulesList.close()
+      } else {
+        this.moduleView = view
+      }
     }
   },
   created () {
@@ -397,6 +307,7 @@ export default {
     Exam,
     ModulesList,
     InviteUser,
+    RoleCard,
     RoleDetail,
     UserDetail
   }

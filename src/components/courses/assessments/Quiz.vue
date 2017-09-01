@@ -102,20 +102,31 @@ export default {
   },
   methods: {
     continueCourse () {
-      const courseName = this.$route.params.courseName.toLowerCase()
-      this.$refs.quizModal.close()
-      if (this.nextUrl !== '') {
-        switch (this.nextUrl) {
-          case 'done':
-            this.$router.push({name: 'done', params: {courseName: courseName}})
-            break
-          case 'exam':
-            this.$router.push({name: 'exam', params: {courseName: courseName}})
-            break
-          default:
-            this.$router.push({name: 'module', params: {moduleName: this.nextUrl}})
-        }
+      if (typeof this.enrollment.progress.modules.completed === 'undefined') {
+        this.enrollment.progress.modules.completed = []
       }
+      this.enrollment.progress.modules.completed.push(this.enrollment.progress.modules.current.id)
+      this.enrollment.progress.modules.current = {}
+      var enrollmentToSend = this.enrollment
+      enrollmentToSend.course_id = this.course.id
+      delete enrollmentToSend.course
+      const data = {fields: enrollmentToSend}
+      this.tigris.user.update(this.auth.id, this.enrollment.id, data).then(r => {
+        const courseName = this.$route.params.courseName.toLowerCase()
+        this.$refs.quizModal.close()
+        if (this.nextUrl !== '') {
+          switch (this.nextUrl) {
+            case 'done':
+              this.$router.push({name: 'done', params: {courseName: courseName}})
+              break
+            case 'exam':
+              this.$router.push({name: 'exam', params: {courseName: courseName}})
+              break
+            default:
+              this.$router.push({name: 'module', params: {moduleName: this.nextUrl}})
+          }
+        }
+      })
     },
     enableOrDisable () {
       const val = this.choice

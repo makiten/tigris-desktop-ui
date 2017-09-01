@@ -1,17 +1,26 @@
 <template>
   <div>
-    <div>
-      <h1>{{ module.title }}</h1>
-      <div v-html="module.content">
-      </div>
+    <div v-html="content">
     </div>
   </div>
 </template>
 
 <script>
+// import VueMarked from 'vue-marked'
+import marked from 'marked'
+
 export default {
   name: 'lesson',
   props: ['module'],
+  computed: {
+    content () {
+      if (this.module.content) {
+        return marked(this.module.content)
+      } else {
+        return ''
+      }
+    }
+  },
   data: () => ({
   })
 }

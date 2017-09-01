@@ -154,9 +154,10 @@ export default {
         tigris.test.retrieve(null, course.id).then(t => {
           this.exam = t.data
           this._findLog(tigris, t.data.id, this.auth.id, enrollment.id).then(log => {
-            if (log === '' || log.date_completed !== null) {
-              const data = { 'user-id': this.auth.id, 'enrollment-id': enrollment.id }
+            if (log || log === '' || log.date_completed !== null) {
+              const data = {'enrollment-id': enrollment.id}
               this._createLog(tigris, t.data.id, data).then(r => {
+                console.log(r.data)
                 if (r.data.result === 1) {
                   this._findLog(tigris, t.data.id, this.auth.id, enrollment.id).then(log => {
                     this.examLog = log

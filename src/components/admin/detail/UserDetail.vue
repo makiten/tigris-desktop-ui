@@ -1,77 +1,92 @@
 <template>
-  <div class="layout-padding fit">
-    <h3>{{ $t('content.admin.user.edit.heading', {n: user.shortname}) }}</h3>
+  <q-modal ref="userDetail" :content-css="{minWidth: '80vw', minHeight: '60vh'}">
+    <q-layout>
+      <div class="full-width scroll">
+        <div class="row">
+          <div class="auto text-right">
+            <button @click="$refs.userDetail.close()">
+              <i class="text-primary">close</i>
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="layout-padding fit">
+            <h3>{{ $t('content.admin.user.edit.heading', {n: user.shortname}) }}</h3>
 
-    <form method="post" v-on:submit.prevent>
-      <div class="row gutter">
-        <div class="form-group auto" :class="{'form-group--error': $v.form.shortname.$error}">
-          <div class="stacked-label">
-            <input
-               class="form__input full-width"
-               id="shortname"
-               v-model="form.shortname"
-               @input="$v.form.shortname.$touch()"
-               :placeholder="$t('content.admin.user.edit.form.shortname.placeholder')"
-               :class="{'has-error': $v.form.shortname.$error}">
-            <label class="form__label" for="shortname">{{ $t('content.admin.user.edit.form.shortname.name') }}</label>
+            <form method="post" v-on:submit.prevent>
+              <div class="row gutter">
+                <div class="form-group auto" :class="{'form-group--error': $v.form.shortname.$error}">
+                  <div class="stacked-label">
+                    <input
+                       class="form__input full-width"
+                       id="shortname"
+                       v-model="form.shortname"
+                       @input="$v.form.shortname.$touch()"
+                       :placeholder="$t('content.admin.user.edit.form.shortname.placeholder')"
+                       :class="{'has-error': $v.form.shortname.$error}">
+                    <label class="form__label" for="shortname">{{ $t('content.admin.user.edit.form.shortname.name') }}</label>
           </div>
-          <small class="form-group__message has-error" v-if="!$v.form.shortname.isUnique && $v.form.shortname.$dirty">{{ $t('content.admin.user.edit.form.shortname.errors.isUnique') }}</small>
-        </div>
-        <div class="form-group auto" :class="{'form-group--error': $v.form.email.$error}">
-          <div class="stacked-label">
-            <input
-               class="form__input full-width"
-               id="email"
-               v-model="form.email"
-               @input="$v.form.email.$touch()"
-               :placeholder="$t('content.admin.user.new.form.email.placeholder')"
-               :class="{'has-error': $v.form.email.$error}">
-            <label class="form__label" for="email">{{ $t('content.admin.user.new.form.email.name') }}</label>
+                  <small class="form-group__message has-error" v-if="!$v.form.shortname.isUnique && $v.form.shortname.$dirty">{{ $t('content.admin.user.edit.form.shortname.errors.isUnique') }}</small>
+                </div>
+                <div class="form-group auto" :class="{'form-group--error': $v.form.email.$error}">
+                  <div class="stacked-label">
+                    <input
+                       class="form__input full-width"
+                       id="email"
+                       v-model="form.email"
+                       @input="$v.form.email.$touch()"
+                       :placeholder="$t('content.admin.user.new.form.email.placeholder')"
+                       :class="{'has-error': $v.form.email.$error}">
+                    <label class="form__label" for="email">{{ $t('content.admin.user.new.form.email.name') }}</label>
+                  </div>
+                  <small class="form-group__message has-error" v-if="!$v.form.email.required && $v.form.email.$dirty">{{ $t('content.admin.user.new.form.email.errors.required') }}</small>
+                  <small class="form-group__message has-error" v-if="!$v.form.email.email">{{ $t('content.admin.user.new.form.email.errors.email') }}</small>
+                </div>
+              </div>
+              <div class="row gutter">
+                <div class="form-group auto">
+                  <div class="stacked-label">
+                    <input
+                       class="form__input full-width"
+                       id="password"
+                       type="password"
+                       v-model="form.password"
+                       @input="$v.form.password.$touch()"
+                       :placeholder="$t('content.admin.user.edit.form.password.placeholder')"
+                       :class="{'has-error': $v.form.password.$error}">
+                    <label class="form__label" for="password">{{ $t('content.admin.user.edit.form.password.name') }}</label>
+                  </div>
+                  <small class="form-group__message has-error" v-if="!$v.form.password.minLength && $v.form.password.$dirty">{{ $t('content.admin.user.edit.form.password.errors.minLength') }}</small>
+                </div>
+              </div>
+              <div class="row gutter">
+                <div class="form-group auto">
+                  <div class="stacked-label">
+                    <q-select
+                       type="list"
+                       class="full-width"
+                       v-model="form.roles"
+                       :label="$t('content.admin.user.new.form.group.name')"
+                       :options="groupOptions" />
+                  </div>
+                </div>
+              </div>
+              <div class="row gutter">
+                <div>
+                  <button class="secondary big round" @click="updateUser">
+                    {{ $t('buttons.save') }}
+                  </button>
+                  <button class="tertiary big round" @click="close">
+                    {{ $t('buttons.cancel') }}
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-          <small class="form-group__message has-error" v-if="!$v.form.email.required && $v.form.email.$dirty">{{ $t('content.admin.user.new.form.email.errors.required') }}</small>
-          <small class="form-group__message has-error" v-if="!$v.form.email.email">{{ $t('content.admin.user.new.form.email.errors.email') }}</small>
         </div>
       </div>
-      <div class="row gutter">
-        <div class="form-group auto">
-          <div class="stacked-label">
-            <input
-               class="form__input full-width"
-               id="password"
-               type="password"
-               v-model="form.password"
-               @input="$v.form.password.$touch()"
-               :placeholder="$t('content.admin.user.edit.form.password.placeholder')"
-               :class="{'has-error': $v.form.password.$error}">
-            <label class="form__label" for="password">{{ $t('content.admin.user.edit.form.password.name') }}</label>
-          </div>
-          <small class="form-group__message has-error" v-if="!$v.form.password.minLength && $v.form.password.$dirty">{{ $t('content.admin.user.edit.form.password.errors.minLength') }}</small>
-        </div>
-      </div>
-      <div class="row gutter">
-        <div class="form-group auto">
-          <div class="stacked-label">
-            <q-select
-               type="list"
-               class="full-width"
-               v-model="form.roles"
-               :label="$t('content.admin.user.new.form.group.name')"
-               :options="groupOptions" />
-          </div>
-        </div>
-      </div>
-      <div class="row gutter">
-        <div>
-          <button class="secondary big round" @click="updateUser">
-            {{ $t('buttons.save') }}
-          </button>
-          <button class="tertiary big round" @click="closeModal">
-            {{ $t('buttons.cancel') }}
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
+    </q-layout>
+  </q-modal>
 </template>
 
 <script>
@@ -79,7 +94,7 @@ import { required, minLength, email } from 'vuelidate/lib/validators'
 
 export default {
   name: 'user-detail',
-  props: ['modal', 'tigris', 'user'],
+  props: ['tigris', 'user'],
   data () {
     return {
       form: {
@@ -118,11 +133,17 @@ export default {
     this._onCreated()
   },
   methods: {
+    close () {
+      this.$refs.userDetail.close()
+    },
+    open () {
+      this.$refs.userDetail.open()
+    },
     _onCreated () {
-      if (typeof this.tigris.role !== 'undefined') {
+      if (this.tigris.role) {
         this.getRoleOptions().then(opts => {
           this.groupOptions = opts
-          if (typeof this.user !== 'undefined') {
+          if (this.user) {
             this._populate()
           }
         })
@@ -136,13 +157,13 @@ export default {
       }
     },
     _isUniqueUsername (name) {
-      if (typeof name === 'undefined') { name = '' }
+      if (!name) { name = '' }
       return this.tigris.user.retrieve(null, null, { shortname: name }).then(r => {
-        return typeof r.data === 'undefined' || r.data === null || r.data === ''
+        return r.data || r.data === ''
       })
     },
-    closeModal () {
-      this.modal.close()
+    closeAndReset () {
+      this.close()
       this.$emit('reset-search')
     },
     getRoleOptions () {
@@ -165,10 +186,9 @@ export default {
       }
       const data = {fields: $submit, action: '', roles: $roles}
       this.tigris.user.update(this.user.id, null, data).then(r => {
-        console.log(r.data)
         if (r.data) {
           this.$emit('send-toast', 'positive', this.$t('content.modals.account.settings.toast.success'))
-          this.closeModal()
+          this.close()
         } else {
           this.$emit('send-toast', 'negative', this.$t('content.modals.account.settings.toast.failure'))
         }
