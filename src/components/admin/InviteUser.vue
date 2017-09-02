@@ -65,6 +65,10 @@ export default {
   props: ['tigris'],
   data () {
     return {
+      blankForm: {
+        email: '',
+        group: 0
+      },
       form: {
         email: '',
         group: 0
@@ -82,6 +86,9 @@ export default {
   },
   computed: {},
   watch: {
+    group (val) {
+      this._onCreated()
+    },
     tigris (val) {
       this._onCreated()
     }
@@ -96,39 +103,40 @@ export default {
     _onCreated () {
       if (this.tigris.role) {
         this.getGroupOptions().then(opts => {
-          const defaultGroup = opts.filter(o => { return o.label === 'Student' })[0]
+          const defaultGroup = opts.filter(o => { return o.label === 'Students' })[0]
           this.form.group = defaultGroup.value
           this.groupOptions = opts
         })
       }
     },
     addUser () {
-      this.tigris.user.create(null, {fields: {email: this.form.email}, role: this.form.group}).then(r => {
+      const data = {fields: {email: this.form.email}, role: this.form.group}
+      this.tigris.user.create(null, data).then(r => {
         console.log(r.data)
         if (r.data.result.id) {
           const userId = r.data.result.id
           this.tigris.util.invite({id: userId, email: this.form.email}).then(t => {
             const token = t.data.token
+            const url = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '')
             const data = {
               to: this.form.email,
               subject: this.$t('content.admin.user.new.invite.subject'),
-              message: this.$t('content.admin.user.new.invite.message', {url: location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : ''), token: token})
+              message: this.$t('content.admin.user.new.invite.message', {url: url, token: token})
             }
             this.tigris.util.email(data).then(r => {
               if (r.data.result === 'OK') {
+                this.form = this._.cloneDeep(this.blankForm)
+                this.$v.form.$reset()
                 this.$emit('send-toast',
                            'positive',
                            this.$t('content.admin.user.new.toasts.positive', {e: this.form.email}))
+                this.close()
               }
-              this.close()
-              this.form.email = ''
-            }).catch(e => { console.error(e) })
-          }).catch(e => { console.error(e) })
+            })
+          })
         }
       }).catch(e => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(e)
-        }
+        if (process.env.NODE_ENV !== 'production') { console.error(e) }
         this.$emit('send-toast',
                    'negative',
                    this.$t('content.admin.user.new.toasts.negative', {e: this.form.email}))

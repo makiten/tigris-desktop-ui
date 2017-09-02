@@ -57,6 +57,7 @@ export default {
     'questions': 'Number of Questions:',
     'quiz': 'Quiz ::: Quizzes',
     'module': 'Module ::: Modules',
+    'roles': 'Group ::: Groups',
     'test': 'Exam ::: Exams'
   },
   'result': {

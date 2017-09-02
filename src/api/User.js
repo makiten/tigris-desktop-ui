@@ -2,7 +2,7 @@ import ApiMethodClient from './ApiMethodClient'
 
 export default class User extends ApiMethodClient {
   create (id, data) {
-    if (id !== null) {
+    if (id) {
       return this._apiMethod(`/users/${id}/enrollments`, 'post', data)
     } else {
       return this._apiMethod('/users', 'post', data)

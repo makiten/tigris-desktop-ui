@@ -102,7 +102,7 @@ export default {
   },
   methods: {
     continueCourse () {
-      if (typeof this.enrollment.progress.modules.completed === 'undefined') {
+      if (!this.enrollment.progress.modules.completed) {
         this.enrollment.progress.modules.completed = []
       }
       this.enrollment.progress.modules.completed.push(this.enrollment.progress.modules.current.id)
@@ -149,7 +149,7 @@ export default {
       }
     },
     evaluateChoice () {
-      const choice = this.choice
+      const choice = this.choice.trim()
       this.tigris.quiz.evaluate(this.quiz.id, this.course.id, this.module.id, choice).then(r => {
         this.correct = r.data.result.correct
         this.message = r.data.result.message

@@ -11,7 +11,7 @@ export default class Quiz extends ApiMethodClient {
     return this._apiMethod(`/quizzes/${id}/evaluate`, 'post', data)
   }
   destroy (id) { return this._apiMethod(`/quizzes/${id}`, 'delete') }
-  retrieve (id, moduleId, keepAnswer) {
+  retrieve (id, moduleId, keepAnswer = false) {
     // GET: /quizzes
     if (arguments.length === 0) {
       return this._apiMethod('/quizzes', 'get')

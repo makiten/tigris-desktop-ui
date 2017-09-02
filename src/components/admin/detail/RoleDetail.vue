@@ -45,6 +45,16 @@
             <div class="row gutter">
               <div class="auto form-group" :class="{'form-group--error': $v.form.permissions.$error}">
                 <q-select
+                   v-if="action === 'edit' && role && Object.keys(role).length > 0 && !role.deletable"
+                   readonly
+                   type="checkbox"
+                   class="form__input full-width"
+                   v-model="form.permissions"
+                   @input="$v.form.permissions.$touch()"
+                   :label="$t('content.admin.role.form.permissions.label')"
+                   :options="permOptions" />
+                <q-select
+                   v-else
                    type="checkbox"
                    class="form__input full-width"
                    v-model="form.permissions"
@@ -55,8 +65,11 @@
             </div>
             <div class="row gutter">
               <div>
-                <button class="big round secondary" @click="addRole">
-                  {{ $t('content.admin.role.form.button') }}
+                <button class="big round secondary" @click="addRole" v-if="action === 'add'">
+                  {{ $t('buttons.add', {n: $t('labels.roles')}, 1) }}
+                </button>
+                <button class="big round secondary" @click="updateRole" v-else>
+                  {{ $t('buttons.save') }}
                 </button>
               </div>
             </div>
@@ -75,6 +88,11 @@ export default {
   props: ['action', 'auth', 'role', 'tigris'],
   data () {
     return {
+      blankForm: {
+        name: '',
+        description: '',
+        permissions: [1]
+      },
       form: {
         name: '',
         description: '',
@@ -86,7 +104,13 @@ export default {
   computed: {
   },
   watch: {
+    action (val) {
+      this._onCreated()
+    },
     role (val) {
+      this._onCreated()
+    },
+    tigris (val) {
       this._onCreated()
     }
   },
@@ -114,6 +138,8 @@ export default {
           this.permOptions = opts
           if (this.role.id && this.action === 'edit') {
             this._populate()
+          } else {
+            this.form = this._.cloneDeep(this.blankForm)
           }
         })
       }
@@ -130,20 +156,17 @@ export default {
       this.tigris.role.create(data).then(r => {
         if (r.data.id) {
           const role = r.data
+          this.form = this._.cloneDeep(this.blankForm)
+          this.$v.form.$reset()
           this.$emit('add', 'positive', this.$t('content.admin.role.toasts.positive', {n: role.name}), role)
+          this.close()
         } else {
           this.$emit('add', 'negative', this.$t('content.admin.role.toasts.negative'), null)
         }
       }).catch(e => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(e)
-        }
+        if (process.env.NODE_ENV !== 'production') { console.error(e) }
         this.$emit('add', 'negative', this.$t('content.admin.role.toasts.negative'), null)
       })
-    },
-    editPermission () {
-      const data = {name: this.form.title, description: this.form.description, permission: this.form.permissions}
-      return data
     },
     getPermOptions () {
       return this.getPermissions(this.tigris).then(perms => {
@@ -157,6 +180,20 @@ export default {
     getPermissions (tigris) {
       return tigris.permission.retrieve().then(r => {
         return r.data
+      })
+    },
+    updateRole () {
+      const data = {fields: {name: this.form.name, description: this.form.description, permissions: this.form.permissions}}
+      this.tigris.role.update(this.role.id, data).then(r => {
+        if (r.data) {
+          this.$emit('add', 'positive', this.$t('result.success.message'))
+          this.close()
+        } else {
+          this.$emit('add', 'negative', this.$t('result.failure.message'))
+        }
+      }).catch(e => {
+        if (process.env.NODE_ENV !== 'production') { console.error(e) }
+        this.$emit('add', 'negative', this.$t('result.failure.message'))
       })
     }
   },

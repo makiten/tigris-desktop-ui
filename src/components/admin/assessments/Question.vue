@@ -246,6 +246,12 @@ export default {
     _onCreated () {
       if (this.action === 'add') {
         this.answers = this._createAnswerVar(this.counts[this.view])
+      } else {
+        if (this.module) {
+          this.quiz = this.module.quiz
+        } else if (this.testQuestion) {
+          this.quiz = this.testQuestion
+        }
       }
     },
     __processFillInTheBlank (quiz) {
@@ -457,12 +463,12 @@ export default {
       this.tigris.quiz.update(this.quiz.id, data).then(r => {
         if (r.data.result === 1) {
           this.$emit('close', 'list', '')
-          this.$emit('save', 'positive', this.$t('results.success.message'))
+          this.$emit('save', 'positive', this.$t('result.success.message'))
         } else {
-          this.$emit('save', 'negative', this.$t('results.failure.message'))
+          this.$emit('save', 'negative', this.$t('result.failure.message'))
         }
       }).catch(e => {
-        this.$emit('save', 'negative', this.$t('results.failure.message'))
+        this.$emit('save', 'negative', this.$t('result.failure.message'))
       })
     },
     setTestQuestion () {

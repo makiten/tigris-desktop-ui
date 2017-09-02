@@ -1,5 +1,5 @@
 <template>
-  <q-modal ref="modulesList" class="maximized" @keyup.esc="$refs.modulesList.close()">
+  <q-modal ref="modulesList" class="maximized">
     <q-layout>
       <div class="full-width scroll">
         <div class="row">
@@ -68,7 +68,7 @@
               </div>
             </template>
             <template v-else-if="view === 'detail'">
-              <module-detail @send="sendToast" @save-module="updateModules" @close="switchViewTo" :action="action" :auth="auth" :course="course" :module="currentModule" :tigris="tigris" />
+              <module-detail @send="sendToast" @save-module="updateModules" @delete-module="removeModules" @close="switchViewTo" :action="action" :auth="auth" :course="course" :module="currentModule" :tigris="tigris" />
             </template>
             <template v-else-if="view === 'quiz'">
               <question @save="sendToast" @close="switchViewTo" :action="action" :module="currentModule" :partial="false" :tigris="tigris" />
@@ -155,7 +155,6 @@ export default {
         } else {
           action = 'add'
         }
-        console.log(action)
         this.currentModule = module
         this.switchViewTo('quiz', action)
       })
@@ -171,6 +170,13 @@ export default {
           this.sendToast('negative', this.$t('result.failure.message'))
         }
       })
+    },
+    removeModules (type, msg, module) {
+      if (type === 'positive') {
+        const idx = this.modules.findIndex(m => m.id === module.id)
+        this.modules.splice(idx, 1)
+      }
+      this.sendToast(type, msg)
     },
     search (terms, done) {
       console.log(terms)
@@ -192,11 +198,9 @@ export default {
       this.action = action
     },
     updateModules (type, msg, module) {
-      console.log(type, msg, module)
       if (type === 'positive') {
         this.tigris.module.retrieve(this.course.id, module).then(r => {
           const fullModule = r.data
-          console.log(fullModule)
           const idx = this.modules.findIndex(m => m.id === fullModule.id)
           if (idx >= 0) {
             this.modules[idx] = fullModule

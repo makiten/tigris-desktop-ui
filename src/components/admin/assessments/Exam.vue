@@ -27,7 +27,7 @@
             </template>
             <template v-if="count > questions.length">
               <template v-for="n in (count - questions.length)">
-                <question @reset="resetQuestions" @save="saveQuestion" @send-toast="sendToast" :action="'add'" :partial="true" :order="questions.length + n - 1" />
+                <question @reset="resetQuestions" @save="saveQuestion" @send-toast="sendToast" :action="'add'" :partial="true" :order="questions.length + n" />
               </template>
             </template>
             <div class="row large-gutter">
@@ -94,6 +94,12 @@ export default {
     this._onCreated()
   },
   methods: {
+    close () {
+      this.$refs.exam.close()
+    },
+    open () {
+      this.$refs.exam.open()
+    },
     _createQuestionVar (count) {
     },
     _examExists () {
@@ -156,6 +162,9 @@ export default {
           this.$emit('send-toast', 'positive', this.$t('result.success.message'))
           if (publish) {
             this.close()
+          } else {
+            this._onCreated()
+            this.action = 'edit'
           }
         } else {
           this.$emit('send-toast', 'negative', this.$t('result.failure.message'))
@@ -164,12 +173,6 @@ export default {
         if (process.env.NODE_ENV !== 'production') { console.error(e) }
         this.$emit('send-toast', 'negative', this.$t('result.failure.message'))
       })
-    },
-    close () {
-      this.$refs.exam.close()
-    },
-    open () {
-      this.$refs.exam.open()
     },
     resetQuestions () {
       this.questions = []
@@ -210,9 +213,7 @@ export default {
       this.tigris.test.update(this.test.id, data).then(r => {
         if (r.data.result === 1) {
           this.$emit('send-toast', 'positive', this.$t('result.success.message'))
-          if (publish) {
-            this.close()
-          }
+          if (publish) { this.close() }
         } else {
           this.$emit('send-toast', 'negative', this.$t('result.failure.message'))
         }

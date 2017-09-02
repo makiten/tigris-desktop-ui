@@ -53,7 +53,7 @@
                     <small class="form-group__message has-error" v-if="!$v.form.slug.required && $v.form.slug.$dirty">
                       {{ $t('content.admin.course.detail.form.slug.errors.required') }}
                     </small>
-                    <small class="form-group__message has-error" v-if="!$v.form.slug.isUnique">
+                    <small class="form-group__message has-error" v-if="!$v.form.slug.isUnique && $v.form.slug.$dirty">
                       {{ $t('content.admin.course.detail.form.slug.errors.isUnique') }}
                     </small>
                     <small v-html="$t('content.admin.course.detail.form.slug.info')"></small>
@@ -115,7 +115,6 @@
                     <button class="remove big" @click="remove">
                       <i :class="$t('result.failure.class')">delete_forever</i>
                     </button>
-
                   </div>
                 </div>
               </div>
@@ -235,7 +234,11 @@ export default {
         if (['done', 'exam'].indexOf(slug.toLowerCase()) >= 0) {
           return false
         } else {
-          return !r.data
+          if (this.course.slug) {
+            return this.course.slug === slug
+          } else {
+            return !r.data
+          }
         }
       })
     },
@@ -244,9 +247,9 @@ export default {
         if (course) {
           this.form = this._.cloneDeep(this.blankForm)
           this.$v.form.$reset()
+          this.close()
           this.$emit('add', 'positive', this.$t('result.success.message'), course)
           this.$emit('open', 'modulesList', 'add', 'course', course)
-          this.close()
         }
       })
     },

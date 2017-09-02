@@ -81,14 +81,19 @@
 
       <div class="row">
         <div class="auto">
-          <button class="secondary outline big round" @click="saveModule(false)">
+          <button class="secondary outline big round" @click="save(false)">
             {{ $t('content.admin.module.detail.form.buttons.save') }}
           </button>
-          <button class="secondary big round" @click="saveModule(true)">
+          <button class="secondary big round" @click="save(true)">
             {{ $t('content.admin.module.detail.form.buttons.quit') }}
           </button>
           <button class="tertiary big round" @click="cancel">
             {{ $t('buttons.cancel') }}
+          </button>
+        </div>
+        <div class="auto text-right">
+          <button class="remove big" @click="remove">
+            <i :class="$t('result.failure.class')">delete_forever</i>
           </button>
         </div>
       </div>
@@ -182,6 +187,11 @@ export default {
         return r.data.result
       })
     },
+    removeModule (tigris) {
+      return tigris.module.destroy(this.module.id).then(r => {
+        return r.data.result
+      })
+    },
     updateModule (tigris, form) {
       form.creator = this.module.creator
       const data = {module: form}
@@ -208,10 +218,21 @@ export default {
         }
       })
     },
-    nextStep () {
-      this.modal.close()
+    remove () {
+      if (this.module) {
+        this.removeModule(this.tigris).then(result => {
+          this.form = this._.cloneDeep(this.blankForm)
+          this.$emit('delete-module', 'positive', this.$t('result.success.message'), this.module)
+          this.close()
+        }).catch(e => {
+          this.$emit('delete-module', 'negative', this.$t('result.failure.message'))
+        })
+      } else {
+        this.form = this._.cloneDeep(this.blankForm)
+        this.close()
+      }
     },
-    saveModule (quit) {
+    save (quit) {
       if (this.action === 'add') {
         this.addModule(this.tigris, this.form).then(module => {
           this.form = this._.cloneDeep(this.blankForm)

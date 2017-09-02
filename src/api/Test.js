@@ -4,7 +4,7 @@ export default class Test extends ApiMethodClient {
   create (data) { return this._apiMethod('/tests', 'post', data) }
   destroy (id) { return this._apiMethod(`/tests/${id}`, 'delete') }
   evaluate (id, data) { return this._apiMethod(`/tests/${id}/evaluate`, 'post', data) }
-  retrieve (id, courseId, keepAnswer) {
+  retrieve (id, courseId, keepAnswer = false) {
     // GET: /tests
     if (arguments.length === 0) {
       return this._apiMethod('/tests', 'get')

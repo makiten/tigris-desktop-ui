@@ -15,7 +15,7 @@
       <div class="flex justify-center quiz">
         <button class="secondary round big" v-if="view === 'quiz'" @click="view = 'lesson'">
           <i class="on-left">book</i>
-          {{ $t('content.courses.module.actions.module') }}
+          {{ $t('content.courses.module.actions.read') }}
         </button>
         <button class="primary round big" v-else @click="view = 'quiz'">
           <i class="on-left">assignment</i>
@@ -77,40 +77,44 @@ export default {
         const enrollments = r.data.enrollments
         const resultInProgress = enrollments.in_progress.filter(e => e.course.id === courseId)[0]
         const resultCompleted = enrollments.completed.filter(e => e.course.id === courseId)[0]
-        return resultInProgress || resultCompleted
+        if (resultInProgress) {
+          return resultInProgress
+        } else if (resultCompleted) {
+          return resultCompleted
+        } else {
+          return null
+        }
       })
     },
     _onCreated () {
       Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
         const courseSlug = this.$route.params.courseName.toLowerCase()
-        this.getCourse(tigris, courseSlug).then(c => {
-          return c
-        }).then(c => {
-          this._findEnrollment(tigris, c.id).then(n => {
+        this.getCourse(tigris, courseSlug).then(course => {
+          this._findEnrollment(tigris, course.id).then(enrollment => {
             const moduleSlug = this.$route.params.moduleName.toLowerCase()
-            this.getModule(tigris, c.id, moduleSlug).then(m => {
-              this.module = m
-              if (!(typeof n === 'undefined' || n === null)) {
-                const progress = n.progress
-                progress.modules = {current: {id: m.id, slug: m.slug}}
+            this.getModule(tigris, course.id, moduleSlug).then(module => {
+              this.module = module
+              if (enrollment) {
+                const progress = enrollment.progress
+                progress.modules = {current: {id: module.id, slug: module.slug}}
                 const data = {fields: {progress: progress}}
-                this.updateEnrollment(tigris, n.id, data).then(r => {
-                  if (r.result === 1) {
-                    n.progress = progress
-                    this.enrollment = n
+                this.updateEnrollment(tigris, enrollment.id, data).then(r => {
+                  if (r === 1) {
+                    enrollment.progress = progress
+                    this.enrollment = enrollment
                   }
                 })
               } else {
                 const progress = {
                   modules: {
-                    current: {id: m.id, slug: m.slug},
+                    current: {id: module.id, slug: module.slug},
                     completed: []
                   }
                 }
-                const data = {fields: {course_id: c.id, progress: progress}}
-                this.addEnrollment(tigris, data).then(r => {
-                  tigris.user.retrieve(this.auth.id, r.result).then(enrollment => {
-                    this.enrollment = enrollment
+                const data = {fields: {course_id: course.id, progress: progress}}
+                this.addEnrollment(tigris, data).then(enrollmentId => {
+                  tigris.user.retrieve(this.auth.id, enrollmentId).then(newEnrollment => {
+                    this.enrollment = newEnrollment.data
                   })
                 })
               }
@@ -124,26 +128,23 @@ export default {
     },
     addEnrollment (tigris, data) {
       return tigris.user.create(this.auth.id, data).then(r => {
-        return r.data
+        console.log(r.data)
+        return r.data.result
       })
     },
     getCourse (tigris, slug) {
       return tigris.course.retrieve({ type: 4, query: slug }).then(r => {
         return r.data
-      }).catch(e => {
-        console.error(e)
       })
     },
     getModule (tigris, courseId, slug) {
       return tigris.module.retrieve(courseId, null, { slug: slug }).then(r => {
         return r.data
-      }).catch(e => {
-        // console.error(e)
       })
     },
     updateEnrollment (tigris, enrollmentId, data) {
       return tigris.user.update(this.auth.id, enrollmentId, data).then(r => {
-        return r.data
+        return r.data.result
       })
     }
   },

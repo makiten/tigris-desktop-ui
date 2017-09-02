@@ -26,11 +26,7 @@ export default {
   }),
   methods: {
     setValue (val) {
-      const formattedVal = val.trim()
-      if (formattedVal !== val) {
-        this.$refs.input.value = formattedVal
-      }
-      this.$emit('input', formattedVal)
+      this.$emit('input', val)
     }
   },
   watch: {

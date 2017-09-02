@@ -119,10 +119,10 @@
       </div>
 
       <role-detail ref="groupModal" @add="addRole" @edit="editRole" :action="action" :auth="auth" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
-      <modules-list :auth="auth" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
+      <modules-list @reset-search="resetCourseSearch" :auth="auth" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
       <course-detail @add="addCard" @open="openModal" @delete="removeCard" :action="action" :auth="auth" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
       <invite-user @send-toast="sendToast" ref="inviteUser" :tigris="tigris" />
-      <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" :modal="$refs.userDetail" :tigris="tigris" />
+      <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" ref="userDetail" :tigris="tigris" />
       <exam ref="exam" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
     </div>
   </div>
@@ -247,8 +247,8 @@ export default {
       })
     },
     openModal (name, action, model, obj) {
-      if (!(typeof action === 'undefined' || action === null)) {
-        if (!(typeof obj === 'undefined' || obj === null)) {
+      if (action) {
+        if (obj) {
           this.toEdit[model] = obj
         }
         this.action = action
@@ -265,6 +265,9 @@ export default {
       }
       this.sendToast(type, msg)
     },
+    resetCourseSearch () {
+      this.terms.course = ''
+    },
     resetSearch () {
       this._getUsers().then(users => {
         this.users = users
@@ -276,13 +279,15 @@ export default {
     },
     selectedCourse (item) {
       const course = this.courses.filter(c => { return c.slug === item.value })[0]
-      this.openModal('modulesList', null, 'course', course)
+      this.terms.course = ''
+      this.openModal('modulesList', 'add', 'course', course)
     },
     searchUser (terms, done) {
       done(Utils.filter(terms, {field: 'label', list: this._parseUsers(this.users)}))
     },
     selectedUser (item) {
       const user = this.users.filter(u => { return u.email === item.value })[0]
+      this.terms.user = ''
       this.openModal('userDetail', 'edit', 'user', user)
     },
     sendToast (type, msg) {
