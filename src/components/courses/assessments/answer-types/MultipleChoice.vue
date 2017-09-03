@@ -35,6 +35,10 @@ export default {
   },
   watch: {
     choice () {
+    },
+    value (val) {
+      this.checked = val
+      this.setValue(val)
     }
   },
   created () {

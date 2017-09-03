@@ -128,8 +128,7 @@ export default {
     },
     addEnrollment (tigris, data) {
       return tigris.user.create(this.auth.id, data).then(r => {
-        console.log(r.data)
-        return r.data.result
+        return r.data[0].id
       })
     },
     getCourse (tigris, slug) {

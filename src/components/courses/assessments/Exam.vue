@@ -32,6 +32,14 @@
             </div>
           </div>
           <div class="row gutter" v-else-if="questionIdx === exam.data.questions.length - 1">
+            <div class="auto text-left" v-if="questionIdx > 0">
+              <button class="big round tertiary" v-shortkey.once="['ctrl', 'alt', 'p']" @shortkey="prevQuestion()" @click="prevQuestion">
+                <i>navigate_before</i>
+                {{ $t('content.courses.exam.buttons.prev') }}
+              </button>
+              <br>
+              <small>{{ $t('content.courses.exam.shortcut') }} <kbd>ctrl + alt + p</kbd></small>
+            </div>
             <div class="auto text-right">
               <button class="big round primary" v-shortkey="['ctrl', 'alt', 'f']" @shortkey="submitExam()" @click="submitExam">
                 <i>send</i>
@@ -56,7 +64,7 @@
               <small>{{ $t('content.courses.exam.shortcut') }} <kbd>ctrl + alt + r</kbd></small>
             </div>
             <div class="auto text-right">
-              <button class="big round primary" v-shortkey="['ctrl', 'alt', 'h']" @shortkey="returnHome()" @click="returnHome">
+              <button class="big round primary" v-shortkey="['ctrl', 'alt', 'h']" @shortkey="returnHome" @click="returnHome">
                 <i>home</i>
                 {{ $t('content.courses.detail.buttons.return') }}
               </button>
@@ -122,7 +130,7 @@ export default {
       })
     },
     _onCreated (authId, token) {
-      if (typeof this.course.id !== 'undefined') {
+      if (this.course.id) {
         Tigris.initializeWithToken(authId, token).then(tigris => {
           this.getExam(tigris, this.course)
         })
@@ -149,6 +157,12 @@ export default {
 
       return submissionVals.length !== examQuestionVals.length || submissionVals.indexOf('') >= 0
     },
+    getAnswer (tigris, qId) {
+      var submission = this.examLog.submission
+      const key = qId.toString()
+
+      this.choice = submission[key]
+    },
     getExam (tigris, course) {
       this.tigris = tigris
       tigris.user.retrieve(this.auth.id).then(r => {
@@ -159,7 +173,6 @@ export default {
         tigris.test.retrieve(null, course.id).then(t => {
           this.exam = t.data
           this._findLog(tigris, t.data.id, this.auth.id, enrollment.id).then(log => {
-            console.log(log)
             if (!log || log === '' || !log.date_completed) {
               const data = {'enrollment-id': enrollment.id}
               this._createLog(tigris, t.data.id, data).then(r => {
@@ -209,15 +222,17 @@ export default {
       this.addAnswer(this.tigris, this.questionIdx)
     },
     prevQuestion () {
+      this.choice = ''
       this.questionIdx--
+      this.getAnswer(this.tigris, this.questionIdx)
     },
     repeatExam () {
-      this.showResults = false
-      this.questionIdx = 0
-      this._onCreated(this.token)
+      // this.showResults = false
+      // this.questionIdx = 0
+      window.location.reload(false)
     },
     returnHome () {
-      this.$router.push('/')
+      this.$router.push({name: 'index'})
     }
   },
   watch: {

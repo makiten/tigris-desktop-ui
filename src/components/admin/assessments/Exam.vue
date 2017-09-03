@@ -163,7 +163,10 @@ export default {
           if (publish) {
             this.close()
           } else {
-            this._onCreated()
+            // if (this.questions.length > 0) {
+            //  this.questions.length = 0
+            // }
+            // this._onCreated()
             this.action = 'edit'
           }
         } else {
