@@ -4,7 +4,52 @@
       <div class="logo flex items-center justify-center">
         <img class="desktop-only" src="~assets/jogral-logo-web-white.svg">
       </div>
-      <div class="login-card card bg-white round-borders items-center justify-center" @keyup.enter="login" v-if="org.useSso">
+      <div class="login-card card bg-white round-borders items-center justify-center" @keyup.enter="login" v-if="forgot.view">
+        <div class="card-title">
+          {{ $t('forgot_password.heading') }}
+        </div>
+        <div class="card-content">
+          <div class="row">
+            <div class="auto">
+              <transition name="fade" mode="out-in">
+                <p class="text-center" key="submitted" v-if="forgot.submitted">{{ $t('forgot_password.result') }}</p>
+                <p class="text-center" key="instruction" v-else>{{ $t('forgot_password.instructions') }}</p>
+              </transition>
+            </div>
+          </div>
+          <div class="row large-gutter">
+            <div class="auto form-group" :class="{'form-group--error': $v.forgot.email.$error}">
+              <div class="stacked-label">
+                <input
+                   type="email"
+                   name="email"
+                   id="email"
+                   class="form__input full-width"
+                   v-model="forgot.email"
+                   @input="$v.forgot.email.$touch()"
+                   :class="{'has-error': $v.forgot.email.$error}">
+                <label class="form__label" for="email">{{ $t('labels.email') }}</label>
+                <small class="form-group__message has-error" v-if="!$v.forgot.email.email">{{ $t('forgot_password.error') }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="row gutter">
+            <div class="auto text-center">
+              <transition name="fade">
+                <div v-if="!forgot.submitted">
+                  <button class="secondary round big" @click="requestReset" v-if="!$v.forgot.email.$error && $v.forgot.email.$dirty">
+                    {{ $t('buttons.reset_password') }}
+                  </button>
+                  <button class="secondary round big" disabled v-else>
+                    {{ $t('buttons.reset_password') }}
+                  </button>
+                </div>
+              </transition>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="login-card card bg-white round-borders items-center justify-center" @keyup.enter="login" v-else-if="org.useSso">
         <div class="card-title">
           {{ $t('login.labels.sso.heading') }}
         </div>
@@ -33,10 +78,11 @@
           {{ $t('login.labels.heading') }}
         </div>
         <div class="card-content">
-          <div class="row large-gutter" v-if="error">
-            <div class="auto">
+          <transition name="fade">
+            <div class="row gutter bg-negative error" v-if="error">
+              <p class="text-center text-white">{{ $t('login.errors.error') }}</p>
             </div>
-          </div>
+          </transition>
           <div class="row large-gutter">
             <div class="auto form-group" :class="{'form-group--error': $v.creds.username.$error}">
               <div class="stacked-label">
@@ -70,9 +116,16 @@
               </div>
             </div>
           </div>
+          <div class="row gutter">
+            <div class="auto">
+              <button class="primary clear big" @click="forgot.view = true">
+                {{ $t('login.labels.forgot') }}
+              </button>
+            </div>
+          </div>
           <div class="row">
             <div class="auto text-center">
-              <button class="secondary round big" @click="login" v-if="!$v.creds.$error">
+              <button class="secondary round big" @click="login" v-if="!$v.creds.$error && $v.creds.$dirty">
                 <i class="on-left">school</i>
                 {{ $t('login.labels.login') }}
               </button>
@@ -90,7 +143,7 @@
 </template>
 
 <script>
-import { required, minLength } from 'vuelidate/lib/validators'
+import { email, required, minLength } from 'vuelidate/lib/validators'
 import { mapActions, mapGetters } from 'vuex'
 import { Loading } from 'quasar'
 import { Tigris } from '../api'
@@ -110,6 +163,11 @@ export default {
       creds: {
         username: '',
         password: ''
+      },
+      forgot: {
+        email: '',
+        submitted: false,
+        view: false
       }
     }
   },
@@ -121,6 +179,11 @@ export default {
       password: {
         required,
         minLength: minLength(8)
+      }
+    },
+    forgot: {
+      email: {
+        email
       }
     }
   },
@@ -179,6 +242,23 @@ export default {
       this.$store.commit({ type: 'auth/destroy' })
       // Display message
     },
+    requestReset () {
+      const url = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '')
+      const data = {
+        email: this.forgot.email,
+        message: {
+          subject: this.$t('forgot_password.email_message.subject'),
+          body: this.$t('forgot_password.email_message.body', {url: url})
+        }
+      }
+      Tigris.resetPassword(data.email, data.message).then(r => {
+        if (r.data) {
+          this.forgot.submitted = true
+        }
+      }).catch(e => {
+        if (process.env.NODE_ENV !== 'production') { console.error(e) }
+      })
+    },
     switchSso (val) {
       const org = this.org
       org.useSso = val
@@ -206,4 +286,14 @@ body
 p.login-footer
   color white
   font-weight bold
+.bg-negative.error
+  padding 2vh 4vw
+.fade-enter-active
+.fade-leave-active
+  transition all 0.3s
+
+.fade-enter
+.fade-leave-to /* .fade-leave-active below version 2.1.8 */
+  opacity 0
+  transform translateY(30px)
 </style>

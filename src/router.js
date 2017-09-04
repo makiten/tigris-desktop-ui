@@ -50,6 +50,7 @@ export default new VueRouter({
       ]
     },
     { path: '/verify/:token', name: 'verify', component: load('Verify') },
+    { path: '/reset-password/:token', name: 'reset-password', component: load('ResetPassword') },
     { path: '/login', name: 'login', component: load('Login') }, // Login
     { path: '/logout', name: 'logout', component: load('Login') }, // Logout
     { path: '/forbidden', component: load('Error403') }, // Forbidden

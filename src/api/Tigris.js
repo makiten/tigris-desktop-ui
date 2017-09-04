@@ -58,6 +58,13 @@ export default class Tigris {
     })
   }
 
+  static resetPassword (email, message) {
+    const $http = axios.create({
+      baseURL: process.env.apiHost + '/api'
+    })
+    return $http.post('/utils/reset-password', {email: email, message: message})
+  }
+
   static finalize (id, email, password) {
     const $http = axios.create({
       baseURL: process.env.apiHost + '/api'

@@ -51,9 +51,22 @@ export default {
     'delete': 'Delete{item}',
     'edit': 'Edit{item}',
     'publish': 'Publish',
+    'reset_password': 'Reset Password',
     'save': 'Save'
   },
+  'forgot_password': {
+    'error': 'Email address is not valid.',
+    'heading': 'Enter your Email Address',
+    'instructions': 'Please put in the email address associated with your account.',
+    'result': 'Okay! We\'ll send reset instructions to that email!',
+    'email_message': {
+      'subject': 'Reset Your Password',
+      'body': '<p>Someone has requested a password reset to your account. If you initiated this request, you can do so at <a href="{url}/reset-password/[token]">{url}/reset-password/[token]</a>. This link will expire after 8 hours.</p>' +
+              '<p>If you did <em>not</em> initiate this request, change your password immediately.</p>'
+    }
+  },
   'labels': {
+    'email': 'Email Address',
     'questions': 'Number of Questions:',
     'quiz': 'Quiz ::: Quizzes',
     'module': 'Module ::: Modules',
@@ -579,6 +592,7 @@ export default {
     'labels': {
       'login': 'Login',
       'heading': 'Login to Tigris Learning',
+      'forgot': 'Forgot your password?',
       'username': 'Username',
       'password': 'Password',
       'sso': {
@@ -593,6 +607,10 @@ export default {
     'labels': {
       'heading': 'You\'ve logged out from Tigris Learning'
     }
+  },
+  'reset_password': {
+    'heading': 'Reset Your Password',
+    'instructions': 'Please input your new password.'
   },
   'verify': {
     'heading': 'Email Address confirmed! Now, set your password.',

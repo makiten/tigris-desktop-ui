@@ -264,10 +264,7 @@ export default {
     },
     sendToast (type, statement) {
       Toast.create[type]({
-        html: statement,
-        icon: 'check',
-        bgColor: '#1e703f',
-        color: '#fff'
+        html: statement
       })
     }
   },
