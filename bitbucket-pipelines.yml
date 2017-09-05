@@ -1,0 +1,22 @@
+# This is a sample build configuration for Clojure.
+# Check our guides at https://confluence.atlassian.com/x/5Q4SMw for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+# image: node:alpine
+
+pipelines:
+  default:
+    - step:
+        script: # Modify the commands below to build your repository.
+          - echo Building...
+  custom:
+    build-to-docker:
+      - step:
+          script:
+            - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD https://docker.jogral.io
+            - docker build -t docker.jogral.io/tigris-webapp:latest
+            - docker build -t docker.jogral.io/tigris-webapp:1.1
+            - docker push docker.jogral.io/tigris-webapp
+options:
+  docker: true
