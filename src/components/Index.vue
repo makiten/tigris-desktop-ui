@@ -197,7 +197,7 @@ export default {
         this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
         this.$store.commit({ type: 'token/initialize', token: tigris._token })
         this.tigris = tigris
-        if (typeof this.auth.id !== 'undefined') {
+        if (this.auth.id) {
           this.getUserCourses().then(courses => {
             this.courses = courses
             this.getRecommendedCourses().then(r => {
@@ -231,7 +231,7 @@ export default {
       if (Loading.isActive()) {
         Loading.hide()
       }
-      this.$router.replace({ path: '/logout' })
+      this.$router.replace({ path: '/login' })
     },
     getRecommendedCourses () {
       return this.tigris.course.retrieve({ type: 2 }).then(r => {
@@ -274,7 +274,7 @@ export default {
     }
   },
   created () {
-    if (this.token !== null) {
+    if (this.token && this.auth) {
       this._onCreated(this.auth.id, this.token)
     } else {
       this.logout()

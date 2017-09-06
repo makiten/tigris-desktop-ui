@@ -79,10 +79,13 @@
         </div>
         <div class="card-content">
           <transition name="fade">
-            <div class="row gutter bg-negative error" v-if="error">
-              <p class="text-center text-white">{{ $t('login.errors.error') }}</p>
+            <div class="row">
+              <div class="auto bg-negative error" v-if="error">
+                <p class="text-center text-white">{{ $t('login.errors.error') }}</p>
+              </div>
             </div>
           </transition>
+          <br>
           <div class="row large-gutter">
             <div class="auto form-group" :class="{'form-group--error': $v.creds.username.$error}">
               <div class="stacked-label">

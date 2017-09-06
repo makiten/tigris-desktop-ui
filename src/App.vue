@@ -1,7 +1,7 @@
 <template>
   <!-- Don't drop "q-app" class -->
   <div id="q-app">
-    <router-view :currentYear="currentYear" :apiHost="apiHost"></router-view>
+    <router-view :currentYear="currentYear"></router-view>
   </div>
 </template>
 
@@ -12,8 +12,7 @@
 export default {
   data () {
     return {
-      currentYear: new Date().getFullYear(),
-      apiHost: process.env.apiHost
+      currentYear: new Date().getFullYear()
     }
   },
   watch: {

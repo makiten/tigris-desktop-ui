@@ -112,7 +112,6 @@ export default {
     addUser () {
       const data = {fields: {email: this.form.email}, role: this.form.group}
       this.tigris.user.create(null, data).then(r => {
-        console.log(r.data)
         if (r.data.result.id) {
           const userId = r.data.result.id
           this.tigris.util.invite({id: userId, email: this.form.email}).then(t => {
@@ -125,11 +124,11 @@ export default {
             }
             this.tigris.util.email(data).then(r => {
               if (r.data.result === 'OK') {
-                this.form = this._.cloneDeep(this.blankForm)
                 this.$v.form.$reset()
                 this.$emit('send-toast',
                            'positive',
                            this.$t('content.admin.user.new.toasts.positive', {e: this.form.email}))
+                this.form = this._.cloneDeep(this.blankForm)
                 this.close()
               }
             })
