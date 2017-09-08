@@ -12,7 +12,7 @@
           </template>
         </p>
       </div>
-      <div class="flex justify-center quiz">
+      <div class="flex justify-center quiz" v-if="quizExists">
         <button class="secondary round big" v-if="view === 'quiz'" @click="view = 'lesson'">
           <i class="on-left">book</i>
           {{ $t('content.courses.module.actions.read') }}
@@ -22,14 +22,24 @@
           {{ $t('content.courses.module.actions.quiz') }}
         </button>
       </div>
+      <div class="flex justify-center quiz" v-else>
+        <button class="primary round big" @click="continueCourse">
+          {{ $t('content.courses.detail.buttons.continue') }}
+        </button>
+      </div>
       <hr>
       <transition name="module-quiz-fade" mode="out-in">
         <component :is="view" :auth="auth" :course="course" :enrollment="enrollment" :module="module" :token="token"></component>
       </transition>
-      <div class="flex justify-center">
+      <div class="flex justify-center" v-if="quizExists">
         <button class="primary round big" @click="view = 'quiz'" v-if="view === 'lesson'">
           <i class="on-left">assignment</i>
           {{ $t('content.courses.module.actions.quiz') }}
+        </button>
+      </div>
+      <div class="flex justify-center quiz" v-else>
+        <button class="primary round big" @click="continueCourse">
+          {{ $t('content.courses.detail.buttons.continue') }}
         </button>
       </div>
     </div>
@@ -48,7 +58,9 @@ export default {
     view: 'lesson',
     module: { title: '' },
     enrollment: {},
-    errors: []
+    errors: [],
+    quizExists: false,
+    tigris: null
   }),
   computed: {
     ...mapGetters({
@@ -88,38 +100,44 @@ export default {
     },
     _onCreated () {
       Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
+        this.tigris = tigris
         const courseSlug = this.$route.params.courseName.toLowerCase()
         this.getCourse(tigris, courseSlug).then(course => {
           this._findEnrollment(tigris, course.id).then(enrollment => {
-            const moduleSlug = this.$route.params.moduleName.toLowerCase()
-            this.getModule(tigris, course.id, moduleSlug).then(module => {
-              this.module = module
-              if (enrollment) {
-                const progress = enrollment.progress
-                progress.modules = {current: {id: module.id, slug: module.slug}}
-                const data = {fields: {progress: progress}}
-                this.updateEnrollment(tigris, enrollment.id, data).then(r => {
-                  if (r === 1) {
-                    enrollment.progress = progress
-                    this.enrollment = enrollment
-                  }
+            if (this.$route.fullPath.indexOf('done') < 0) {
+              const moduleSlug = this.$route.params.moduleName.toLowerCase()
+              this.getModule(tigris, course.id, moduleSlug).then(module => {
+                this.module = module
+                this.getQuiz(module.id).then(r => {
+                  this.quizExists = !!r.data
                 })
-              } else {
-                const progress = {
-                  modules: {
-                    current: {id: module.id, slug: module.slug},
-                    completed: []
-                  }
-                }
-                const data = {fields: {course_id: course.id, progress: progress}}
-                this.addEnrollment(tigris, data).then(enrollmentId => {
-                  tigris.user.retrieve(this.auth.id, enrollmentId).then(newEnrollment => {
-                    this.enrollment = newEnrollment.data
+                if (enrollment) {
+                  const progress = enrollment.progress
+                  progress.modules = {current: {id: module.id, slug: module.slug}}
+                  const data = {fields: {progress: progress}}
+                  this.updateEnrollment(tigris, enrollment.id, data).then(r => {
+                    if (r === 1) {
+                      enrollment.progress = progress
+                      this.enrollment = enrollment
+                    }
                   })
-                })
-              }
-            })
-            this.view = 'lesson'
+                } else {
+                  const progress = {
+                    modules: {
+                      current: {id: module.id, slug: module.slug},
+                      completed: []
+                    }
+                  }
+                  const data = {fields: {course_id: course.id, progress: progress}}
+                  this.addEnrollment(tigris, data).then(enrollmentId => {
+                    tigris.user.retrieve(this.auth.id, enrollmentId).then(newEnrollment => {
+                      this.enrollment = newEnrollment.data
+                    })
+                  })
+                }
+              })
+              this.view = 'lesson'
+            }
           })
         })
       }).catch(e => {
@@ -131,15 +149,70 @@ export default {
         return r.data[0].id
       })
     },
+    continueCourse () {
+      const nextIndex = this.modules.findIndex(m => m.id === this.module.id) + 1
+      let completed
+      if (!this.enrollment.progress.modules.completed) {
+        completed = []
+      } else {
+        completed = this.enrollment.progress.modules.completed
+      }
+      completed.push(this.enrollment.progress.modules.current.id)
+      completed = completed.filter((item, i, arr) => { return arr.indexOf(item) === i })
+      this.enrollment.progress.modules.completed = completed.sort()
+      this.enrollment.progress.modules.current = {}
+      let enrollmentToSend = this.enrollment
+      enrollmentToSend.course_id = this.course.id
+      delete enrollmentToSend.course
+      let data
+
+      if (nextIndex >= this.modules.length) {
+        this.getExam().then(exam => {
+          let routeName
+          const courseName = this.$route.params.courseName.toLowerCase()
+          if (exam) {
+            routeName = 'exam'
+          } else {
+            routeName = 'done'
+            const now = new Date()
+            enrollmentToSend.date_completed = now.getTime()
+          }
+          data = {fields: enrollmentToSend}
+          this.updateEnrollment(this.tigris, enrollmentToSend.id, data).then(result => {
+            if (result) {
+              this.$router.push({name: routeName, params: {courseName: courseName}})
+            }
+          })
+        })
+      } else {
+        const nextUrl = this.modules[nextIndex].slug
+        data = {fields: enrollmentToSend}
+        this.updateEnrollment(this.tigris, enrollmentToSend.id, data).then(result => {
+          if (result) {
+            this.$router.push({name: 'module', params: {moduleName: nextUrl}})
+          }
+        })
+      }
+    },
     getCourse (tigris, slug) {
       return tigris.course.retrieve({ type: 4, query: slug }).then(r => {
         return r.data
+      })
+    },
+    getExam () {
+      return this.tigris.test.retrieve(null, this.course.id).then(t => {
+        return t.data
       })
     },
     getModule (tigris, courseId, slug) {
       return tigris.module.retrieve(courseId, null, { slug: slug }).then(r => {
         return r.data
       })
+    },
+    getQuiz (moduleId) {
+      return this.tigris.quiz.retrieve(null, moduleId).then(r => {
+        return r.data
+      }).catch(e => {})
     },
     updateEnrollment (tigris, enrollmentId, data) {
       return tigris.user.update(this.auth.id, enrollmentId, data).then(r => {

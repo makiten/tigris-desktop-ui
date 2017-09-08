@@ -26,7 +26,7 @@ export default class ApiToken {
       const token = new ApiToken($http)
       token._user = result.user
       token.value = result.token
-      token.axios.defaults.headers.common['Authorization'] = 'Bearer ' + result.token
+      token.axios.defaults.headers.common['Authorization'] = 'Token ' + result.token
       return token
     }).catch(e => { return e })
   }
@@ -35,13 +35,13 @@ export default class ApiToken {
     const $http = axios.create({
       baseURL: process.env.apiHost + '/api'
     })
-    const headers = { 'Authorization': 'Bearer ' + token.value }
+    const headers = { 'Authorization': 'Token ' + token.value }
     return $http.put('/users/refresh', {id: id}, { headers: headers }).then(r => {
       const result = r.data
       const newToken = new ApiToken($http)
       newToken._user = result.user
       newToken.value = result.token
-      newToken.axios.defaults.headers.common['Authorization'] = 'Bearer ' + result.token
+      newToken.axios.defaults.headers.common['Authorization'] = 'Token ' + result.token
       return newToken
     }).catch(e => { return e })
   }
@@ -53,7 +53,7 @@ export default class ApiToken {
   refresh () {
     this.axios.put('/users/refresh', {}).then(r => {
       const result = r.data
-      this.axios.defaults.headers.common['Authorization'] = result.token
+      this.axios.defaults.headers.common['Authorization'] = 'Token ' + result.token
     })
   }
 }

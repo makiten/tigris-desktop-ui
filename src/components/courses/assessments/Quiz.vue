@@ -102,10 +102,15 @@ export default {
   },
   methods: {
     continueCourse () {
+      let completed
       if (!this.enrollment.progress.modules.completed) {
-        this.enrollment.progress.modules.completed = []
+        completed = []
+      } else {
+        completed = this.enrollment.progress.modules.completed
       }
-      this.enrollment.progress.modules.completed.push(this.enrollment.progress.modules.current.id)
+      completed.push(this.enrollment.progress.modules.current.id)
+      completed = completed.filter((item, i, arr) => { return arr.indexOf(item) === i })
+      this.enrollment.progress.modules.completed = completed.sort()
       this.enrollment.progress.modules.current = {}
       var enrollmentToSend = this.enrollment
       enrollmentToSend.course_id = this.course.id

@@ -23,28 +23,34 @@
 </template>
 
 <script>
+import { Tigris } from '../../api'
+
 export default {
   name: 'done',
+  props: ['auth', 'enrollment', 'token'],
   data: () => ({
     dashboard: '',
-    jogral_url: process.env.jogral_url,
     slug: '',
     content: '',
     errors: []
   }),
-  mounted () {
-    this.slug = this.$route.params.courseName
-    this.dashboard = process.env.jogral_url + '/dashboard/'
-    // const token = this.$cookie.get('_euphrates_token')
-    // const course = this.$cookie.get('_euphrates_course')
-    const url = '' // process.env.euphrates.api_url + '/course/' + course + '/module/done/'
-    var headers = {} // {'Authorization': 'Bearer ' + token}
-    this.axios.get(url, {'headers': headers}).then(
-      response => {
-        this.content = response.data.content
-      }).catch(e => {
-        this.errors.push(e)
+  watch: {
+    enrollment (val) {
+      this._onCreated()
+    }
+  },
+  created () {
+    this._onCreated()
+  },
+  methods: {
+    _onCreated () {
+      Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
+        tigris.user.update(this.auth.id, this.enrollment.id, {}).then(r => {
+        })
       })
+    }
+  },
+  mounted () {
   }
 }
 </script>

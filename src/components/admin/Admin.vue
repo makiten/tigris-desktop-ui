@@ -97,12 +97,12 @@
               <h5>{{ $t('content.admin.accordions.users.roles.label') }}</h5>
             </div>
             <div class="self-center">
-              <button class="big" @click="openModal('groupModal', 'add')">
+              <!--<button class="big" @click="openModal('groupModal', 'add')">
                 <i>add_circle_outline</i>
                 <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
                   {{ $t('content.admin.role.form.button') }}
                 </q-tooltip>
-              </button>
+              </button>-->
             </div>
           </div>
           <div class="row gutter wrap">
@@ -178,6 +178,9 @@ export default {
     ...mapActions([
     ]),
     _onCreated () {
+      if (!this.auth.admin) {
+        this.$router.replace({ path: '/forbidden' })
+      }
       Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
         this.tigris = tigris
       }).then(r => {

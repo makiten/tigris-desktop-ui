@@ -1,17 +1,88 @@
 export default {
   'lang': 'Português (Brasileiro)',
+  'assessments': {
+    'answer': {
+      'heading': 'Qual Tipo de Resposta?',
+      'label': 'Resposta',
+      'placeholder': 'Uma resposta.',
+      'types': {
+        'label': 'Número de Respostas',
+        'fitb': 'Campo em branco',
+        'ma': 'Resposta Múltipla',
+        'mc': 'Escolha Múltipla'
+      }
+    },
+    'message': {
+      'labels': {
+        'correct': 'Mensagem de Diálogo (Resposta Correta)',
+        'incorrect': 'Mensagem de Diálogo (Resposta Incorreta)'
+      },
+      'placeholder': 'Sua resposta é correta!'
+    },
+    'messages': {
+      'correct': {
+        'heading': 'That\'s Right!',
+        'message': ''
+      },
+      'incorrect': {
+        'heading': 'Sorry...',
+        'message': ''
+      }
+    },
+    'question': {
+      'fitb': 'Digite a oração e use <code>[input]</code> no lugar do campo. Por exemplo, "A Luta do [input] occoreu em San Antonio."',
+      'heading': 'Digite Sua Pergunta',
+      'placeholder': 'O que faz ela uma noite horrível?'
+    },
+    'table': {
+      'answer': 'Resposta',
+      'correct': 'Correto?',
+      'message': 'Mensagem de Diálogo'
+    },
+    'types': {
+      'quiz': 'Teste',
+      'test': 'Exame'
+    }
+  },
   'buttons': {
+    'add': 'Adicionar {n}',
     'cancel': 'Cancelar',
+    'draft': 'Salvar como Rascunho',
+    'delete': 'Apagar{item}',
+    'edit': 'Editar{item}',
+    'publish': 'Publicar',
+    'reset_password': 'Reiniciar a Senha',
     'save': 'Salvar'
+  },
+  'forgot_password': {
+    'error': 'O email não é válido.',
+    'heading': 'Entre o Endereço de Email',
+    'instructions': 'Por favor coloque o endereço de email ligado a sua conta.',
+    'result': 'Com certeza! Nós vamos mandar as instruções de reinício da sua conta para esse email!',
+    'email_message': {
+      'subject': 'Reiniciar a sua Senha',
+      'body': '<p>Se pede o reinício da sua conta. Se você fiz esse pedido, favor reinicie sua conta em <a href="{url}/reset-password/[token]">{url}/reset-password/[token]</a>. Este link vai terminar daqui 8 horas.</p>' +
+              '<p>Se você <em>não</em> fiz esse pedido, por favor mude a sua senha rápido.</p>'
+    }
+  },
+  'labels': {
+    'email': 'Endereço de Email',
+    'questions': 'Número de Perguntas:',
+    'quiz': 'Teste ::: Testes',
+    'module': 'Aula ::: Aulas',
+    'roles': 'Grupo ::: Grupos',
+    'test': 'Exame ::: Exames'
   },
   'result': {
     'success': {
       'icon': 'check_circle',
-      'class': 'text-green-10'
+      'class': 'text-green-10',
+      'message': 'Completou com sucesso!'
     },
     'failure': {
       'icon': 'highlight_off',
-      'class': 'text-red-9'
+      'class': 'text-red-9',
+      'message': 'Ops! Um erro occoreu!'
     }
   },
   'coming_soon': 'Em breve',
@@ -521,6 +592,7 @@ export default {
     'labels': {
       'login': 'Entrar',
       'heading': 'Entrar em Tigris Learning',
+      'forgot': 'Esqueceu a sua conta??',
       'username': 'Nome de usuário',
       'password': 'Senha',
       'sso': {
@@ -535,6 +607,10 @@ export default {
     'labels': {
       'heading': 'Você saiu de Tigris Learning'
     }
+  },
+  'reset_password': {
+    'heading': 'Reiniciar a Sua Conta',
+    'instructions': 'Favor preenche a sua senha nova.'
   },
   'verify': {
     'heading': 'O endereço de email é confirmado! Por favor criar uma senha agora.',

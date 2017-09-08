@@ -1,5 +1,5 @@
 export default {
-  'lang': 'English (US)',
+  'lang': 'English (UK)',
   'assessments': {
     'answer': {
       'heading': 'What Kind of Answer?',
@@ -118,7 +118,7 @@ export default {
     'admin': {
       'tabs': {
         'courses': 'Courses',
-        'customization': 'Customization',
+        'customisation': 'Customisation',
         'settings': 'Settings',
         'users': 'Users & Groups'
       },
@@ -142,20 +142,20 @@ export default {
             'content': 'Update or delete courses already created.'
           }
         },
-        'customization': {
-          'colors': {
-            'label': 'Colors',
-            'content': 'Change the color scheme for Tigris.'
+        'customisation': {
+          'colours': {
+            'label': 'Colours',
+            'content': 'Change the colour scheme for Tigris.'
           },
           'logo': {
             'label': 'Logo',
-            'content': 'Change the logo you want associated with your organization.'
+            'content': 'Change the logo you want associated with your organisation.'
           }
         },
         'settings': {
           'account': {
             'label': 'Account',
-            'content': 'Details on the organization.'
+            'content': 'Details on the organisation.'
           },
           'api': {
             'label': 'API',
@@ -163,7 +163,7 @@ export default {
           },
           'security': {
             'label': 'Security',
-            'content': 'Change security settings across the organization.'
+            'content': 'Change security settings across the organisation.'
           }
         },
         'users': {

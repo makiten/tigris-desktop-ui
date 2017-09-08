@@ -5,6 +5,7 @@
  */
 /*
 const localesToLoad = [
+  'en_gb',
   'en_us',
   'jp',
   'pt_br'
@@ -16,13 +17,17 @@ const localesToLoad = [
  */
 /*
 function load (locale) {
-  return () => System.import(`./../i18n/locale-${locale}.js`)
+  return () => { System.import(`./../i18n/locale-${locale}.js`) }
 }
 */
+import localeEn from './../i18n/locale-en_001.js'
+import localeEnGb from './../i18n/locale-en_gb.js'
 import localeEnUs from './../i18n/locale-en_us.js'
 import localeJp from './../i18n/locale-jp.js'
 import localePtBr from './../i18n/locale-pt_br.js'
 const localeData = {
+  'en': localeEn,
+  'en_gb': localeEnGb,
   'en_us': localeEnUs,
   'jp': localeJp,
   'pt_br': localePtBr

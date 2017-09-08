@@ -125,6 +125,13 @@
                 {{ $t('login.labels.forgot') }}
               </button>
             </div>
+            <div class="auto text-right">
+              <q-select
+                 type="list"
+                 v-model="locale"
+                 @input="$i18n.set($event)"
+                 :options="localeOpts"></q-select>
+            </div>
           </div>
           <div class="row">
             <div class="auto text-center">
@@ -158,6 +165,9 @@ export default {
     return {
       error: false,
       useLogo: true,
+      // locale: '',
+      locale: this.$i18n.locale(),
+      localeOpts: this._i18nOptions(),
       org: {
         name: '',
         loginUrl: '',
@@ -192,11 +202,18 @@ export default {
   },
   computed: mapGetters({
     auth: 'auth/auth',
+    // i18n: 'auth/auth',
     token: 'token/token'
   }),
   methods: {
     ...mapActions([
     ]),
+    _i18nOptions () {
+      const keys = Object.keys(this.$store.state.i18n.translations)
+      let opts = []
+      keys.forEach(k => { opts.push({ value: k, label: this.$store.state.i18n.translations[k].lang }) })
+      return opts
+    },
     _checkOrRedirectToDashboard () {
       if (this.$route.name === 'logout') {
         this.logout()
@@ -207,7 +224,7 @@ export default {
     },
     _doApiAuth (creds) {
       Tigris.initialize(creds).then(tigris => {
-        if (tigris._token === null || tigris._token._user === null) {
+        if (!tigris._token || !tigris._token._user) {
           throw tigris
         } else {
           this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
@@ -274,6 +291,7 @@ export default {
     if (Loading.isActive()) {
       Loading.hide()
     }
+    this._i18nOptions()
     this._checkOrRedirectToDashboard()
   },
   components: {

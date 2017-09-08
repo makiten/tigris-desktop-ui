@@ -42,7 +42,7 @@
             <i>account_circle</i>
             <q-popover ref="popover">
               <div class="list item-delimiter highlight">
-                <div class="item item-link" @click="$router.push({name: 'admin'})">
+                <div class="item item-link" @click="$router.push({name: 'admin'})" v-if="auth.admin">
                   <div class="item-content">
                     <a>{{ $t('header.nav.admin') }}</a>
                   </div>
@@ -89,6 +89,21 @@
 
     <dashboard :auth="auth" :enrollments="enrollments" :recommended="courses.recommended" :token="token" v-if="$route.fullPath.toLowerCase() == '/'" />
     <router-view :auth="auth" :label="$t('header.nav.tooltips.toc')" :token="token" class="layout-view" v-else></router-view>
+
+    <div class="toolbar" slot="footer">
+      <div class="row fit">
+        <div>
+          <strong>&copy;{{currentYear}} Jogral, L.L.C.</strong>
+        </div>
+        <div class="auto text-right vertical-top">
+          <q-select
+             type="list"
+             v-model="locale"
+             @input="$i18n.set($event)"
+             :options="localeOpts"></q-select>
+        </div>
+      </div>
+    </div>
 
     <q-modal ref="aboutModal" :content-css="{minWidth: '40vw', minHeight: '30vh'}">
       <div class="layout-padding">
@@ -168,6 +183,8 @@ export default {
       app: { label: 'Jogral' },
       courses: {},
       enrollments: {},
+      locale: this.$i18n.locale(),
+      localeOpts: this._i18nOptions(),
       notifications: [],
       nextUrl: '',
       tigris: {}
@@ -192,6 +209,12 @@ export default {
   methods: {
     ...mapActions([
     ]),
+    _i18nOptions () {
+      const keys = Object.keys(this.$store.state.i18n.translations)
+      let opts = []
+      keys.forEach(k => { opts.push({ value: k, label: this.$store.state.i18n.translations[k].lang }) })
+      return opts
+    },
     _onCreated (id, token) {
       Tigris.initializeWithToken(id, token).then(tigris => {
         this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
