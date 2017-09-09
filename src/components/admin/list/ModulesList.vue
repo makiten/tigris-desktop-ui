@@ -117,14 +117,16 @@ export default {
     },
     _onCreated () {
       const tigris = this.tigris
-      this.getModules(tigris).then(list => {
-        this.modules = list
-        this.modules.forEach(m => {
-          this.getQuiz(tigris, m).then(quiz => {
-            m.quiz = quiz
+      if (this.course.id) {
+        this.getModules(tigris).then(list => {
+          this.modules = list
+          this.modules.forEach(m => {
+            this.getQuiz(tigris, m).then(quiz => {
+              m.quiz = quiz
+            })
           })
         })
-      })
+      }
     },
     add () {
       this.currentModule = {}

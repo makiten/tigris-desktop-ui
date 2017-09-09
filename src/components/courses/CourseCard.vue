@@ -14,7 +14,7 @@
             {{ $t('content.courses.card.buttons.go_to_class') }}
           </button>
         </div>
-        <div class="auto text-center">
+        <div class="auto text-center" v-if="hasExam">
           <button @click="goToExam(course.slug)" class="full-width secondary big outline">
             {{ $t('content.courses.card.buttons.test_out') }}
           </button>
@@ -35,7 +35,7 @@
               {{ $t('content.courses.card.buttons.repeat_go_to_class') }}
             </button>
           </div>
-          <div class="auto text-center">
+          <div class="auto text-center" v-if="hasExam">
             <button @click="$router.push('/courses/' + course.slug + '/exam')" class="full-width secondary big outline">
               {{ $t('content.courses.card.buttons.repeat_test_out') }}
             </button>
@@ -48,11 +48,11 @@
         {{ course.title }}
       </div>
       <div class="card-content">
-        {{ course.teaser | truncate }}
+        {{ course.description | truncate }}
       </div>
       <div class="action row no-gutter">
         <div class="auto text-center">
-          <button @click="$router.push('/courses/' + course.slug + '/' + currentUrl)" class="full-width secondary big" v-if="typeof currentUrl !== 'undefined'">
+          <button @click="$router.push('/courses/' + course.slug + '/' + currentUrl)" class="full-width secondary big" v-if="currentUrl">
             {{ $t('content.courses.card.buttons.go_to_class') }}
           </button>
           <button @click="$router.push('/courses/' + course.slug)" class="full-width secondary big" v-else>
@@ -67,9 +67,11 @@
 <script>
 export default {
   name: 'course-card',
-  props: ['course', 'currentUrl', 'status'],
+  props: ['course', 'currentUrl', 'status', 'tigris'],
   data () {
-    return {}
+    return {
+      hasExam: false
+    }
   },
   filters: {
     truncate (value) {
@@ -81,23 +83,43 @@ export default {
     }
   },
   watch: {
+    course (val) {
+      this._onCreated()
+    },
+    tigris (val) {
+      this._onCreated()
+    }
   },
   methods: {
+    getExam (courseId) {
+      return this.tigris.test.retrieve(null, courseId).then(t => {
+        return t.data
+      })
+    },
     goToCourse (slug) {
       this.$router.push({name: 'course', params: {courseName: slug}})
     },
     goToExam (slug) {
       this.$router.push({name: 'exam', params: {courseName: slug}})
+    },
+    _onCreated () {
+      this.getExam(this.course.id).then(c => {
+        console.log(!!c)
+        this.hasExam = !!c
+      })
     }
   },
   created () {
+    if (this.course && this.tigris) {
+      this._onCreated()
+    }
   }
 }
 </script>
 
 <style lang="stylus">
 .card
-  height 37.75vh
+  height 36.9vh
   .card-content
     height 6vh
 </style>

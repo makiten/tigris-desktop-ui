@@ -27,7 +27,7 @@
               <h4>{{ $t('content.admin.tabs.courses') }}</h4>
             </div>
             <div class="self-center">
-              <button class="big" @click="openModal('courseDetail', 'add')">
+              <button class="big" @click="openModal('courseDetail', 'add', 'course')">
                 <i>add_circle_outline</i>
                 <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
                   {{ $t('content.admin.accordions.courses.add.button') }}
@@ -49,7 +49,7 @@
 
           <div class="row lg-gutter">
             <div class="full-width">
-              <q-autocomplete v-model="terms.course" :delay="0" @search="searchCourse" @selected="selectedCourse">
+              <q-autocomplete v-model="terms.course" :Delay="0" @search="searchCourse" @selected="selectedCourse">
                 <q-search v-model="terms.course" />
               </q-autocomplete>
             </div>
@@ -77,7 +77,7 @@
               <h4>{{ $t('content.admin.accordions.users.users.label') }}</h4>
             </div>
             <div class="self-center">
-              <button class="big" @click="openModal('inviteUser', 'add')">
+              <button class="big" @click="openModal('inviteUser', 'add', 'user')">
                 <i>add_circle_outline</i>
                 <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
                   {{ $t('content.admin.user.new.form.button') }}
@@ -173,6 +173,7 @@ export default {
     }
   },
   watch: {
+    '$route': '_onCreated'
   },
   methods: {
     ...mapActions([
@@ -252,11 +253,14 @@ export default {
     openModal (name, action, model, obj) {
       if (action) {
         if (obj) {
-          this.toEdit[model] = obj
+          this.toEdit[model.toLowerCase()] = obj
         }
         this.action = action
       } else {
         this.action = 'add'
+      }
+      if (this.action === 'add' && name === 'courseDetail') {
+        this.toEdit[model.toLowerCase()] = {}
       }
       this.$refs[name].open()
     },

@@ -207,14 +207,14 @@ export default {
       if (touchMap.has($v)) {
         clearTimeout(touchMap.get($v))
       }
-      touchMap.set($v, setTimeout($v.$touch, 500))
+      touchMap.set($v, setTimeout($v.$touch, 100))
     },
     doesSlugNotExist (tigris, slug) {
       return tigris.module.retrieve(this.course.id, null, {slug: slug}).then(r => {
         if (['done', 'exam'].indexOf(slug.toLowerCase()) >= 0) {
           return false
         } else {
-          return r.data.length === 0
+          return !r.data
         }
       })
     },

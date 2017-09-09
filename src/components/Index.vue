@@ -205,6 +205,9 @@ export default {
     }
   },
   watch: {
+    '$route': function (val) {
+      this._onCreated(this.auth.id, this.token)
+    }
   },
   methods: {
     ...mapActions([

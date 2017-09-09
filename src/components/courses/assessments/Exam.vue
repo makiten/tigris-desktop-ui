@@ -56,7 +56,7 @@
           </div>
           <div class="row gutter">
             <div class="auto text-left">
-              <button class="big round secondary" v-shortkey="['ctrl', 'alt', 'r']" @shortkey="repeatExam()" @click="repeatExam">
+              <button class="big round secondary" v-shortkey.once="['ctrl', 'alt', 'r']" @shortkey="repeatExam()" @click="repeatExam">
                 <i>repeat</i>
                 {{ $t('content.courses.exam.buttons.repeat') }}
               </button>
@@ -64,12 +64,12 @@
               <small>{{ $t('content.courses.exam.shortcut') }} <kbd>ctrl + alt + r</kbd></small>
             </div>
             <div class="auto text-right">
-              <button class="big round primary" v-shortkey="['ctrl', 'alt', 'h']" @shortkey="returnHome" @click="returnHome">
+              <button class="big round primary" v-shortkey.once="['ctrl', 'alt', 'n']" @shortkey="returnHome()" @click="returnHome">
                 <i>home</i>
                 {{ $t('content.courses.detail.buttons.return') }}
               </button>
               <br>
-              <small>{{ $t('content.courses.exam.shortcut') }} <kbd>ctrl + alt + h</kbd></small>
+              <small>{{ $t('content.courses.exam.shortcut') }} <kbd>ctrl + alt + n</kbd></small>
             </div>
           </div>
         </template>
@@ -173,10 +173,10 @@ export default {
         tigris.test.retrieve(null, course.id).then(t => {
           this.exam = t.data
           this._findLog(tigris, t.data.id, this.auth.id, enrollment.id).then(log => {
-            if (!log || log === '' || !log.date_completed) {
+            if (!log || log === '') {
               const data = {'enrollment-id': enrollment.id}
               this._createLog(tigris, t.data.id, data).then(r => {
-                if (r.data.result === 1) {
+                if (r.data.result) {
                   this._findLog(tigris, t.data.id, this.auth.id, enrollment.id).then(log => {
                     this.examLog = log
                   })

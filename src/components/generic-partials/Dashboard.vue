@@ -30,8 +30,8 @@
                   <p>{{ $t('content.dashboard.empty') }}</p>
                 </div>
                 <div class="width-1of3" v-for="enrollment in enrollments.in_progress" v-else>
-                  <course-card :course="enrollment.course" :currentUrl="enrollment.progress.modules.current.slug" :status="'in-progress'" v-if="typeof enrollment.progress.modules !== 'undefined'" />
-                  <course-card :course="enrollment.course" :status="'in-progress'" v-else/>
+                  <course-card :course="enrollment.course" :currentUrl="enrollment.progress.modules.current.slug" :status="'in-progress'" :tigris="tigris" v-if="typeof enrollment.progress.modules !== 'undefined'" />
+                  <course-card :course="enrollment.course" :status="'in-progress'" :tigris="tigris" v-else/>
                 </div>
               </div>
             </div>
@@ -42,7 +42,7 @@
                   <p>{{ $t('content.dashboard.empty') }}</p>
                 </div>
                 <div class="width-1of3" v-for="enrollment in enrollments.completed" v-else>
-                  <course-card :course="enrollment.course" :status="'completed'" />
+                  <course-card :course="enrollment.course" :status="'completed'" :tigris="tigris" />
                 </div>
               </div>
             </div>

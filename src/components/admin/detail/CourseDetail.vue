@@ -181,15 +181,18 @@ export default {
   },
   computed: {},
   watch: {
+    '$refs.courseDetail': '_onCreated',
     'form.title': function (val) {
-      this.tigris.util.slugify({val: val}).then(r => {
+      this.tigris.util.slugify({val: this.form.title}).then(r => {
         // this.form.title = val
         this.form.slug = r.data.result
-        this.delayTouch(this.$v.form.slug)
+        this.$v.form.slug.$touch()
       })
     },
     course (val) {
-      this._onCreated()
+      if (val) {
+        this._onCreated()
+      }
     }
   },
   methods: {
@@ -227,7 +230,7 @@ export default {
       if (touchMap.has($v)) {
         clearTimeout(touchMap.get($v))
       }
-      touchMap.set($v, setTimeout($v.$touch, 1500))
+      touchMap.set($v, setTimeout($v.$touch, 100))
     },
     doesSlugNotExist (tigris, slug) {
       return tigris.course.retrieve({type: 4, query: slug}).then(r => {
@@ -246,6 +249,7 @@ export default {
       this.addCourse(this.tigris, this.form).then(course => {
         if (course) {
           this.form = this._.cloneDeep(this.blankForm)
+          this.$v.form.slug.$reset()
           this.$v.form.$reset()
           this.close()
           this.$emit('add', 'positive', this.$t('result.success.message'), course)
@@ -268,6 +272,7 @@ export default {
         this.addCourse(this.tigris, this.form).then(course => {
           if (course) {
             this.form = this._.cloneDeep(this.blankForm)
+            this.$v.form.slug.$reset()
             this.$v.form.$reset()
             this.$emit('add', 'positive', this.$t('result.success.message'), course)
           } else {

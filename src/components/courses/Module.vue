@@ -104,40 +104,39 @@ export default {
         const courseSlug = this.$route.params.courseName.toLowerCase()
         this.getCourse(tigris, courseSlug).then(course => {
           this._findEnrollment(tigris, course.id).then(enrollment => {
-            if (this.$route.fullPath.indexOf('done') < 0) {
-              const moduleSlug = this.$route.params.moduleName.toLowerCase()
-              this.getModule(tigris, course.id, moduleSlug).then(module => {
-                this.module = module
-                this.getQuiz(module.id).then(r => {
-                  this.quizExists = !!r.data
-                })
-                if (enrollment) {
-                  const progress = enrollment.progress
-                  progress.modules = {current: {id: module.id, slug: module.slug}}
-                  const data = {fields: {progress: progress}}
-                  this.updateEnrollment(tigris, enrollment.id, data).then(r => {
-                    if (r === 1) {
-                      enrollment.progress = progress
-                      this.enrollment = enrollment
-                    }
-                  })
-                } else {
-                  const progress = {
-                    modules: {
-                      current: {id: module.id, slug: module.slug},
-                      completed: []
-                    }
-                  }
-                  const data = {fields: {course_id: course.id, progress: progress}}
-                  this.addEnrollment(tigris, data).then(enrollmentId => {
-                    tigris.user.retrieve(this.auth.id, enrollmentId).then(newEnrollment => {
-                      this.enrollment = newEnrollment.data
-                    })
-                  })
-                }
+            const moduleSlug = this.$route.params.moduleName.toLowerCase()
+            this.getModule(tigris, course.id, moduleSlug).then(module => {
+              this.module = module
+              this.getQuiz(module.id).then(r => {
+                this.quizExists = !!r.data
               })
-              this.view = 'lesson'
-            }
+              console.log(enrollment)
+              if (enrollment) {
+                const progress = enrollment.progress
+                progress.modules = {current: {id: module.id, slug: module.slug}}
+                const data = {fields: {progress: progress}}
+                this.updateEnrollment(tigris, enrollment.id, data).then(r => {
+                  if (r === 1) {
+                    enrollment.progress = progress
+                    this.enrollment = enrollment
+                  }
+                })
+              } else {
+                const progress = {
+                  modules: {
+                    current: {id: module.id, slug: module.slug},
+                    completed: []
+                  }
+                }
+                const data = {fields: {course_id: course.id, progress: progress}}
+                this.addEnrollment(tigris, data).then(enrollmentId => {
+                  tigris.user.retrieve(this.auth.id, enrollmentId).then(newEnrollment => {
+                    this.enrollment = newEnrollment.data
+                  })
+                })
+              }
+            })
+            this.view = 'lesson'
           })
         })
       }).catch(e => {
@@ -165,7 +164,6 @@ export default {
       enrollmentToSend.course_id = this.course.id
       delete enrollmentToSend.course
       let data
-
       if (nextIndex >= this.modules.length) {
         this.getExam().then(exam => {
           let routeName
@@ -177,7 +175,6 @@ export default {
             enrollmentToSend.completed_on = new Date()
           }
           data = {fields: enrollmentToSend}
-          console.log(data)
           this.updateEnrollment(this.tigris, enrollmentToSend.id, data).then(result => {
             if (result) {
               this.$router.push({name: routeName, params: {courseName: courseName}})
@@ -185,6 +182,7 @@ export default {
           }).catch(e => { console.error(e) })
         })
       } else {
+        console.log(nextIndex)
         const nextUrl = this.modules[nextIndex].slug
         data = {fields: enrollmentToSend}
         this.updateEnrollment(this.tigris, enrollmentToSend.id, data).then(result => {

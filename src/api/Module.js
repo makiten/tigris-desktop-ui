@@ -13,14 +13,14 @@ export default class Module extends ApiMethodClient {
   }
   retrieve (courseId, id, query) {
     // GET: /courses/{id}/modules?slug=[slug]
-    if (!(typeof query === 'undefined' || query === null)) {
+    if (query) {
       var qs = this._toQueryString(query)
       if (qs !== '') {
         qs = '?' + qs
       }
       return this._apiMethod(`/courses/${courseId}/modules${qs}`, 'get')
     // GET: /courses/{id}/modules
-    } else if (typeof id === 'undefined' || id === null) {
+    } else if (!id) {
       return this._apiMethod(`/courses/${courseId}/modules`, 'get')
     // GET: /courses/{id}/modules/{id}
     } else if (typeof id === 'number') {

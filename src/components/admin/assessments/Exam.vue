@@ -1,10 +1,10 @@
 <template>
-  <q-modal ref="exam" class="maximized">
+  <q-modal ref="exam" class="maximized" @escape-key="close">
     <q-layout>
       <div class="full-width scroll">
         <div class="row">
           <div class="auto text-right">
-            <button @click="$refs.exam.close()">
+            <button @click="close">
               <i class="text-primary">close</i>
             </button>
           </div>
@@ -95,9 +95,14 @@ export default {
   },
   methods: {
     close () {
+      this.count = 0
+      this.questions = []
+      this.test = { id: 0 }
+      this.action = 'add'
       this.$refs.exam.close()
     },
     open () {
+      this.count = 1
       this.$refs.exam.open()
     },
     _createQuestionVar (count) {
@@ -111,9 +116,9 @@ export default {
       })
     },
     _onCreated () {
-      if (!!this.tigris.test && !!this.course.id) {
+      if (this.tigris.test && this.course.id) {
         this._getExam().then(test => {
-          if (test) {
+          if (test.data) {
             this.test = test
             this._processExam(this.test)
           }

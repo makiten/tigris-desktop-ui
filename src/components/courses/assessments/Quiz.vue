@@ -14,7 +14,6 @@
       <fill-in-the-blank :question="quiz.data.question" v-model="choice"></fill-in-the-blank>
     </div>
 
-    <p>Answer: {{ choice }}</p>
     <button id="submit-answer" class="round secondary disabled" @click="evaluateChoice">
       {{ $t('content.courses.module.quiz.buttons.submit') }}
     </button>
@@ -114,6 +113,9 @@ export default {
       this.enrollment.progress.modules.current = {}
       var enrollmentToSend = this.enrollment
       enrollmentToSend.course_id = this.course.id
+      if (this.nextUrl === 'done') {
+        enrollmentToSend.completed_on = new Date()
+      }
       delete enrollmentToSend.course
       const data = {fields: enrollmentToSend}
       this.tigris.user.update(this.auth.id, this.enrollment.id, data).then(r => {

@@ -8,7 +8,7 @@
     <h4>{{ $t('content.courses.list.headings.all') }}</h4>
     <div class="row gutter">
       <div class="width-1of4" v-for="course in courses">
-        <course-card :course="course" :status="''" />
+        <course-card :course="course" :status="''" :tigris="tigris" />
       </div>
     </div>
   </div>
@@ -29,7 +29,8 @@ export default {
       search: {
         model: '',
         results: []
-      }
+      },
+      tigris: {}
     }
   },
   watch: {
@@ -52,6 +53,7 @@ export default {
     // this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
     // this.$store.commit({ type: 'token/initialize', token: tigris._token })
     Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
+      this.tigris = tigris
       this.getCourses(tigris).then(c => {
         this.courses = c
       })
