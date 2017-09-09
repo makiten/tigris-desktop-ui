@@ -42,7 +42,7 @@
               <i :class="'item-secondary ' + $t('result.success.class')" v-if="typeof enrollment.completed_on !== 'undefined' || typeof enrollment.progress !== 'undefined' && enrollment.progress.modules.complete.indexOf(module.id) >= 0">{{ $t('result.success.icon') }}</i>
             </router-link>
           </template>
-          <template v-if="true">
+          <template v-if="hasExam">
             <router-link tag="div" class="item item-link" :to="{ name: 'exam' }">
               <div class="item-primary">
                 {{ modules.length + 1 }}.
@@ -98,6 +98,7 @@ export default {
     return {
       course: {},
       enrollment: {},
+      hasExam: false,
       modules: [],
       tigris: {}
     }
@@ -126,13 +127,16 @@ export default {
           this.course = c
           return c
         }).then(c => {
-          this.getModules(tigris, c.id).then(m => {
-            this.modules = m
-          })
-          this._findEnrollment(tigris, this.auth.id).then(e => {
-            if (typeof e !== 'undefined') {
-              this.enrollment = e
-            }
+          this.getExam(tigris, c.id).then(exam => {
+            this.hasExam = !!exam
+            this.getModules(tigris, c.id).then(m => {
+              this.modules = m
+            })
+            this._findEnrollment(tigris, this.auth.id).then(e => {
+              if (e) {
+                this.enrollment = e
+              }
+            })
           })
         })
         // this.goToFirstModule()
@@ -147,6 +151,11 @@ export default {
         return r.data
       }).catch(e => {
         console.error(e)
+      })
+    },
+    getExam (tigris, courseId) {
+      return tigris.test.retrieve(null, courseId).then(t => {
+        return t.data
       })
     },
     getModules (tigris, id) {

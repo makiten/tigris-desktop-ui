@@ -25,12 +25,12 @@ export default class User extends ApiMethodClient {
         qs = ''
       }
       return this._apiMethod(`/users${qs}`, 'get')
-    // GET: /users/{id}
-    } else if (typeof enrollmentId === 'undefined') {
-      return this._apiMethod(`/users/${id}`, 'get')
     // GET: /users/{id}/enrollments/{e_id}
-    } else {
+    } else if (id && enrollmentId) {
       return this._apiMethod(`/users/${id}/enrollments/${enrollmentId}`, 'get')
+    // GET: /users/{id}
+    } else {
+      return this._apiMethod(`/users/${id}`, 'get')
     }
   }
   update (id, enrollmentId, data) {

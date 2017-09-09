@@ -411,16 +411,17 @@ export default {
         }
       },
       'done': {
+        'content': 'Congratulations on finishing the course. Continue on, and find something new to learn!',
         'position': {
-          'message': 'Great job! Now, let\'s continue our studies and {0}!',
+          'message': 'Great job! Now, let\'s continue our studies and {link}!',
           'new_course': 'take another course'
         },
         'repeat': {
-          'message': 'Want to go back to the course content? Go to {0}.',
+          'message': 'Want to go back to the course content? Go to {link}.',
           'toc': 'the Table of Contents'
         },
         'return': {
-          'message': 'Go back to {0}.',
+          'message': 'Go back to {link}.',
           'link': 'our course selection'
         }
       },

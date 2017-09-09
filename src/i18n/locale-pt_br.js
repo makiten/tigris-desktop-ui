@@ -411,16 +411,17 @@ export default {
         }
       },
       'done': {
+        'content': 'Parabens por completar este curso. Vamos a procurar para mais cursos.',
         'position': {
-          'message': 'Você é excelente! Bem, vamos continuar estudar e {0}!',
+          'message': 'Você é excelente! Bem, vamos continuar estudar e {link}!',
           'new_course': 'fazer um novo curso'
         },
         'repeat': {
-          'message': 'Quer voltar para conteúdo neste curso? Vá para {0}.',
+          'message': 'Quer voltar para conteúdo neste curso? Vá para {link}.',
           'toc': 'o índice'
         },
         'return': {
-          'message': 'Volte para a página da {0}.',
+          'message': 'Volte para a página da {link}.',
           'link': 'escolha de cursos'
         }
       },

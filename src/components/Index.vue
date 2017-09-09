@@ -1,5 +1,5 @@
 <template>
-  <q-layout class="bg-light" v-if="auth !== null">
+  <q-layout class="bg-light" v-if="auth">
     <div slot="header" class="toolbar">
       <div class="row flex full-width no-margin no-padding">
         <div class="auto">

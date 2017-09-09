@@ -10,7 +10,7 @@ export default class Test extends ApiMethodClient {
       return this._apiMethod('/tests', 'get')
     // GET: /tests?course-id={id}
     } else if (id === null && typeof courseId === 'number') {
-      const keep = (!(typeof keepAnswer === 'undefined' || keepAnswer === null)) ? '&' + this._toQueryString({'keep-answer': keepAnswer}) : ''
+      const keep = (keepAnswer) ? '&' + this._toQueryString({'keep-answer': keepAnswer}) : ''
       return this._apiMethod(`/tests?course-id=${courseId}${keep}`, 'get')
     // GET: /tests/{id}
     } else {

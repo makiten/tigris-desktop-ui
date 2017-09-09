@@ -113,7 +113,7 @@ export default {
     _onCreated () {
       if (!!this.tigris.test && !!this.course.id) {
         this._getExam().then(test => {
-          if (test !== '') {
+          if (test) {
             this.test = test
             this._processExam(this.test)
           }

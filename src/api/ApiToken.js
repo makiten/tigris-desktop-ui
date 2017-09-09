@@ -25,6 +25,7 @@ export default class ApiToken {
       const result = r.data
       const token = new ApiToken($http)
       token._user = result.user
+      token._user.admin = result.admin
       token.value = result.token
       token.axios.defaults.headers.common['Authorization'] = 'Token ' + result.token
       return token
@@ -40,6 +41,7 @@ export default class ApiToken {
       const result = r.data
       const newToken = new ApiToken($http)
       newToken._user = result.user
+      newToken._user.admin = result.admin
       newToken.value = result.token
       newToken.axios.defaults.headers.common['Authorization'] = 'Token ' + result.token
       return newToken

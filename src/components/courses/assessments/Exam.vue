@@ -208,7 +208,10 @@ export default {
           if (typeof r.data.result !== 'undefined') {
             this.results = r.data.result
             this.tigris.test.updateEnrollment(this.exam.id, this.auth.id, this.enrollment.id, {details: {score: r.data.result.score, date_completed: true}}).then(s => {
-              this.showResults = true
+              const data = {fields: {completed_on: new Date()}}
+              this.tigris.user.update(this.auth.id, this.enrollment.id, data).then(u => {
+                this.showResults = true
+              })
             })
           }
         })

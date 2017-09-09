@@ -4,26 +4,24 @@
       <div class="flex justify-center current-position">
         <p>
           <i>my_location</i>
-          <i18n path="position.message" tag="span">
-            <router-link to="/courses">{{ $t('position.new_course') }}</router-link>
-          </i18n>
+          <router-link to="/courses" v-html="$t('content.courses.done.position.message', {link: $t('content.courses.done.position.new_course')})"></router-link>
         </p>
       </div>
       <hr>
-      <div class="row" v-html="content">
-        {{ content }}
+      <div class="row">
+        {{ $t('content.courses.done.content') }}
       </div>
       <div class="row">
-        <i18n path="return.message" tag="p">
-          <router-link to="/courses">{{ $t('return.link') }}</router-link>
-        </i18n>
+        <router-link to="/courses">
+          {{ $t('content.courses.done.return.message', {link: $t('content.courses.done.return.link')}) }}
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { Tigris } from '../../api'
+// import { Tigris } from '../../api'
 
 export default {
   name: 'done',
@@ -40,14 +38,18 @@ export default {
     }
   },
   created () {
-    this._onCreated()
+    if (this.auth) {
+      this._onCreated()
+    }
   },
   methods: {
     _onCreated () {
+      /*
       Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
         tigris.user.update(this.auth.id, this.enrollment.id, {}).then(r => {
         })
       })
+      */
     }
   },
   mounted () {

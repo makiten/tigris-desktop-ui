@@ -146,7 +146,7 @@ export default {
     },
     addEnrollment (tigris, data) {
       return tigris.user.create(this.auth.id, data).then(r => {
-        return r.data[0].id
+        return r.data.result[0].id
       })
     },
     continueCourse () {
@@ -174,15 +174,15 @@ export default {
             routeName = 'exam'
           } else {
             routeName = 'done'
-            const now = new Date()
-            enrollmentToSend.date_completed = now.getTime()
+            enrollmentToSend.completed_on = new Date()
           }
           data = {fields: enrollmentToSend}
+          console.log(data)
           this.updateEnrollment(this.tigris, enrollmentToSend.id, data).then(result => {
             if (result) {
               this.$router.push({name: routeName, params: {courseName: courseName}})
             }
-          })
+          }).catch(e => { console.error(e) })
         })
       } else {
         const nextUrl = this.modules[nextIndex].slug
