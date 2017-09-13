@@ -87,7 +87,7 @@
       </div>
     </div>
 
-    <dashboard :auth="auth" :enrollments="enrollments" :recommended="courses.recommended" :token="token" v-if="$route.fullPath.toLowerCase() == '/'" />
+    <dashboard :auth="auth" :enrollments="enrollments" :recommended="courses.recommended" :token="token" v-if="$route.fullPath.toLowerCase() == '/'" class="layout-view" />
     <router-view :auth="auth" :label="$t('header.nav.tooltips.toc')" :token="token" class="layout-view" v-else></router-view>
 
     <div class="toolbar" slot="footer">
@@ -143,18 +143,20 @@
             <i>close</i>
           </button>
         </div>
-        <div class="layout-padding fit bg-light scroll">
-          <div class="shadow-2 round-borders bg-white">
-            <q-tabs :refs="$refs" default-tab="settings" class="primary justified shadow-1">
-              <q-tab name="settings" icon="settings">{{ $t('content.modals.account.settings.tab') }}</q-tab>
-              <q-tab name="profile" icon="face">{{ $t('content.modals.account.profile.tab') }}</q-tab>
-            </q-tabs>
-            <div>
-              <div ref="settings">
-                <settings :auth="auth" :modal="$refs.accountModal" :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
-              </div>
-              <div ref="profile">
-                <profile :auth="auth" :modal="$refs.accountModal" :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
+        <div class="layout-view">
+          <div class="layout-padding fit bg-light scroll">
+            <div class="shadow-2 round-borders bg-white">
+              <q-tabs :refs="$refs" default-tab="settings" class="primary justified shadow-1">
+                <q-tab name="settings" icon="settings">{{ $t('content.modals.account.settings.tab') }}</q-tab>
+                <q-tab name="profile" icon="face">{{ $t('content.modals.account.profile.tab') }}</q-tab>
+              </q-tabs>
+              <div>
+                <div ref="settings">
+                  <settings :auth="auth" :modal="$refs.accountModal" :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
+                </div>
+                <div ref="profile">
+                  <profile :auth="auth" :modal="$refs.accountModal" :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
+                </div>
               </div>
             </div>
           </div>

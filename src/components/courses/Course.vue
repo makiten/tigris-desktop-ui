@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-padding fit scroll">
+  <div class="layout-padding full-width scroll">
     <div class="shadow-2 round-borders bg-white" v-if="typeof $route.params.moduleName === 'undefined' && $route.fullPath.indexOf('exam') < 0 &&  $route.fullPath.indexOf('done') < 0">
       <div class="layout-padding">
         <h3>{{ course.title }}</h3>

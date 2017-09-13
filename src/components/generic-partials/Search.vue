@@ -44,13 +44,10 @@ export default {
   },
   methods: {
     searchCourses () {
-      console.log(this.tigris)
       if (this.search.model.length > 3) {
         this.tigris.course.retrieve({ type: 3, query: encodeURI(this.search.model) }).then(r => {
           this.search.results = r.data
-        }).catch(e => {
-          console.error(e)
-        })
+        }).catch(e => { if (DEV) { console.error(e) } })
       }
     }
   },

@@ -452,7 +452,7 @@ export default {
       },
       'module': {
         'actions': {
-          'module': 'Ler o módulo',
+          'read': 'Ler o módulo',
           'quiz': 'Fazer o teste'
         },
         'quiz': {

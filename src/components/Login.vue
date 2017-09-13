@@ -1,5 +1,5 @@
 <template>
-  <div class="login-page window-height window-width column items-center">
+  <div class="login-page fit column items-center">
     <div>
       <div class="logo flex items-center justify-center">
         <img class="desktop-only" src="~assets/jogral-logo-web-white.svg">

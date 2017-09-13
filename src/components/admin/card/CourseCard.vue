@@ -3,7 +3,7 @@
     <div class="card-title row">
       <div class="auto">
         <span class="cursor-pointer" @click="modules()">
-          {{ course.title }}
+          {{ course.title | truncate(24) }}
           <q-tooltip>
             {{ $t('content.admin.module.list.heading') }}
           </q-tooltip>
@@ -50,9 +50,9 @@ export default {
     }
   },
   filters: {
-    truncate (value) {
-      if (value.length > 100) {
-        return value.substring(0, 97) + '...'
+    truncate (value, length = 100) {
+      if (value.length > length) {
+        return value.substring(0, length - 3) + '...'
       } else {
         return value
       }
@@ -102,7 +102,7 @@ export default {
 button
   padding 0.25vh 0vw
 .card
-  height 20vh
+  min-height 16vh
   span
     padding-left 0
   .card-title

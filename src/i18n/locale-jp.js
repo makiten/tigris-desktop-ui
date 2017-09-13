@@ -381,7 +381,7 @@ export default {
       },
       'module': {
         'actions': {
-          'module': 'モデュールを読む',
+          'read': 'モデュールを読む',
           'quiz': 'クイズを受ける'
         },
         'quiz': {

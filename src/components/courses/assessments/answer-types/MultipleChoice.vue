@@ -1,7 +1,7 @@
 <template>
   <div class="auto">
     <h4>{{ question }}</h4>
-    <p>{{ $t('instructions') }}</p>
+    <p>{{ $t('content.courses.module.quiz.types.mc.instructions') }}</p>
     <div class="list item-delimiter">
       <label class="item" v-for="(answer, index) in answers">
         <div class="item-primary">

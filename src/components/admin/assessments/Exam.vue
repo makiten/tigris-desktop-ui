@@ -1,5 +1,5 @@
 <template>
-  <q-modal ref="exam" class="maximized" @escape-key="close">
+  <q-modal ref="exam" class="maximized" @escape-key="cancel">
     <q-layout>
       <div class="full-width scroll">
         <div class="row">
@@ -38,6 +38,9 @@
                 <button class="secondary big round" @click="addTest(true)">
                   {{ $t('buttons.publish') }}
                 </button>
+                <button class="tertiary big round" @click="cancel">
+                  {{ $t('buttons.cancel') }}
+                </button>
               </div>
               <div v-else>
                 <button class="outline primary big round" @click="updateTest(false)" v-if="test.status === 0">
@@ -45,6 +48,9 @@
                 </button>
                 <button class="secondary big round" @click="updateTest(true)">
                   {{ $t('buttons.publish') }}
+                </button>
+                <button class="tertiary big round" @click="cancel">
+                  {{ $t('buttons.cancel') }}
                 </button>
               </div>
             </div>
@@ -56,7 +62,7 @@
 </template>
 
 <script>
-import { Toast } from 'quasar'
+import { Utils, Toast } from 'quasar'
 import Question from './Question'
 
 export default {
@@ -91,19 +97,16 @@ export default {
     }
   },
   created () {
-    this._onCreated()
+    // this._onCreated()
   },
   methods: {
     close () {
-      this.count = 0
-      this.questions = []
-      this.test = { id: 0 }
-      this.action = 'add'
-      this.$refs.exam.close()
+      this.unload()
+      Utils.debounce(this.$refs.exam.close(), 750)
     },
     open () {
-      this.count = 1
       this.$refs.exam.open()
+      if (!this.test.data) { this.count = 1 }
     },
     _createQuestionVar (count) {
     },
@@ -121,6 +124,8 @@ export default {
           if (test.data) {
             this.test = test
             this._processExam(this.test)
+          } else {
+            this.test = { id: 0 }
           }
         })
       }
@@ -182,6 +187,14 @@ export default {
         this.$emit('send-toast', 'negative', this.$t('result.failure.message'))
       })
     },
+    cancel () {
+      this.close()
+    },
+    load () {
+      this.count = 1
+      this.test = { id: 0 }
+      this.questions = []
+    },
     resetQuestions () {
       this.questions = []
     },
@@ -203,6 +216,11 @@ export default {
         html: msg
       })
     },
+    unload () {
+      this.count = 0
+      this.test = { id: 0 }
+      this.questions = []
+    },
     updateTest (publish) {
       var questions = []
       this.questions.forEach(q => {
@@ -221,7 +239,9 @@ export default {
       this.tigris.test.update(this.test.id, data).then(r => {
         if (r.data.result === 1) {
           this.$emit('send-toast', 'positive', this.$t('result.success.message'))
-          if (publish) { this.close() }
+          if (publish) {
+            this.close()
+          }
         } else {
           this.$emit('send-toast', 'negative', this.$t('result.failure.message'))
         }

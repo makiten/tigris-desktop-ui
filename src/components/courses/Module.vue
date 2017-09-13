@@ -7,8 +7,11 @@
           <template v-if="view === 'quiz'">
             {{ $t('content.courses.module.actions.quiz', { title: course.title, module: module.title }), '' }}
           </template>
-          <template v-else>
+          <template v-else-if="view === 'lesson'">
             {{ $t('content.courses.module.actions.read', { title: course.title, module: module.title }), '' }}
+          </template>
+          <template v-else>
+            {{ $t('content.courses.exam.label', { title: course.title, module: module.title }), '' }}
           </template>
         </p>
       </div>
@@ -110,7 +113,6 @@ export default {
               this.getQuiz(module.id).then(r => {
                 this.quizExists = !!r.data
               })
-              console.log(enrollment)
               if (enrollment) {
                 const progress = enrollment.progress
                 progress.modules = {current: {id: module.id, slug: module.slug}}

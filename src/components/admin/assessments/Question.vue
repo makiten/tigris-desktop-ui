@@ -197,7 +197,7 @@ export default {
         value: ''
       },
       question: '',
-      quiz: null,
+      quiz: {},
       view: 'fitb'
     }
   },

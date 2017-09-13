@@ -19,7 +19,7 @@ export default class User extends ApiMethodClient {
     // GET: /users
     if (arguments.length === 0 || data) {
       var qs
-      if (!(typeof data === 'undefined' || data === null)) {
+      if (data) {
         qs = '?' + this._toQueryString(data)
       } else {
         qs = ''
@@ -34,7 +34,7 @@ export default class User extends ApiMethodClient {
     }
   }
   update (id, enrollmentId, data) {
-    if (typeof enrollmentId === 'undefined' || enrollmentId === null) {
+    if (!enrollmentId) {
       return this._apiMethod(`/users/${id}`, 'patch', data)
     } else {
       return this._apiMethod(`/users/${id}/enrollments/${enrollmentId}`, 'patch', data)

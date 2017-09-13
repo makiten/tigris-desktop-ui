@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import { Utils } from 'quasar'
 import { required, minLength } from 'vuelidate/lib/validators'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
@@ -152,13 +153,13 @@ export default {
   },
   computed: {},
   watch: {
-    'form.title': function (val) {
+    'form.title': Utils.debounce(function (val) {
       this.tigris.util.slugify({val: val}).then(r => {
         // this.form.title = val
         this.form.slug = r.data.result
         this.delayTouch(this.$v.form.slug)
       })
-    },
+    }, 100),
     module (val) {
       this.module = val
       this._onCreated(this.tigris)

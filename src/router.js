@@ -45,7 +45,11 @@ export default new VueRouter({
         {
           path: '/admin/',
           name: 'admin',
-          component: load('admin/Admin')
+          component: load('admin/Admin'),
+          props: true,
+          children: [
+            { path: 'users/:shortname/', name: 'user', component: load('admin/User'), props: true }
+          ]
         }
       ]
     },

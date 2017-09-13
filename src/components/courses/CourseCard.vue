@@ -74,9 +74,9 @@ export default {
     }
   },
   filters: {
-    truncate (value) {
-      if (value.length > 80) {
-        return value.substring(0, 77) + '...'
+    truncate (value, length = 80) {
+      if (value.length > length) {
+        return value.substring(0, length - 3) + '...'
       } else {
         return value
       }
@@ -100,11 +100,10 @@ export default {
       this.$router.push({name: 'course', params: {courseName: slug}})
     },
     goToExam (slug) {
-      this.$router.push({name: 'exam', params: {courseName: slug}})
+      this.$router.push({path: `/courses/${slug}/exam`})
     },
     _onCreated () {
       this.getExam(this.course.id).then(c => {
-        console.log(!!c)
         this.hasExam = !!c
       })
     }
@@ -119,7 +118,7 @@ export default {
 
 <style lang="stylus">
 .card
-  height 36.9vh
+  min-height 36.9vh
   .card-content
     height 6vh
 </style>

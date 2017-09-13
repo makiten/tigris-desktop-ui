@@ -1,129 +1,132 @@
 <template>
-  <div class="layout-padding fit bg-light scroll">
-    <div class="shadow-2 round-borders bg-white">
-      <q-tabs :refs="$refs" default-tab="courses" class="primary justified shadow-1">
-        <!--<q-tab name="settings" icon="settings">{{ $t('content.admin.tabs.settings') }}</q-tab>-->
-        <q-tab name="courses" icon="school">{{ $t('content.admin.tabs.courses') }}</q-tab>
-        <!--<q-tab name="customization" icon="build">{{ $t('content.admin.tabs.customization') }}</q-tab>-->
-        <q-tab name="users" icon="group">{{ $t('content.admin.tabs.users') }}</q-tab>
-      </q-tabs>
-      <div class="layout-padding bg-white admin">
-        <!--
-        <div ref="settings">
-          <h5>{{ $t('content.admin.accordions.settings.account.label') }}</h5>
-          <p>{{ $t('content.admin.accordions.settings.account.content') }}</p>
-          <h5>{{ $t('content.admin.accordions.settings.security.label') }}</h5>
-          <p>{{ $t('content.admin.accordions.settings.security.content') }}</p>
-          <p>{{ $t('coming_soon') }}</p>
-          <h5>{{ $t('content.admin.accordions.settings.api.label') }}</h5>
-          <p>{{ $t('content.admin.accordions.settings.api.content') }}</p>
-          <p>{{ $t('coming_soon') }}</p>
-        </div>
-        -->
+  <div>
+    <router-view :tigris="tigris" v-if="$route.name === 'user'" />
+    <div class="layout-padding fit bg-light scroll" v-else>
+      <div class="shadow-2 round-borders bg-white">
+        <q-tabs :refs="$refs" default-tab="courses" class="primary justified shadow-1">
+          <!--<q-tab name="settings" icon="settings">{{ $t('content.admin.tabs.settings') }}</q-tab>-->
+          <q-tab name="courses" icon="school">{{ $t('content.admin.tabs.courses') }}</q-tab>
+          <!--<q-tab name="customization" icon="build">{{ $t('content.admin.tabs.customization') }}</q-tab>-->
+          <q-tab name="users" icon="group">{{ $t('content.admin.tabs.users') }}</q-tab>
+        </q-tabs>
+        <div class="layout-padding bg-white admin">
+          <!--
+              <div ref="settings">
+                <h5>{{ $t('content.admin.accordions.settings.account.label') }}</h5>
+                <p>{{ $t('content.admin.accordions.settings.account.content') }}</p>
+                <h5>{{ $t('content.admin.accordions.settings.security.label') }}</h5>
+                <p>{{ $t('content.admin.accordions.settings.security.content') }}</p>
+                <p>{{ $t('coming_soon') }}</p>
+                <h5>{{ $t('content.admin.accordions.settings.api.label') }}</h5>
+                <p>{{ $t('content.admin.accordions.settings.api.content') }}</p>
+                <p>{{ $t('coming_soon') }}</p>
+              </div>
+              -->
 
-        <div ref="courses">
-          <div class="row actions">
-            <div>
-              <h4>{{ $t('content.admin.tabs.courses') }}</h4>
+          <div ref="courses">
+            <div class="row actions">
+              <div>
+                <h4>{{ $t('content.admin.tabs.courses') }}</h4>
+              </div>
+              <div class="self-center">
+                <button class="big" @click="openModal('courseDetail', 'add', 'course')">
+                  <i>add_circle_outline</i>
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
+                    {{ $t('content.admin.accordions.courses.add.button') }}
+                  </q-tooltip>
+                </button>
+                <!--
+                    <button class="big" @click="">
+                      <i>file_upload</i>
+                      <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
+                        {{ $t('content.admin.accordions.courses.add.upload.button') }}
+                      </q-tooltip>
+                    </button>
+                    -->
+              </div>
             </div>
-            <div class="self-center">
-              <button class="big" @click="openModal('courseDetail', 'add', 'course')">
-                <i>add_circle_outline</i>
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
-                  {{ $t('content.admin.accordions.courses.add.button') }}
-                </q-tooltip>
-              </button>
-<!--
-              <button class="big" @click="">
-                <i>file_upload</i>
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
-                  {{ $t('content.admin.accordions.courses.add.upload.button') }}
-                </q-tooltip>
-              </button>
--->
+
+            <h5>{{ $t('content.admin.accordions.courses.edit.label') }}</h5>
+            <p>{{ $t('content.admin.accordions.courses.edit.content') }}</p>
+
+            <div class="row lg-gutter">
+              <div class="full-width">
+                <q-autocomplete v-model="terms.course" :delay="0" @search="searchCourse" @selected="selectedCourse">
+                  <q-search v-model="terms.course" />
+                </q-autocomplete>
+              </div>
+            </div>
+
+            <div class="row wrap lg-gutter">
+              <template v-for="(course, index) in courses">
+                <transition-group name="fade" tag="div" class="width-1of4 sm-auto sm-wrap">
+                  <course-card @delete="removeCard" @open="openModal" :course="course" :tigris="tigris" v-bind:key="course" :index="index" />
+                </transition-group>
+              </template>
             </div>
           </div>
-
-          <h5>{{ $t('content.admin.accordions.courses.edit.label') }}</h5>
-          <p>{{ $t('content.admin.accordions.courses.edit.content') }}</p>
-
-          <div class="row lg-gutter">
-            <div class="full-width">
-              <q-autocomplete v-model="terms.course" :Delay="0" @search="searchCourse" @selected="selectedCourse">
-                <q-search v-model="terms.course" />
-              </q-autocomplete>
+          <!--
+              <div ref="customization">
+                <h5>{{ $t('content.admin.accordions.customization.logo.label') }}</h5>
+                <p>{{ $t('content.admin.accordions.customization.logo.content') }}</p>
+                <h5>{{ $t('content.admin.accordions.customization.colors.label') }}</h5>
+                <p>{{ $t('content.admin.accordions.customization.colors.content') }}</p>
+              </div>
+              -->
+          <div ref="users">
+            <div class="row actions">
+              <div>
+                <h4>{{ $t('content.admin.accordions.users.users.label') }}</h4>
+              </div>
+              <div class="self-center">
+                <button class="big" @click="openModal('inviteUser', 'add', 'user')">
+                  <i>add_circle_outline</i>
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
+                    {{ $t('content.admin.user.new.form.button') }}
+                  </q-tooltip>
+                </button>
+              </div>
             </div>
-          </div>
-
-          <div class="row wrap lg-gutter">
-            <template v-for="(course, index) in courses">
-              <transition-group name="fade" tag="div" class="width-1of5">
-                <course-card @delete="removeCard" @open="openModal" :course="course" :tigris="tigris" v-bind:key="course" :index="index" />
-              </transition-group>
-            </template>
+            <div class="row">
+              <div class="auto">
+                <q-autocomplete v-model="terms.user" :delay="0" @search="searchUser" @selected="selectedUser">
+                  <q-search v-model="terms.user" />
+                </q-autocomplete>
+              </div>
+            </div>
+            <div class="row actions">
+              <div>
+                <h5>{{ $t('content.admin.accordions.users.roles.label') }}</h5>
+              </div>
+              <div class="self-center">
+                <!--<button class="big" @click="openModal('groupModal', 'add')">
+                    <i>add_circle_outline</i>
+                    <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
+                      {{ $t('content.admin.role.form.button') }}
+                    </q-tooltip>
+                </button>-->
+              </div>
+            </div>
+            <div class="row gutter wrap">
+              <template v-for="role in roles">
+                <transition-group name="fade" tag="div" class="width-1of5">
+                  <role-card @delete="removeCard" @modal-open="openModal('groupModal', 'edit', 'role', role)" v-bind:key="role" :role="role" />
+                </transition-group>
+              </template>
+            </div>
+            <!--<p>{{ $t('content.admin.accordions.users.roles.content') }}</p>-->
+            <!--<h5>{{ $t('content.admin.accordions.users.permissions.label') }}</h5>-->
+            <!--<p>{{ $t('content.admin.accordions.users.permissions.content') }}</p>-->
           </div>
         </div>
-<!--
-        <div ref="customization">
-          <h5>{{ $t('content.admin.accordions.customization.logo.label') }}</h5>
-          <p>{{ $t('content.admin.accordions.customization.logo.content') }}</p>
-          <h5>{{ $t('content.admin.accordions.customization.colors.label') }}</h5>
-          <p>{{ $t('content.admin.accordions.customization.colors.content') }}</p>
-        </div>
--->
-        <div ref="users">
-          <div class="row actions">
-            <div>
-              <h4>{{ $t('content.admin.accordions.users.users.label') }}</h4>
-            </div>
-            <div class="self-center">
-              <button class="big" @click="openModal('inviteUser', 'add', 'user')">
-                <i>add_circle_outline</i>
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
-                  {{ $t('content.admin.user.new.form.button') }}
-                </q-tooltip>
-              </button>
-            </div>
-          </div>
-          <div class="row">
-            <div class="auto">
-              <q-autocomplete v-model="terms.user" :delay="0" @search="searchUser" @selected="selectedUser">
-                <q-search v-model="terms.user" />
-              </q-autocomplete>
-            </div>
-          </div>
-          <div class="row actions">
-            <div>
-              <h5>{{ $t('content.admin.accordions.users.roles.label') }}</h5>
-            </div>
-            <div class="self-center">
-              <!--<button class="big" @click="openModal('groupModal', 'add')">
-                <i>add_circle_outline</i>
-                <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
-                  {{ $t('content.admin.role.form.button') }}
-                </q-tooltip>
-              </button>-->
-            </div>
-          </div>
-          <div class="row gutter wrap">
-            <template v-for="role in roles">
-              <transition-group name="fade" tag="div" class="width-1of5">
-                <role-card @delete="removeCard" @modal-open="openModal('groupModal', 'edit', 'role', role)" v-bind:key="role" :role="role" />
-              </transition-group>
-            </template>
-          </div>
-          <!--<p>{{ $t('content.admin.accordions.users.roles.content') }}</p>-->
-          <!--<h5>{{ $t('content.admin.accordions.users.permissions.label') }}</h5>-->
-          <!--<p>{{ $t('content.admin.accordions.users.permissions.content') }}</p>-->
-        </div>
+
+        <role-detail ref="groupModal" @add="addRole" @edit="editRole" :action="action" :auth="auth" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
+        <modules-list @reset-search="resetCourseSearch" :auth="auth" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
+        <course-detail @add="addCard" @open="openModal" @delete="removeCard" :action="action" :auth="auth" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
+        <invite-user @send-toast="sendToast" ref="inviteUser" :tigris="tigris" />
+        <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" ref="userDetail" :tigris="tigris" />
+        <exam ref="exam" @refresh="refresh" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
       </div>
-
-      <role-detail ref="groupModal" @add="addRole" @edit="editRole" :action="action" :auth="auth" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
-      <modules-list @reset-search="resetCourseSearch" :auth="auth" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
-      <course-detail @add="addCard" @open="openModal" @delete="removeCard" :action="action" :auth="auth" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
-      <invite-user @send-toast="sendToast" ref="inviteUser" :tigris="tigris" />
-      <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" ref="userDetail" :tigris="tigris" />
-      <exam ref="exam" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
     </div>
   </div>
 </template>
@@ -143,7 +146,7 @@ import UserDetail from './detail/UserDetail'
 
 export default {
   name: 'admin-panel',
-  props: [],
+  props: ['shortname'],
   data () {
     return {
       action: '',
@@ -263,6 +266,9 @@ export default {
         this.toEdit[model.toLowerCase()] = {}
       }
       this.$refs[name].open()
+    },
+    refresh () {
+      this.$forceUpdate()
     },
     removeCard (type, msg, id, cardType = 'courses') {
       if (type === 'positive') {

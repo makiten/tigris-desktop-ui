@@ -91,19 +91,17 @@
 
               <div class="row">
                 <div class="auto">
-                  <label for="thumbnail">{{ $t('content.admin.course.detail.form.thumbnail.name') }}</label>
-                  <q-uploader :url="uploadUrl" class="full-width" id="thumbnail" v-model="form.image" extensions=".gif,.jpg,.jpeg,.png" :hide-upload-button="true" />
+                  <label>{{ $t('content.admin.course.detail.form.thumbnail.name') }}</label>
+                  <q-uploader ref="thumbnail" :url="uploadUrl" extensions=".gif,.jpg,.jpeg,.png" hide-upload-button :multiple="false" />
                   <small v-html="$t('content.admin.course.detail.form.thumbnail.info')"></small>
                 </div>
               </div>
 
               <div class="row">
                 <div class="auto">
-                  <button class="secondary outline big round" @click="saveCourse(false)">
+                  <button class="secondary big round" @click="saveCourse(true)">
                     {{ $t('content.admin.course.detail.form.buttons.save') }}
                   </button>
-                  <button class="secondary big round" @click="saveCourse(true)">
-                    {{ $t('content.admin.course.detail.form.buttons.quit') }}
                   </button>
                   <button class="primary big round" @click="nextStep()" v-if="action === 'add'">
                     {{ $t('content.admin.course.detail.form.buttons.add_modules') }}
@@ -127,6 +125,7 @@
 </template>
 
 <script>
+import { Utils } from 'quasar'
 import { required, minLength } from 'vuelidate/lib/validators'
 
 const touchMap = new WeakMap()
@@ -158,7 +157,7 @@ export default {
         status: 1,
         creator: ''
       },
-      uploadUrl: 'https://azure.microsoft.com'
+      uploadUrl: process.env.apiHost + '/api/utils/upload'
     }
   },
   validations: {
@@ -182,17 +181,15 @@ export default {
   computed: {},
   watch: {
     '$refs.courseDetail': '_onCreated',
-    'form.title': function (val) {
-      this.tigris.util.slugify({val: this.form.title}).then(r => {
+    'form.title': Utils.debounce(function (val) {
+      this.tigris.util.slugify({val: val}).then(r => {
         // this.form.title = val
         this.form.slug = r.data.result
-        this.$v.form.slug.$touch()
+        this.delayTouch(this.$v.form.slug)
       })
-    },
+    }, 100),
     course (val) {
-      if (val) {
-        this._onCreated()
-      }
+      this._onCreated()
     }
   },
   methods: {
@@ -200,6 +197,7 @@ export default {
       this.$refs.courseDetail.close()
     },
     open () {
+      this._onCreated()
       this.$refs.courseDetail.open()
     },
     _onCreated () {
@@ -246,6 +244,7 @@ export default {
       })
     },
     nextStep () {
+      this.$refs.thumbnail.upload()
       this.addCourse(this.tigris, this.form).then(course => {
         if (course) {
           this.form = this._.cloneDeep(this.blankForm)
@@ -268,6 +267,7 @@ export default {
       }
     },
     saveCourse (quit) {
+      this.$refs.thumbnail.upload()
       if (this.action === 'add') {
         this.addCourse(this.tigris, this.form).then(course => {
           if (course) {
