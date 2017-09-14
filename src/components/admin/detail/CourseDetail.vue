@@ -92,19 +92,23 @@
               <div class="row">
                 <div class="auto">
                   <label>{{ $t('content.admin.course.detail.form.thumbnail.name') }}</label>
-                  <q-uploader ref="thumbnail" :url="uploadUrl" extensions=".gif,.jpg,.jpeg,.png" hide-upload-button :multiple="false" />
+                  <q-uploader @upload="checkUpload" ref="thumbnail" :url="uploadUrl" extensions=".gif,.jpg,.jpeg,.png" :multiple="false" />
                   <small v-html="$t('content.admin.course.detail.form.thumbnail.info')"></small>
                 </div>
               </div>
 
               <div class="row">
                 <div class="auto">
+                  <!--
                   <button class="secondary big round" @click="saveCourse(true)">
-                    {{ $t('content.admin.course.detail.form.buttons.save') }}
+                    {{ $t('buttons.draft') }}
                   </button>
-                  </button>
+                  -->
                   <button class="primary big round" @click="nextStep()" v-if="action === 'add'">
-                    {{ $t('content.admin.course.detail.form.buttons.add_modules') }}
+                    {{ $t('buttons.publish') }}
+                  </button>
+                  <button class="primary big round" @click="saveCourse(true)" v-else>
+                    {{ $t('buttons.save') }}
                   </button>
                   <button class="tertiary big round" @click="close">
                     {{ $t('buttons.cancel') }}
@@ -223,6 +227,10 @@ export default {
         })
       })
     },
+    checkUpload (e, xhr) {
+      const response = JSON.parse(xhr)
+      this.form.image = response.uri
+    },
     delayTouch ($v) {
       $v.$reset()
       if (touchMap.has($v)) {
@@ -243,8 +251,10 @@ export default {
         }
       })
     },
-    nextStep () {
+    imageUpload () {
       this.$refs.thumbnail.upload()
+    },
+    nextStep () {
       this.addCourse(this.tigris, this.form).then(course => {
         if (course) {
           this.form = this._.cloneDeep(this.blankForm)
@@ -267,7 +277,6 @@ export default {
       }
     },
     saveCourse (quit) {
-      this.$refs.thumbnail.upload()
       if (this.action === 'add') {
         this.addCourse(this.tigris, this.form).then(course => {
           if (course) {
@@ -280,11 +289,11 @@ export default {
           }
         })
       } else {
-        this.updateCourse(this.tigris, this.form).then(r => {
-          if (r === 1) {
-            this.$emit('save', 'positive', this.$t('result.success.message'))
+        this.updateCourse(this.tigris, this.form).then(course => {
+          if (course) {
+            this.$emit('save', 'positive', this.$t('result.success.message'), course)
           } else {
-            this.$emit('save', 'negative', this.$t('result.failure.message'))
+            this.$emit('save', 'negative', this.$t('result.failure.message'), course)
           }
         })
       }
@@ -296,7 +305,7 @@ export default {
       form.creator = this.course.creator
       const data = {course: form}
       return tigris.course.update(this.course.id, data).then(r => {
-        return r.data.result
+        return r.data
       })
     }
   },

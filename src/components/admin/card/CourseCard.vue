@@ -117,7 +117,7 @@ button
       i
         color darken($primary, 55%)
   .card-content
-    height 9vh
+    height 6vh
   .card-actions
     vertical-align bottom
 </style>

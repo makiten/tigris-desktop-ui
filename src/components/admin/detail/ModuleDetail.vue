@@ -72,7 +72,7 @@
       <div class="row">
         <div class="auto">
           <div class="stacked-label">
-            <mavon-editor v-model="form.content" :language="'en'" default_open="edit" />
+            <mavon-editor v-model="form.content" :language="'en'" default_open="edit" previewtoggle="true" />
             <label>{{ $t('content.admin.module.detail.form.content.name') }}</label>
             <small v-html="$t('content.admin.module.detail.form.content.info')"></small>
           </div>
@@ -91,7 +91,7 @@
             {{ $t('buttons.cancel') }}
           </button>
         </div>
-        <div class="auto text-right">
+        <div class="auto text-right" v-if="action === 'edit'">
           <button class="remove big" @click="remove">
             <i :class="$t('result.failure.class')">delete_forever</i>
           </button>

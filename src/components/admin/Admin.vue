@@ -122,7 +122,7 @@
 
         <role-detail ref="groupModal" @add="addRole" @edit="editRole" :action="action" :auth="auth" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
         <modules-list @reset-search="resetCourseSearch" :auth="auth" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
-        <course-detail @add="addCard" @open="openModal" @delete="removeCard" :action="action" :auth="auth" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
+        <course-detail @add="addCard" @open="openModal" @delete="removeCard" @save="updateCard" :action="action" :auth="auth" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
         <invite-user @send-toast="sendToast" ref="inviteUser" :tigris="tigris" />
         <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" ref="userDetail" :tigris="tigris" />
         <exam ref="exam" @refresh="refresh" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
@@ -301,6 +301,7 @@ export default {
     selectedUser (item) {
       const user = this.users.filter(u => { return u.email === item.value })[0]
       this.terms.user = ''
+      // this.$router.push({ path: `/admin/users/${user.id}` })
       this.openModal('userDetail', 'edit', 'user', user)
     },
     sendToast (type, msg) {
@@ -314,6 +315,13 @@ export default {
       } else {
         this.moduleView = view
       }
+    },
+    updateCard (type, msg, course) {
+      if (type === 'positive') {
+        const idx = this.courses.findIndex(c => c.id === course.id)
+        this.courses[idx] = course
+      }
+      this.sendToast(type, msg)
     }
   },
   created () {
@@ -341,18 +349,6 @@ export default {
   button
     color $primary
     padding 0.25vh 0.25vw
-.card.role-card
-  height 14vh
-  .card-title
-    padding-top 0.1vh
-    padding-bottom 0.1vh
-    button
-      padding 0.25vh 0vw
-      i
-        color lighten($primary, 55%)
-    button:hover
-      i
-        color darken($primary, 55%)
 
 .fade-enter-active
 .fade-leave-active

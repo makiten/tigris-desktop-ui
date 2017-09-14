@@ -304,6 +304,7 @@ export default {
             'delete': 'Apagar',
             'edit': 'Editar'
           },
+          'empty': 'Sem aulas.',
           'heading': 'Ver Informação de Aulas'
         }
       },
@@ -489,6 +490,7 @@ export default {
       'empty': 'Sem cursos.',
       'in_progress': 'Cursos em andamento',
       'completed': 'Cursos acabados',
+      'register': 'Ver os Cursos',
       'headings': {
         'greeting': {
           'with_name': 'Olá, {name}',

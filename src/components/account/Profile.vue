@@ -1,6 +1,6 @@
 <template>
   <div class="layout-padding">
-    <form name="personal-data" method="post" enctype="application/x-www-form-urlencoded">
+    <form name="personal-data" method="post" v-on:submit.prevent>
       <h4>{{ $t('content.modals.account.profile.form.heading') }}</h4>
       <div class="row gutter">
         <div class="auto">
@@ -23,16 +23,13 @@
             <label>{{ $t('content.modals.account.profile.form.fields.email') }}</label>
           </div>
         </div>
-        <div class="auto text-center">
+        <!--<div class="auto text-center">
           <div class="stacked-label">
             <label>{{ $t('content.modals.account.profile.form.fields.avatar') }}</label>
             <br>
-            <button class="big round primary" @click="">
-              <i>file_upload</i>
-              {{ $t('content.modals.account.profile.form.buttons.upload') }}
-            </button>
+            <q-uploader @upload="checkUpload" ref="avatar" :url="uploadUrl" extensions=".gif,.jpg,.jpeg,.png" :multiple="false" />
           </div>
-        </div>
+        </div>-->
       </div>
     </form>
 
@@ -49,10 +46,12 @@ export default {
   data () {
     return {
       form: {
+        avatar: '',
         first_name: '',
         last_name: '',
         email: ''
-      }
+      },
+      uploadUrl: process.env.apiHost + '/api/utils/upload'
     }
   },
   watch: {
@@ -64,6 +63,10 @@ export default {
           this.form[k] = this.auth[k]
         }
       }
+    },
+    checkUpload (e, xhr) {
+      const response = JSON.parse(xhr)
+      this.form.avatar = response.uri
     },
     saveProfile () {
       const data = {fields: this.form, action: ''}

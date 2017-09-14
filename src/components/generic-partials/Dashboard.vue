@@ -28,7 +28,13 @@
               <div ref="tab-current">
                 <div class="row gutter no-margin">
                   <div v-if="typeof enrollments.in_progress === 'undefined' || enrollments.in_progress.length === 0" class="auto text-center">
-                    <p>{{ $t('content.dashboard.empty') }}</p>
+                    <p>
+                      {{ $t('content.dashboard.empty') }}
+                    </p>
+                    <button class="secondary round big" @click="$router.push({ name: 'courses' })">
+                      <i>school</i>
+                      {{ $t('content.dashboard.register') }}
+                    </button>
                   </div>
                   <div class="width-1of3 sm-auto" v-for="enrollment in enrollments.in_progress" v-else>
                     <course-card :course="enrollment.course" :currentUrl="enrollment.progress.modules.current.slug" :status="'in-progress'" :tigris="tigris" v-if="typeof enrollment.progress.modules !== 'undefined'" />
@@ -40,7 +46,9 @@
               <div ref="tab-complete">
                 <div class="row gutter no-margin">
                   <div v-if="typeof enrollments.completed === 'undefined' || enrollments.completed.length === 0" class="auto text-center">
-                    <p>{{ $t('content.dashboard.empty') }}</p>
+                    <p>
+                      {{ $t('content.dashboard.empty') }}
+                    </p>
                   </div>
                   <div class="width-1of3 sm-auto" v-for="enrollment in enrollments.completed" v-else>
                     <course-card :course="enrollment.course" :status="'completed'" :tigris="tigris" />
@@ -110,18 +118,6 @@ export default {
 <style lang="styl">
 div.content
   padding 1vh 0.85vw 1vh 0
-.row
-  div
-    div.card
-      div.card-content
-        div.action
-          margin-top 0.5vh
-      img
-        width 200px
-        height 200px
-        padding 1vh 1vw
-        margin-left auto
-        margin-right auto
 .q-tab
   font-family 'oxygenbold'
 </style>

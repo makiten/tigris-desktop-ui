@@ -1,7 +1,8 @@
 <template>
   <div class="card bg-white shadow-1 cursor-pointer" @click="goToCourse(course.slug)">
     <template v-if="status === 'in-progress'">
-      <img src="https://jogralmedia.blob.core.windows.net/production/img/courses/d29yZHByZXNzLWxvZ28tbm90ZXh0LXJnYg_c4U04wK.png" alt="">
+      <img :src="course.image" :alt="course.title" v-if="course.image">
+      <img class="full-width" :src="'http://via.placeholder.com/400x200/999999/ffffff?text=' + encodeURIComponent(course.title)" :alt="course.title" v-else>
       <div class="card-title">
         {{ course.title }}
       </div>
@@ -22,7 +23,8 @@
       </div>
     </template>
     <template v-else-if="status === 'completed'">
-      <img src="https://jogralmedia.blob.core.windows.net/production/img/courses/d29yZHByZXNzLWxvZ28tbm90ZXh0LXJnYg_c4U04wK.png" alt="">
+      <img :src="course.image" :alt="course.title" v-if="course.image">
+      <img class="full-width" :src="'http://via.placeholder.com/400x200/999999/ffffff?text=' + encodeURIComponent(course.title)" :alt="course.title" v-else>
       <div class="card-title">
         {{ course.title }}
       </div>
@@ -43,7 +45,8 @@
         </div>
     </template>
     <template v-else>
-      <img src="https://jogralmedia.blob.core.windows.net/production/img/courses/d29yZHByZXNzLWxvZ28tbm90ZXh0LXJnYg_c4U04wK.png" alt="">
+      <img :src="course.image" :alt="course.title" v-if="!course.image">
+      <img class="full-width" :src="'http://via.placeholder.com/400x200/999999/ffffff?text=' + encodeURIComponent(course.title)" :alt="course.title" v-else>
       <div class="card-title">
         {{ course.title }}
       </div>

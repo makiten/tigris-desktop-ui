@@ -56,7 +56,6 @@ export default {
 <style lang="stylus">
 @import '~themes/app.variables.styl'
 .card.role-card
-  height 14vh
   .card-title
     padding-top 0.1vh
     padding-bottom 0.1vh

@@ -233,6 +233,7 @@ export default {
             'delete': '削除',
             'edit': '変更'
           },
+          'empty': 'モデュールなし',
           'heading': 'モデュールリスト'
         }
       },
@@ -418,6 +419,7 @@ export default {
       'in_progress': '通行中コース',
       'empty': 'コースなし',
       'completed': '修了コース',
+      'register': 'コースを検索',
       'headings': {
         'greeting': {
           'with_name': 'こんにちは、{name}',

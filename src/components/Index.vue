@@ -4,8 +4,10 @@
       <div class="row flex full-width no-margin no-padding">
         <div class="auto">
           <q-toolbar-title :padding="1">
-            <span class="mobile-only">{{app.label}}</span>
-            <img class="desktop-only" src="~assets/jogral-logo-web-white.svg">
+            <span class="mobile-only vertical-middle">{{app.label}}</span>
+            <img class="desktop-only vertical-middle" src="~assets/jogral-logo-web-white.svg">
+            <big class="inline-block vertical-middle" style="padding-left:1vw">Tigris</big>
+            <small class="inline-block vertical-bottom" style="padding-left:0.1vw">β</small>
           </q-toolbar-title>
         </div>
         <div class="auto text-center">
@@ -168,7 +170,6 @@
 
 <script>
 import { Loading, Toast } from 'quasar'
-Loading.show()
 import { Tigris } from '../api'
 import { mapActions, mapGetters } from 'vuex'
 import Admin from './admin/Admin'

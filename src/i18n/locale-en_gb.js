@@ -304,6 +304,7 @@ export default {
             'delete': 'Remove',
             'edit': 'Edit'
           },
+          'empty': 'No modules.',
           'heading': 'View Modules'
         }
       },
@@ -489,6 +490,7 @@ export default {
       'empty': 'No courses.',
       'in_progress': 'In Progress',
       'completed': 'Completed',
+      'register': 'View Courses',
       'headings': {
         'greeting': {
           'with_name': 'Hello, {name}',

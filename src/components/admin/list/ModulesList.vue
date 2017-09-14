@@ -1,17 +1,17 @@
 <template>
   <q-modal ref="modulesList" class="maximized">
     <q-layout>
-      <div class="full-width scroll">
-        <div class="row">
-          <div class="auto text-right">
-            <button @click="$refs.modulesList.close()">
-              <i class="text-primary">close</i>
-            </button>
+      <template v-if="view === 'list'">
+        <div class="full-width scroll">
+          <div class="row">
+            <div class="auto text-right">
+              <button @click="$refs.modulesList.close()">
+                <i class="text-primary">close</i>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="layout-padding auto" @keyup.esc="switchViewOrClose('list')">
-            <template v-if="view === 'list'">
+          <div class="row">
+            <div class="layout-padding auto">
               <div>
                 <h2>
                   {{ $t('content.admin.module.list.heading') }}
@@ -25,7 +25,17 @@
                 <div class="row lg-gutter">
                   <div class="full-width">
                     <div class="list item-delimiter">
-                      <template v-for="(module, index) in modules">
+                      <template v-if="modules.length === 0">
+                        <div class="item-content">
+                          <div class="text-center">
+                            <p>{{ $t('content.admin.module.list.empty') }}</p>
+                            <button class="secondary round big" @click="add">
+                              {{ $t('content.admin.module.detail.new.heading') }}
+                            </button>
+                          </div>
+                        </div>
+                      </template>
+                      <template v-for="(module, index) in modules" v-else>
                         <div class="item cursor-pointer" @click="edit(module)">
                           <i class="item-primary">assignment</i>
                           <div class="item-content has-secondary">
@@ -66,16 +76,42 @@
                   </div>
                 </div>
               </div>
-            </template>
-            <template v-else-if="view === 'detail'">
-              <module-detail @send="sendToast" @save-module="updateModules" @delete-module="removeModules" @close="switchViewTo" :action="action" :auth="auth" :course="course" :module="currentModule" :tigris="tigris" />
-            </template>
-            <template v-else-if="view === 'quiz'">
-              <question @save="sendToast" @close="switchViewTo" :action="action" :module="currentModule" :partial="false" :tigris="tigris" />
-            </template>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
+      <template v-else-if="view === 'detail'">
+        <div class="full-width scroll">
+          <div class="row">
+            <div class="auto text-right">
+              <button @click="view = 'list'">
+                <i class="text-primary">close</i>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="layout-padding auto">
+              <module-detail @send="sendToast" @save-module="updateModules" @delete-module="removeModules" @close="switchViewTo" :action="action" :auth="auth" :course="course" :module="currentModule" :tigris="tigris" />
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-else-if="view === 'quiz'">
+        <div class="full-width scroll">
+          <div class="row">
+            <div class="auto text-right">
+              <button @click="view = 'list'">
+                <i class="text-primary">close</i>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="layout-padding auto">
+              <question @save="sendToast" @close="switchViewTo" :action="action" :module="currentModule" :partial="false" :tigris="tigris" />
+            </div>
+          </div>
+        </div>
+      </template>
     </q-layout>
   </q-modal>
 </template>
@@ -110,7 +146,7 @@ export default {
   },
   methods: {
     close () {
-      this.$refs.modulesList.close()
+      this.switchViewOrClose('list')
     },
     open () {
       this.$refs.modulesList.open()
