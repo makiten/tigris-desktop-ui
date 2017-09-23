@@ -3,7 +3,7 @@
     <div>
       <h4>{{ $t('content.modals.account.settings.forms.username.heading') }}</h4>
       <form name="change-username" method="post" enctype="application/x-www-form-urlencoded" v-on:submit.prevent>
-        <div class="row gutter">
+        <div class="row gutter lt-md-column">
           <div class="auto form-group" :class="{'form-group--error': $v.user.shortname.$error}">
             <div class="stacked-label">
               <input
@@ -17,18 +17,28 @@
             </div>
           </div>
           <div>
-            <button @click="updateUser" class="secondary big round" v-if="!$v.user.$error || !$v.user.$dirty">
-              {{ $t('content.modals.account.settings.forms.username.button') }}
-            </button>
-            <button @click="updateUser" class="secondary big round" disabled v-else>
-              {{ $t('content.modals.account.settings.forms.username.button') }}
-            </button>
+            <div class="lt-md">
+              <button @click="updateUser" class="secondary big full-width" v-if="!$v.user.$error || !$v.user.$dirty">
+                {{ $t('content.modals.account.settings.forms.username.button') }}
+              </button>
+              <button @click="updateUser" class="secondary big full-width" disabled v-else>
+                {{ $t('content.modals.account.settings.forms.username.button') }}
+              </button>
+            </div>
+            <div class="gt-sm">
+              <button @click="updateUser" class="secondary big round" v-if="!$v.user.$error || !$v.user.$dirty">
+                {{ $t('content.modals.account.settings.forms.username.button') }}
+              </button>
+              <button @click="updateUser" class="secondary big round" disabled v-else>
+                {{ $t('content.modals.account.settings.forms.username.button') }}
+              </button>
+            </div>
           </div>
         </div>
       </form>
       <h4>{{ $t('content.modals.account.settings.forms.password.heading') }}</h4>
       <form name="change-password" method="post" enctype="application/x-www-form-urlencoded" v-on:submit.prevent>
-        <div class="row gutter">
+        <div class="row gutter lt-md-column">
           <div class="auto form-group" :class="{'form-group--error': $v.password.new_password.$error}">
             <div class="stacked-label">
               <input
@@ -69,12 +79,22 @@
             </div>
           </div>
           <div>
-            <button class="big round secondary" @click="updatePassword" v-if="!$v.password.$error || !$v.password.$dirty">
-              {{ $t('content.modals.account.settings.forms.password.button') }}
-            </button>
-            <button class="big round secondary" disabled v-else>
-              {{ $t('content.modals.account.settings.forms.password.button') }}
-            </button>
+            <div class="lt-md">
+              <button class="big full-width secondary" @click="updatePassword" v-if="!$v.password.$error || !$v.password.$dirty">
+                {{ $t('content.modals.account.settings.forms.password.button') }}
+              </button>
+              <button class="big full-width secondary" disabled v-else>
+                {{ $t('content.modals.account.settings.forms.password.button') }}
+              </button>
+            </div>
+            <div class="gt-sm">
+              <button class="big round secondary" @click="updatePassword" v-if="!$v.password.$error || !$v.password.$dirty">
+                {{ $t('content.modals.account.settings.forms.password.button') }}
+              </button>
+              <button class="big round secondary" disabled v-else>
+                {{ $t('content.modals.account.settings.forms.password.button') }}
+              </button>
+            </div>
           </div>
         </div>
       </form>
@@ -86,7 +106,7 @@
 import { required, sameAs, minLength } from 'vuelidate/lib/validators'
 export default {
   name: 'settings',
-  props: ['auth', 'modal', 'tigris'],
+  props: ['auth', 'tigris'],
   data () {
     return {
       password: {

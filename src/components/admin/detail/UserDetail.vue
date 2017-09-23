@@ -14,7 +14,7 @@
             <h3>{{ $t('content.admin.user.edit.heading', {n: user.shortname}) }}</h3>
 
             <form method="post" v-on:submit.prevent>
-              <div class="row gutter">
+              <div class="row gutter lt-md-column">
                 <div class="form-group auto" :class="{'form-group--error': $v.form.shortname.$error}">
                   <div class="stacked-label">
                     <input
@@ -71,14 +71,30 @@
                   </div>
                 </div>
               </div>
-              <div class="row gutter">
+              <div class="row gutter lt-md-column">
                 <div>
-                  <button class="secondary big round" @click="updateUser">
-                    {{ $t('buttons.save') }}
-                  </button>
-                  <button class="tertiary big round" @click="close">
-                    {{ $t('buttons.cancel') }}
-                  </button>
+                  <div class="lt-md">
+                    <button class="secondary big full-width" @click="updateUser">
+                      {{ $t('buttons.save') }}
+                    </button>
+                  </div>
+                  <div class="gt-sm">
+                    <button class="secondary big round" @click="updateUser">
+                      {{ $t('buttons.save') }}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div class="lt-md">
+                    <button class="big primary full-width clear" @click="close">
+                      {{ $t('buttons.cancel') }}
+                    </button>
+                  </div>
+                  <div class="gt-sm">
+                    <button class="big primary round clear" @click="close">
+                      {{ $t('buttons.cancel') }}
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>

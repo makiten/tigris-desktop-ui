@@ -39,7 +39,7 @@
               <div class="item-content has-secondary">
                 {{ module.title }}
               </div>
-              <i :class="'item-secondary ' + $t('result.success.class')" v-if="typeof enrollment.completed_on !== 'undefined' || typeof enrollment.progress !== 'undefined' && enrollment.progress.modules.complete.indexOf(module.id) >= 0">{{ $t('result.success.icon') }}</i>
+              <i :class="'item-secondary ' + $t('result.success.class')" v-if="enrollment.completed_on || enrollment.progress && enrollment.progress.modules.completed.indexOf(module.id) >= 0">{{ $t('result.success.icon') }}</i>
             </router-link>
           </template>
           <template v-if="hasExam">
@@ -55,17 +55,37 @@
           </template>
         </div>
 
-        <button class="secondary big round" @click="goToFirstModule">
-          {{ $t('content.courses.detail.buttons.continue') }}
-        </button>
-        <button class="tertiary big outline round" @click="$router.go(-1)">
-          {{ $t('content.courses.detail.buttons.return') }}
-        </button>
+        <div class="row gutter lt-md-column">
+          <div>
+            <div class="lt-md">
+              <button class="secondary big full-width" @click="goToFirstModule">
+                {{ $t('content.courses.detail.buttons.continue') }}
+              </button>
+            </div>
+            <div class="gt-sm">
+              <button class="secondary big round" @click="goToFirstModule">
+                {{ $t('content.courses.detail.buttons.continue') }}
+              </button>
+            </div>
+          </div>
+          <div>
+            <div class="lt-md">
+              <button class="primary big clear full-width" @click="$router.go(-1)">
+                {{ $t('content.courses.detail.buttons.return') }}
+              </button>
+            </div>
+            <div class="gt-sm">
+              <button class="primiary big clear round" @click="$router.go(-1)">
+                {{ $t('content.courses.detail.buttons.return') }}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <router-view :course="course" :modules="modules" :token="token" class="layout-view" v-else />
 
-    <q-drawer swipe-only ref="drawer">
+    <q-drawer ref="drawer">
       <div class="toolbar dark">
         <q-toolbar-title :padding="1">
           {{ course.title }}
@@ -73,7 +93,9 @@
       </div>
       <div class="list platform-delimiter">
         <template v-for="(module, index) in modules">
-          <q-drawer-link icon="" :to="{ name: 'module', params: { moduleName: module.slug } }">{{ index + 1}}. {{ module.title }}</q-drawer-link>
+          <q-drawer-link icon="class" :to="{ name: 'module', params: { moduleName: module.slug } }">
+            {{ module.title }}
+          </q-drawer-link>
         </template>
       </div>
     </q-drawer>

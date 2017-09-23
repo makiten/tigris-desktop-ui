@@ -47,6 +47,7 @@ export default {
   'buttons': {
     'add': 'Adicionar {n}',
     'cancel': 'Cancelar',
+    'close': 'Apagar',
     'draft': 'Salvar como Rascunho',
     'delete': 'Apagar{item}',
     'edit': 'Editar{item}',
@@ -95,7 +96,19 @@ export default {
       'about': {
         'label': 'Sobre o Tigris',
         'close': 'Fechar',
-        'message': 'Isto é versão 1.0, lançado em julho de 2017. &copy; Jogral, LLC.'
+        'message': 'Este é a versão 1.1.0, lançada em setembro de 2017. &copy; Jogral, LLC.'
+      },
+      'license': {
+        'label': 'Licença',
+        'message': ''
+      },
+      'privacy': {
+        'label': 'Privicidade de Dados',
+        'message': ''
+      },
+      'terms': {
+        'label': 'Termos de Serviços',
+        'message': ''
       },
       'tooltips': {
         'course': 'Cursos',
@@ -103,7 +116,7 @@ export default {
         'more': 'Ver mais',
         'notifications': {
           'label': 'Notificações',
-          'empty_message': 'Sem notificações novas'
+          'empty_message': 'Sem novas notificações'
         },
         'toc': 'Índice'
       }
@@ -365,7 +378,7 @@ export default {
           'heading': 'Criar Novo Usuário',
           'invite': {
             'subject': 'Inscrição de Usuário em Tigris',
-            'message': '<p>Uma convite tem enviado para você usar Tigris. Use este URL para a ativação da sua conta: <a href="{url}/verify/{token}">{url}/verify/{token}</a></p>'
+            'message': '<p>Você recebeu um convite para usar o Tigris! Use este link para ativar sua conta: <a href="{url}/verify/{token}">{url}/verify/{token}</a></p>'
           },
           'form': {
             'button': 'Criar Usuário',
@@ -486,10 +499,10 @@ export default {
       }
     },
     'dashboard': {
-      'welcome': 'Bem-vindo ao seu painel. Você achará os cursos em progresso e completados, assim como as notificações sobre atualizações do software.',
-      'empty': 'Sem cursos.',
+      'welcome': 'Bem-vindo ao seu painel. Aqui você achará os cursos em andamento e concluídos, bem como as notificações sobre atualizações do software.',
+      'empty': 'Nenhum curso em andamento.',
       'in_progress': 'Cursos em andamento',
-      'completed': 'Cursos acabados',
+      'completed': 'Cursos concluídos',
       'register': 'Ver os Cursos',
       'headings': {
         'greeting': {
@@ -510,7 +523,7 @@ export default {
         'profile': {
           'tab': 'Perfil',
           'form': {
-            'heading': 'Detalhes pessoais',
+            'heading': 'Dados pessoais',
             'buttons': {
               'save': 'Salvar',
               'upload': 'Carregar'
@@ -529,7 +542,7 @@ export default {
           }
         },
         'settings': {
-          'tab': 'Configurções',
+          'tab': 'Configurações',
           'forms': {
             'password': {
               'button': 'Mudar',

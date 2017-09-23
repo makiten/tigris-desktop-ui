@@ -79,6 +79,21 @@
                     <a>{{ $t('header.nav.about.label') }}</a>
                   </div>
                 </div>
+                <div class="item item-link" @click="openModalClosePopover('licenseModal', $refs.aboutPopover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.license.label') }}</a>
+                  </div>
+                </div>
+                <div class="item item-link" @click="openModalClosePopover('privacyModal', $refs.aboutPopover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.privacy.label') }}</a>
+                  </div>
+                </div>
+                <div class="item item-link" @click="openModalClosePopover('termsModal', $refs.aboutPopover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.terms.label') }}</a>
+                  </div>
+                </div>
               </div>
             </q-popover>
             <q-tooltip anchor="center left" self="center right" :offset="[0, 0]">
@@ -107,64 +122,29 @@
       </div>
     </div>
 
-    <q-modal ref="aboutModal" :content-css="{minWidth: '40vw', minHeight: '30vh'}">
-      <div class="layout-padding">
-        <div class="row">
-          <div class="auto">
-            <h4>{{ $t('header.nav.about.label') }}</h4>
-          </div>
-          <div class="auto text-right">
-            <button @click="$refs.aboutModal.close()">
-              <i>close</i>
-            </button>
-          </div>
-        </div>
-        <p v-html="$t('header.nav.about.message')"></p>
-        <button class="big round primary" @click="$refs.aboutModal.close()">
-          {{ $t('header.nav.about.close') }}
-        </button>
+    <generic-modal ref="aboutModal" :contentCss="{minWidth: '40vw', minHeight: '30vh'}" />
+
+    <generic-modal ref="licenseModal" :maximized="true">
+      <h4 slot="header">{{ $t('header.nav.license.label') }}</h4>
+      <div slot="content">
       </div>
-    </q-modal>
+    </generic-modal>
 
-    <q-modal ref="notificationsModal" :content-css="{minWidth: '80vw', minHeight: '80vh'}">
-      <notifications :notifications="notifications" :modal="$refs.notificationsModal"></notifications>
-    </q-modal>
+    <generic-modal ref="privacyModal" :maximized="true">
+      <h4 slot="header">{{ $t('header.nav.privacy.label') }}</h4>
+      <div slot="content">
+      </div>
+    </generic-modal>
 
-    <q-modal ref="accountModal" class="maximized">
-      <q-layout>
-        <div class="toolbar" slot="header">
-          <button @click="$refs.accountModal.close()">
-            <i>keyboard_arrow_left</i>
-          </button>
-          <q-toolbar-title :padding="1">
-            <button @click="$refs.accountModal.close()">
-              {{ $t('header.nav.account') }}
-            </button>
-          </q-toolbar-title>
-          <button @click="$refs.accountModal.close()">
-            <i>close</i>
-          </button>
-        </div>
-        <div class="layout-view">
-          <div class="layout-padding fit bg-light scroll">
-            <div class="shadow-2 round-borders bg-white">
-              <q-tabs :refs="$refs" default-tab="settings" class="primary justified shadow-1">
-                <q-tab name="settings" icon="settings">{{ $t('content.modals.account.settings.tab') }}</q-tab>
-                <q-tab name="profile" icon="face">{{ $t('content.modals.account.profile.tab') }}</q-tab>
-              </q-tabs>
-              <div>
-                <div ref="settings">
-                  <settings :auth="auth" :modal="$refs.accountModal" :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
-                </div>
-                <div ref="profile">
-                  <profile :auth="auth" :modal="$refs.accountModal" :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </q-layout>
-    </q-modal>
+    <generic-modal ref="termsModal" :maximized="true">
+      <h4 slot="header">{{ $t('header.nav.terms.label') }}</h4>
+      <div slot="content">
+      </div>
+    </generic-modal>
+
+    <notifications :auth="auth" :notifications="notifications" ref="notificationsModal" />
+
+    <account :auth="auth" ref="accountModal" />
   </q-layout>
 </template>
 
@@ -172,12 +152,14 @@
 import { Loading, Toast } from 'quasar'
 import { Tigris } from '../api'
 import { mapActions, mapGetters } from 'vuex'
+import Account from './account/Account'
 import Admin from './admin/Admin'
 import Profile from './account/Profile'
 import Settings from './account/Settings'
 import Dashboard from './generic-partials/Dashboard'
 import Notifications from './generic-partials/Notifications'
 import CourseCard from './courses/CourseCard'
+import GenericModal from './modals/GenericModal'
 
 export default {
   props: ['currentYear'],
@@ -310,12 +292,14 @@ export default {
     }
   },
   components: {
+    Account,
     Admin,
     Profile,
     Settings,
     Dashboard,
     Notifications,
-    CourseCard
+    CourseCard,
+    GenericModal
   }
 }
 </script>

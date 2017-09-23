@@ -147,7 +147,7 @@
           </div>
         </div>
       </div>
-      <p class="login-footer text-center">&copy;{{currentYear}} Jogral, L.L.C.</p>
+      <p class="login-footer text-white text-center">&copy;{{currentYear}} Jogral, L.L.C.</p>
     </div>
   </div>
 </template>

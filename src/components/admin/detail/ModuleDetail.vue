@@ -79,17 +79,42 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="auto">
-          <button class="secondary outline big round" @click="save(false)">
-            {{ $t('content.admin.module.detail.form.buttons.save') }}
-          </button>
-          <button class="secondary big round" @click="save(true)">
-            {{ $t('content.admin.module.detail.form.buttons.quit') }}
-          </button>
-          <button class="tertiary big round" @click="cancel">
-            {{ $t('buttons.cancel') }}
-          </button>
+      <div class="row gutter lt-md-column">
+        <div>
+          <div class="lt-md">
+            <button class="secondary outline big full-width" @click="save(false)">
+              {{ $t('content.admin.module.detail.form.buttons.save') }}
+            </button>
+          </div>
+          <div class="gt-sm">
+            <button class="secondary outline big round" @click="save(false)">
+              {{ $t('content.admin.module.detail.form.buttons.save') }}
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="lt-md">
+            <button class="secondary big full-width" @click="save(true)">
+              {{ $t('content.admin.module.detail.form.buttons.quit') }}
+            </button>
+          </div>
+          <div class="gt-sm">
+            <button class="secondary big round" @click="save(true)">
+              {{ $t('content.admin.module.detail.form.buttons.quit') }}
+            </button>
+          </div>
+        </div>
+        <div>
+          <div class="lt-md">
+            <button class="primary big full-width clear" @click="cancel">
+              {{ $t('buttons.cancel') }}
+            </button>
+          </div>
+          <div class="gt-sm">
+            <button class="primary big round clear" @click="cancel">
+              {{ $t('buttons.cancel') }}
+            </button>
+          </div>
         </div>
         <div class="auto text-right" v-if="action === 'edit'">
           <button class="remove big" @click="remove">

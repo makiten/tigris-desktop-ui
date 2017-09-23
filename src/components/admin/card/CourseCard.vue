@@ -1,22 +1,15 @@
 <template>
   <div class="card bg-white shadow-1">
-    <div class="card-title row">
-      <div class="auto">
-        <span class="cursor-pointer" @click="modules()">
-          {{ course.title | truncate(24) }}
-          <q-tooltip>
-            {{ $t('content.admin.module.list.heading') }}
-          </q-tooltip>
-        </span>
-        <button class="big" @click="edit()">
-          <i>edit</i>
-        </button>
-      </div>
-      <div class="auto text-right">
-        <button class="remove big" @click="remove()">
-          <i :class="$t('result.failure.class')">delete_forever</i>
-        </button>
-      </div>
+    <div class="card-title">
+      <span class="cursor-pointer" @click="modules()">
+        {{ course.title | truncate(24) }}
+        <q-tooltip>
+          {{ $t('content.admin.module.list.heading') }}
+        </q-tooltip>
+      </span>
+      <button class="big" @click="edit()">
+        <i>edit</i>
+      </button>
     </div>
     <div class="card-content">
       {{ course.description }}
@@ -25,13 +18,18 @@
       <div class="text-primary">
         <button @click="modules()">
           <i>view_module</i>
-          {{ $t('labels.module', {},2) }}
+          {{ $t('labels.module', {}, 2) }}
         </button>
       </div>
       <div class="text-primary">
         <button @click="exam()">
           <i>grade</i>
           {{ $t('labels.test', {}, 1) }}
+        </button>
+      </div>
+      <div class="auto text-right">
+        <button class="remove" @click="remove()">
+          <i class="text-negative">delete_forever</i>
         </button>
       </div>
     </div>

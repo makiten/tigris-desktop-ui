@@ -30,26 +30,66 @@
                 <question @reset="resetQuestions" @save="saveQuestion" @send-toast="sendToast" :action="'add'" :partial="true" :order="questions.length + n" />
               </template>
             </template>
-            <div class="row large-gutter">
-              <div v-if="test.id === 0">
-                <button class="outline primary big round" @click="addTest(false)">
+            <div class="row gutter lt-md-column" v-if="test.id === 0">
+              <div class="lt-md">
+                <button class="outline primary big full-width" @click="addTest(false)">
                   {{ $t('buttons.draft')  }}
                 </button>
-                <button class="secondary big round" @click="addTest(true)">
+              </div>
+              <div class="lt-md">
+                <button class="secondary big full-width" @click="addTest(true)">
                   {{ $t('buttons.publish') }}
                 </button>
-                <button class="tertiary big round" @click="cancel">
+              </div>
+              <div class="lt-md">
+                <button class="primary big full-width clear" @click="cancel">
                   {{ $t('buttons.cancel') }}
                 </button>
               </div>
-              <div v-else>
+              <div class="gt-sm">
+                <button class="outline primary big round" @click="addTest(false)">
+                  {{ $t('buttons.draft')  }}
+                </button>
+              </div>
+              <div class="gt-sm">
+                <button class="secondary big round" @click="addTest(true)">
+                  {{ $t('buttons.publish') }}
+                </button>
+              </div>
+              <div class="gt-sm">
+                <button class="primary big round clear" @click="cancel">
+                  {{ $t('buttons.cancel') }}
+                </button>
+              </div>
+            </div>
+            <div class="row gutter lt-md-column" v-else>
+              <div class="lt-md">
+                <button class="outline primary big full-width" @click="updateTest(false)" v-if="test.status === 0">
+                  {{ $t('buttons.draft', {n: $t('labels.test', {}, 1)}) }}
+                </button>
+              </div>
+              <div class="lt-md">
+                <button class="secondary big full-width" @click="updateTest(true)">
+                  {{ $t('buttons.publish') }}
+                </button>
+              </div>
+              <div class="lt-md">
+                <button class="primary big full-width clear" @click="cancel">
+                  {{ $t('buttons.cancel') }}
+                </button>
+              </div>
+              <div>
                 <button class="outline primary big round" @click="updateTest(false)" v-if="test.status === 0">
                   {{ $t('buttons.draft', {n: $t('labels.test', {}, 1)}) }}
                 </button>
+              </div>
+              <div>
                 <button class="secondary big round" @click="updateTest(true)">
                   {{ $t('buttons.publish') }}
                 </button>
-                <button class="tertiary big round" @click="cancel">
+              </div>
+              <div>
+                <button class="primary big round clear" @click="cancel">
                   {{ $t('buttons.cancel') }}
                 </button>
               </div>

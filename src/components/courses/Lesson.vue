@@ -15,6 +15,12 @@ export default {
   computed: {
     content () {
       if (this.module.content) {
+        marked.setOptions({
+          gfm: true,
+          highlight: function (code) {
+            return require('highlight.js').highlightAuto(code).value
+          }
+        })
         return marked(this.module.content)
       } else {
         return ''

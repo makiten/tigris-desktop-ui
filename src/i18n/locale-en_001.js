@@ -47,6 +47,7 @@ export default {
   'buttons': {
     'add': 'Add {n}',
     'cancel': 'Cancel',
+    'close': 'Close',
     'draft': 'Save as Draft',
     'delete': 'Delete{item}',
     'edit': 'Edit{item}',
@@ -96,6 +97,18 @@ export default {
         'label': 'About Tigris',
         'close': 'Close',
         'message': 'This is version 1.0, released July 2017. &copy; Jogral, LLC.'
+      },
+      'license': {
+        'label': 'Licence',
+        'message': ''
+      },
+      'privacy': {
+        'label': 'Privacy Policy',
+        'message': ''
+      },
+      'terms': {
+        'label': 'Terms of Service',
+        'message': ''
       },
       'tooltips': {
         'course': 'Courses',

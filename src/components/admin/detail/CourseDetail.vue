@@ -11,7 +11,7 @@
         </div>
         <div class="row">
           <div class="layout-padding fit">
-            <h3 v-if="action === 'edit' && !!course">
+            <h3 v-if="action === 'edit' && course">
               {{ $t('content.admin.course.detail.edit.heading', {n: course.title}) }}
             </h3>
             <h3 v-else>{{ $t('content.admin.course.detail.new.heading') }}</h3>
@@ -97,27 +97,52 @@
                 </div>
               </div>
 
-              <div class="row">
-                <div class="auto">
+              <div class="row gutter lt-md-column">
+                <div v-if="action === 'add'">
                   <!--
                   <button class="secondary big round" @click="saveCourse(true)">
                     {{ $t('buttons.draft') }}
                   </button>
                   -->
-                  <button class="primary big round" @click="nextStep()" v-if="action === 'add'">
-                    {{ $t('buttons.publish') }}
-                  </button>
-                  <button class="primary big round" @click="saveCourse(true)" v-else>
-                    {{ $t('buttons.save') }}
-                  </button>
-                  <button class="tertiary big round" @click="close">
-                    {{ $t('buttons.cancel') }}
-                  </button>
-                  <div class="auto text-right" v-if="action === 'edit'">
-                    <button class="remove big" @click="remove">
-                      <i :class="$t('result.failure.class')">delete_forever</i>
+                  <div class="lt-md">
+                    <button class="primary big full-width" @click="nextStep()">
+                      {{ $t('buttons.publish') }}
                     </button>
                   </div>
+                  <div class="gt-sm">
+                    <button class="primary big round" @click="nextStep()">
+                      {{ $t('buttons.publish') }}
+                    </button>
+                  </div>
+                </div>
+                <div v-else>
+                  <div class="lt-md">
+                    <button class="primary big full-width" @click="saveCourse(true)">
+                      {{ $t('buttons.save') }}
+                    </button>
+                  </div>
+                  <div class="gt-sm">
+                    <button class="primary big round" @click="saveCourse(true)">
+                      {{ $t('buttons.save') }}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div class="lt-md">
+                    <button class="primary big full-width clear" @click="close">
+                      {{ $t('buttons.cancel') }}
+                    </button>
+                  </div>
+                  <div class="gt-sm">
+                    <button class="primary big round clear" @click="close">
+                      {{ $t('buttons.cancel') }}
+                    </button>
+                  </div>
+                </div>
+                <div class="auto text-right" v-if="action === 'edit'">
+                  <button class="remove big" @click="remove">
+                    <i :class="$t('result.failure.class')">delete_forever</i>
+                  </button>
                 </div>
               </div>
             </form>
@@ -176,6 +201,7 @@ export default {
       slug: {
         required,
         isUnique (val) {
+          if (this.course.slug === val) return true
           if (val === '') return true
           return this.doesSlugNotExist(this.tigris, val)
         }
@@ -184,15 +210,15 @@ export default {
   },
   computed: {},
   watch: {
-    '$refs.courseDetail': '_onCreated',
     'form.title': Utils.debounce(function (val) {
       this.tigris.util.slugify({val: val}).then(r => {
         // this.form.title = val
         this.form.slug = r.data.result
         this.delayTouch(this.$v.form.slug)
+        // this.$v.form.slug.$touch()
       })
-    }, 100),
-    course (val) {
+    }, 200),
+    action () {
       this._onCreated()
     }
   },
@@ -201,20 +227,19 @@ export default {
       this.$refs.courseDetail.close()
     },
     open () {
-      this._onCreated()
       this.$refs.courseDetail.open()
+      this._onCreated()
     },
     _onCreated () {
-      if (this.course) {
-        if (this.action === 'edit') {
-          for (var k in this.course) {
-            if (this.form.hasOwnProperty(k)) {
-              this.form[k] = this.course[k]
-            }
+      if (this.action === 'edit') {
+        for (var k in this.course) {
+          if (this.form.hasOwnProperty(k)) {
+            this.form[k] = this.course[k]
           }
-        } else {
-          this.form = this._.cloneDeep(this.blankForm)
         }
+      } else if (this.action === 'add') {
+        this.form = this._.cloneDeep(this.blankForm)
+        this.$v.form.$reset()
       }
       // this.tigris.course.retrieve().then(tigris => {})
     },
@@ -236,18 +261,14 @@ export default {
       if (touchMap.has($v)) {
         clearTimeout(touchMap.get($v))
       }
-      touchMap.set($v, setTimeout($v.$touch, 100))
+      touchMap.set($v, setTimeout($v.$touch, 200))
     },
     doesSlugNotExist (tigris, slug) {
       return tigris.course.retrieve({type: 4, query: slug}).then(r => {
         if (['done', 'exam'].indexOf(slug.toLowerCase()) >= 0) {
           return false
         } else {
-          if (this.course.slug) {
-            return this.course.slug === slug
-          } else {
-            return !r.data
-          }
+          return (!r.data || this.course.slug === r.data.slug)
         }
       })
     },
@@ -310,7 +331,6 @@ export default {
     }
   },
   created () {
-    this._onCreated()
   }
 }
 </script>

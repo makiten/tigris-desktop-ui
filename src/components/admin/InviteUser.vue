@@ -14,7 +14,7 @@
             <h3>{{ $t('content.admin.user.new.heading') }}</h3>
             <form method="post" v-on:submit.prevent>
               <div class="row gutter">
-                <div class="form-group" :class="{'form-group--error': $v.form.email.$error}">
+                <div class="form-group auto" :class="{'form-group--error': $v.form.email.$error}">
                   <div class="stacked-label">
                     <input
                        class="form__input full-width"
@@ -31,7 +31,7 @@
                 </div>
               </div>
               <div class="row gutter">
-                <div class="form-group">
+                <div class="form-group auto">
                   <div class="stacked-label">
                     <q-select
                        type="list"
@@ -42,11 +42,30 @@
                   </div>
                 </div>
               </div>
-              <div class="row gutter">
+              <div class="row gutter lt-md-column">
                 <div>
-                  <button @click="addUser" class="secondary big round">
-                    {{ $t('content.admin.user.new.form.button') }}
-                  </button>
+                  <div class="lt-md">
+                    <button @click="addUser" class="secondary big full-width">
+                      {{ $t('content.admin.user.new.form.button') }}
+                    </button>
+                  </div>
+                  <div class="gt-sm">
+                    <button @click="addUser" class="secondary big round">
+                      {{ $t('content.admin.user.new.form.button') }}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div class="lt-md">
+                    <button class="primary big full-width clear" @click="cancel">
+                      {{ $t('buttons.cancel') }}
+                    </button>
+                  </div>
+                  <div class="gt-sm">
+                    <button class="primary big round clear" @click="cancel">
+                      {{ $t('buttons.cancel') }}
+                    </button>
+                  </div>
                 </div>
               </div>
             </form>
@@ -94,6 +113,10 @@ export default {
     }
   },
   methods: {
+    cancel () {
+      this.form = this._.cloneDeep(this.blankForm)
+      this.close()
+    },
     close () {
       this.$refs.inviteUser.close()
     },

@@ -29,9 +29,16 @@
                         <div class="item-content">
                           <div class="text-center">
                             <p>{{ $t('content.admin.module.list.empty') }}</p>
-                            <button class="secondary round big" @click="add">
-                              {{ $t('content.admin.module.detail.new.heading') }}
-                            </button>
+                            <div class="lt-md">
+                              <button class="secondary full-width clear big" @click="add">
+                                {{ $t('content.admin.module.detail.new.heading') }}
+                              </button>
+                            </div>
+                            <div class="gt-sm">
+                              <button class="secondary round clear big" @click="add">
+                                {{ $t('content.admin.module.detail.new.heading') }}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </template>

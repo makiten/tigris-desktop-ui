@@ -146,15 +146,34 @@
         </div>
       </div>
     </template>
-    <div class="row large-gutter" v-if="!partial">
-      <div>
-        <button class="secondary big round" @click="addQuiz" v-if="action === 'add'">
+    <div class="row large-gutter lt-md-column" v-if="!partial">
+      <div class="lt-md" v-if="action === 'add'">
+        <button class="secondary big full-width" @click="addQuiz">
           {{ $t('buttons.add', {n: $t('assessments.types.quiz')}) }}
         </button>
-        <button class="secondary big round" @click="saveQuiz" v-else-if="action === 'edit'">
+      </div>
+      <div class="lt-md" v-else-if="action === 'edit'">
+        <button class="secondary big full-width" @click="saveQuiz">
           {{ $t('buttons.save') }}
         </button>
-        <button class="tertiary big round" @click="cancel">
+      </div>
+      <div class="lt-md">
+        <button class="primary big full-width clear" @click="cancel">
+          {{ $t('buttons.cancel') }}
+        </button>
+      </div>
+      <div class="gt-sm" v-if="action === 'add'">
+        <button class="secondary big round" @click="addQuiz">
+          {{ $t('buttons.add', {n: $t('assessments.types.quiz')}) }}
+        </button>
+      </div>
+      <div class="gt-sm" v-else-if="action === 'edit'">
+        <button class="secondary big round" @click="saveQuiz">
+          {{ $t('buttons.save') }}
+        </button>
+      </div>
+      <div class="gt-sm">
+        <button class="primary big round clear" @click="cancel">
           {{ $t('buttons.cancel') }}
         </button>
       </div>

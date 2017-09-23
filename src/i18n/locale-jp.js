@@ -1,7 +1,14 @@
 export default {
   'lang': '日本語',
   'buttons': {
+    'add': '{n}を作る',
     'cancel': 'キャンセル',
+    'close': '閉じる',
+    'draft': '下書きのコースをセーブ',
+    'delete': '{item}を削除',
+    'edit': '{item}を変更',
+    'publish': '発売',
+    'reset_password': 'パスワード再設定',
     'save': 'セーブする'
   },
   'result': {
@@ -25,6 +32,18 @@ export default {
         'label': 'Tigrisについて',
         'close': '閉じる',
         'message': '2017年7月にリリースされたTigrisのバージョンは1.0です。 &copy; Jogral, LLC.'
+      },
+      'license': {
+        'label': 'ライセンス',
+        'message': ''
+      },
+      'privacy': {
+        'label': 'プライバシー・ポリシー',
+        'message': ''
+      },
+      'terms': {
+        'label': 'ご利用規約',
+        'message': ''
       },
       'tooltips': {
         'course': 'コース',

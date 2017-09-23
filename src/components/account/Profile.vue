@@ -2,7 +2,7 @@
   <div class="layout-padding">
     <form name="personal-data" method="post" v-on:submit.prevent>
       <h4>{{ $t('content.modals.account.profile.form.heading') }}</h4>
-      <div class="row gutter">
+      <div class="row gutter lt-md-column">
         <div class="auto">
           <div class="stacked-label">
             <input type="text" class="full-width" v-model="form.first_name">
@@ -33,16 +33,23 @@
       </div>
     </form>
 
-    <button class="big round secondary" @click="saveProfile()">
-      {{ $t('content.modals.account.profile.form.buttons.save') }}
-    </button>
+    <div class="lt-md">
+      <button class="big full-width secondary" @click="saveProfile()">
+        {{ $t('content.modals.account.profile.form.buttons.save') }}
+      </button>
+    </div>
+    <div class="gt-sm">
+      <button class="big round secondary" @click="saveProfile()">
+        {{ $t('content.modals.account.profile.form.buttons.save') }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'profile',
-  props: ['auth', 'modal', 'tigris'],
+  props: ['auth', 'tigris'],
   data () {
     return {
       form: {
@@ -71,7 +78,6 @@ export default {
     saveProfile () {
       const data = {fields: this.form, action: ''}
       this.tigris.user.update(this.auth.id, null, data).then(r => {
-        // this.modal.close()
         if (r.data) {
           this.$emit('refresh')
           this.$emit('toast', 'positive', this.$t('content.modals.account.profile.toast.success'))

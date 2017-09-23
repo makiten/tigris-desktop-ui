@@ -63,14 +63,42 @@
                    :options="permOptions" />
               </div>
             </div>
-            <div class="row gutter">
+            <div class="row gutter lt-md-column">
+              <div v-if="action === 'add'">
+                <div class="lt-md">
+                  <button class="big full-width secondary" @click="addRole">
+                    {{ $t('buttons.add', {n: $t('labels.roles')}, 1) }}
+                  </button>
+                </div>
+                <div class="gt-sm">
+                  <button class="big round secondary" @click="addRole">
+                    {{ $t('buttons.add', {n: $t('labels.roles')}, 1) }}
+                  </button>
+                </div>
+              </div>
+              <div v-else>
+                <div class="lt-md">
+                  <button class="big full-width secondary" @click="updateRole">
+                    {{ $t('buttons.save') }}
+                  </button>
+                </div>
+                <div class="gt-sm">
+                  <button class="big round secondary" @click="updateRole">
+                    {{ $t('buttons.save') }}
+                  </button>
+                </div>
+              </div>
               <div>
-                <button class="big round secondary" @click="addRole" v-if="action === 'add'">
-                  {{ $t('buttons.add', {n: $t('labels.roles')}, 1) }}
-                </button>
-                <button class="big round secondary" @click="updateRole" v-else>
-                  {{ $t('buttons.save') }}
-                </button>
+                <div class="lt-md">
+                  <button class="big primary full-width clear" @click="close">
+                    {{ $t('buttons.cancel') }}
+                  </button>
+                </div>
+                <div class="gt-sm">
+                  <button class="big primary round clear" @click="close">
+                    {{ $t('buttons.cancel') }}
+                  </button>
+                </div>
               </div>
             </div>
           </form>

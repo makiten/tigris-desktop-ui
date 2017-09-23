@@ -1,10 +1,10 @@
 <template>
   <div class="card bg-white shadow-1 cursor-pointer" @click="goToCourse(course.slug)">
     <template v-if="status === 'in-progress'">
-      <img :src="course.image" :alt="course.title" v-if="course.image">
+      <img :src="course.image" :alt="course.title" v-if="course.image" class="course-image">
       <img class="full-width" :src="'http://via.placeholder.com/400x200/999999/ffffff?text=' + encodeURIComponent(course.title)" :alt="course.title" v-else>
       <div class="card-title">
-        {{ course.title }}
+        {{ course.title | truncate(30) }}
       </div>
       <div class="card-content">
         {{ course.teaser | truncate }}
@@ -23,10 +23,10 @@
       </div>
     </template>
     <template v-else-if="status === 'completed'">
-      <img :src="course.image" :alt="course.title" v-if="course.image">
+      <img :src="course.image" :alt="course.title" v-if="course.image" class="course-image">
       <img class="full-width" :src="'http://via.placeholder.com/400x200/999999/ffffff?text=' + encodeURIComponent(course.title)" :alt="course.title" v-else>
       <div class="card-title">
-        {{ course.title }}
+        {{ course.title | truncate(30) }}
       </div>
       <div class="card-content">
         {{ course.teaser | truncate }}
@@ -45,10 +45,10 @@
         </div>
     </template>
     <template v-else>
-      <img :src="course.image" :alt="course.title" v-if="!course.image">
+      <img :src="course.image" :alt="course.title" v-if="course.image" class="course-image">
       <img class="full-width" :src="'http://via.placeholder.com/400x200/999999/ffffff?text=' + encodeURIComponent(course.title)" :alt="course.title" v-else>
       <div class="card-title">
-        {{ course.title }}
+        {{ course.title | truncate(30)}}
       </div>
       <div class="card-content">
         {{ course.description | truncate }}
@@ -121,7 +121,14 @@ export default {
 
 <style lang="stylus">
 .card
-  min-height 36.9vh
-  .card-content
+  min-height 35vh
+  .course-image
+    max-height 220px
+    max-width 400px
+    margin-left auto
+    margin-right auto
+  .card-title
     height 6vh
+  .card-content
+    height 8vh
 </style>

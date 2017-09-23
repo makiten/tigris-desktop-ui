@@ -4,7 +4,7 @@
     <div class="layout-padding full-width" v-else>
       <h1>{{ $t('content.courses.list.headings.page') }}</h1>
 
-      <div class="row gutter">
+      <div class="row gutter lt-md-column">
         <div class="auto">
           <q-autocomplete v-model="terms" :delay="0" :placeholder="$t('content.search.label')" @search="searchCourse" @selected="selectedCourse">
             <q-search v-model="terms" />
@@ -13,7 +13,7 @@
       </div>
 
       <h4>{{ $t('content.courses.list.headings.all') }}</h4>
-      <div class="row gutter">
+      <div class="row gutter lt-md-column">
         <div class="width-1of4 sm-auto sm-wrap" v-for="course in courses">
           <course-card :course="course" :status="''" :tigris="tigris" />
         </div>

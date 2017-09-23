@@ -31,10 +31,18 @@
                     <p>
                       {{ $t('content.dashboard.empty') }}
                     </p>
-                    <button class="secondary round big" @click="$router.push({ name: 'courses' })">
-                      <i>school</i>
-                      {{ $t('content.dashboard.register') }}
-                    </button>
+                    <div class="lt-md">
+                      <button class="secondary full-width clear big" @click="$router.push({ name: 'courses' })">
+                        <i>school</i>
+                        {{ $t('content.dashboard.register') }}
+                      </button>
+                    </div>
+                    <div class="gt-sm">
+                      <button class="secondary round clear big" @click="$router.push({ name: 'courses' })">
+                        <i>school</i>
+                        {{ $t('content.dashboard.register') }}
+                      </button>
+                    </div>
                   </div>
                   <div class="width-1of3 sm-auto" v-for="enrollment in enrollments.in_progress" v-else>
                     <course-card :course="enrollment.course" :currentUrl="enrollment.progress.modules.current.slug" :status="'in-progress'" :tigris="tigris" v-if="typeof enrollment.progress.modules !== 'undefined'" />
@@ -44,7 +52,7 @@
               </div>
 
               <div ref="tab-complete">
-                <div class="row gutter no-margin">
+                <div class="row gutter no-margin lt-md-column">
                   <div v-if="typeof enrollments.completed === 'undefined' || enrollments.completed.length === 0" class="auto text-center">
                     <p>
                       {{ $t('content.dashboard.empty') }}
@@ -64,7 +72,7 @@
         <div class="fit">
           <h4>{{ $t('content.dashboard.headings.recommended_list') }}</h4>
           <div class="content">
-            <div class="row gutter no-margin">
+            <div class="row gutter no-margin lt-md-column">
               <div class="width-1of4 sm-auto sm-wrap" v-for="course in recommended">
                 <course-card :course="course" />
               </div>

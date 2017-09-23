@@ -49,7 +49,7 @@
             <h5>{{ $t('content.admin.accordions.courses.edit.label') }}</h5>
             <p>{{ $t('content.admin.accordions.courses.edit.content') }}</p>
 
-            <div class="row lg-gutter">
+            <div class="row gutter">
               <div class="full-width">
                 <q-autocomplete v-model="terms.course" :delay="0" @search="searchCourse" @selected="selectedCourse">
                   <q-search v-model="terms.course" />
@@ -57,9 +57,9 @@
               </div>
             </div>
 
-            <div class="row wrap lg-gutter">
+            <div class="row wrap gutter lt-md-column">
               <template v-for="(course, index) in courses">
-                <transition-group name="fade" tag="div" class="width-1of4 sm-auto sm-wrap">
+                <transition-group name="fade" tag="div" class="width-1of4 lt-md-auto lt-md-wrap">
                   <course-card @delete="removeCard" @open="openModal" :course="course" :tigris="tigris" v-bind:key="course" :index="index" />
                 </transition-group>
               </template>
@@ -107,9 +107,9 @@
                 </button>-->
               </div>
             </div>
-            <div class="row gutter wrap">
+            <div class="row gutter wrap lt-md-column">
               <template v-for="role in roles">
-                <transition-group name="fade" tag="div" class="width-1of5">
+                <transition-group name="fade" tag="div" class="width-1of4 lt-md-auto lt-md-wrap">
                   <role-card @delete="removeCard" @modal-open="openModal('groupModal', 'edit', 'role', role)" v-bind:key="role" :role="role" />
                 </transition-group>
               </template>
