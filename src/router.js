@@ -50,7 +50,8 @@ export default new VueRouter({
           children: [
             { path: 'users/:userId/', name: 'user', component: load('admin/User'), props: true }
           ]
-        }
+        },
+        { path: '/notifications/', name: 'notifications', component: load('Notifications'), props: true }
       ]
     },
     { path: '/verify/:token', name: 'verify', component: load('Verify') },

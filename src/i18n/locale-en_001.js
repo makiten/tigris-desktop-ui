@@ -1,5 +1,22 @@
 export default {
+  'language': 'Language',
   'lang': 'English (Default)',
+  'settings': {
+    'account_type': 'Account Type',
+    'account_id': 'Account ID',
+    'cancel': 'Cancel Subscription',
+    'courses': 'Number of Courses',
+    'expires': 'Good until',
+    'location': 'Location',
+    'name': 'Regisitered to',
+    'protocol': 'Protocol',
+    'users': 'Number of Users'
+  },
+  'statuses': {
+    'dev': 'Development',
+    'test': 'Test',
+    'prod': 'Production'
+  },
   'assessments': {
     'answer': {
       'heading': 'What Kind of Answer?',

@@ -1,5 +1,22 @@
 export default {
+  'language': 'Idioma',
   'lang': 'Português (Brasileiro)',
+  'settings': {
+    'account_type': 'Tipo de Conta',
+    'account_id': 'Identidade de Conta',
+    'cancel': 'Cancelar Assinatura',
+    'courses': 'Número de Cursos',
+    'expires': 'Data de Expiraçào',
+    'location': 'Local',
+    'name': 'Nome de Inscrição',
+    'protocol': 'Protocolo',
+    'users': 'Número de Usuários'
+  },
+  'statuses': {
+    'dev': 'Em Desenvolvimento',
+    'test': 'Em Teste',
+    'prod': 'Em Produção'
+  },
   'assessments': {
     'answer': {
       'heading': 'Qual Tipo de Resposta?',

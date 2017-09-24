@@ -126,11 +126,7 @@
               </button>
             </div>
             <div class="auto text-right">
-              <q-select
-                 type="list"
-                 v-model="locale"
-                 @input="$i18n.set($event)"
-                 :options="localeOpts"></q-select>
+              <locale-picker v-model="locale" />
             </div>
           </div>
           <div class="row">
@@ -157,6 +153,7 @@ import { email, required, minLength } from 'vuelidate/lib/validators'
 import { mapActions, mapGetters } from 'vuex'
 import { Loading } from 'quasar'
 import { Tigris } from '../api'
+import LocalePicker from './generic-partials/LocalePicker'
 
 export default {
   name: 'login',
@@ -167,7 +164,6 @@ export default {
       useLogo: true,
       // locale: '',
       locale: this.$i18n.locale(),
-      localeOpts: this._i18nOptions(),
       org: {
         name: '',
         loginUrl: '',
@@ -295,7 +291,7 @@ export default {
     this._checkOrRedirectToDashboard()
   },
   components: {
-    Loading
+    LocalePicker
   }
 }
 </script>

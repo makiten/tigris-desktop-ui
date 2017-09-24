@@ -80,7 +80,7 @@
           </div>
           <div>
             <div class="lt-md">
-              <button class="big full-width secondary" @click="updatePassword" v-if="!$v.password.$error || !$v.password.$dirty">
+              <button class="big full-width secondary" @click="updatePassword" v-if="!$v.password.$invalid && $v.password.$dirty">
                 {{ $t('content.modals.account.settings.forms.password.button') }}
               </button>
               <button class="big full-width secondary" disabled v-else>
@@ -88,7 +88,7 @@
               </button>
             </div>
             <div class="gt-sm">
-              <button class="big round secondary" @click="updatePassword" v-if="!$v.password.$error || !$v.password.$dirty">
+              <button class="big round secondary" @click="updatePassword" v-if="!$v.password.$invalid && $v.password.$dirty">
                 {{ $t('content.modals.account.settings.forms.password.button') }}
               </button>
               <button class="big round secondary" disabled v-else>
@@ -153,11 +153,13 @@ export default {
             this.$v.password.$reset()
             this.$v.password.new_password.$reset()
             this.$v.password.confirm_password.$reset()
-            this.$emit('refresh')
             this.$emit('toast', 'positive', this.$t('content.modals.account.settings.toast.success'))
+            this.$emit('refresh')
           } else {
             this.$emit('toast', 'negative', this.$t('content.modals.account.settings.toast.failure'))
           }
+        }).catch(e => {
+          if (DEV) { console.error(e) }
         })
       }
     },
@@ -172,7 +174,9 @@ export default {
         } else {
           this.$emit('toast', 'negative', this.$t('content.modals.account.settings.toast.failure'))
         }
-      }).catch(e => {})
+      }).catch(e => {
+        if (DEV) { console.error(e) }
+      })
     }
   },
   created () {

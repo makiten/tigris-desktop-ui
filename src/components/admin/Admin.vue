@@ -3,25 +3,73 @@
     <router-view :tigris="tigris" v-if="$route.name === 'user'" />
     <div class="layout-padding fit bg-light scroll" v-else>
       <div class="shadow-2 round-borders bg-white">
-        <q-tabs :refs="$refs" default-tab="courses" class="primary justified shadow-1">
-          <!--<q-tab name="settings" icon="settings">{{ $t('content.admin.tabs.settings') }}</q-tab>-->
+        <q-tabs :refs="$refs" default-tab="settings" class="primary justified shadow-1">
+          <q-tab name="settings" icon="settings">{{ $t('content.admin.tabs.settings') }}</q-tab>
           <q-tab name="courses" icon="school">{{ $t('content.admin.tabs.courses') }}</q-tab>
           <!--<q-tab name="customization" icon="build">{{ $t('content.admin.tabs.customization') }}</q-tab>-->
           <q-tab name="users" icon="group">{{ $t('content.admin.tabs.users') }}</q-tab>
         </q-tabs>
         <div class="layout-padding bg-white admin">
-          <!--
-              <div ref="settings">
-                <h5>{{ $t('content.admin.accordions.settings.account.label') }}</h5>
-                <p>{{ $t('content.admin.accordions.settings.account.content') }}</p>
-                <h5>{{ $t('content.admin.accordions.settings.security.label') }}</h5>
-                <p>{{ $t('content.admin.accordions.settings.security.content') }}</p>
-                <p>{{ $t('coming_soon') }}</p>
-                <h5>{{ $t('content.admin.accordions.settings.api.label') }}</h5>
-                <p>{{ $t('content.admin.accordions.settings.api.content') }}</p>
-                <p>{{ $t('coming_soon') }}</p>
-              </div>
+          <div ref="settings">
+            <h4>{{ $t('content.admin.accordions.settings.account.label') }}</h4>
+            <p>{{ $t('content.admin.accordions.settings.account.content') }}</p>
+            <table class="q-table settings-table">
+              <!--
+              <thead class="sr-only">
+                <tr>
+                  <th>Column</th>
+                  <th>Setting</th>
+                </tr>
+              </thead>
               -->
+              <tbody>
+                <tr>
+                  <th scope="col">{{ $t('settings.account_type') }}</th>
+                  <td>{{ settings.account.type }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.account_id') }}</th>
+                  <td>{{ settings.account.id }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.name') }}</th>
+                  <td>{{ settings.name }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.environment') }}</th>
+                  <td>{{ settings.environment }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.users') }}</th>
+                  <td>{{ settings.count.users }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.courses') }}</th>
+                  <td>{{ settings.count.courses }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.expires') }}</th>
+                  <td>{{ settings.expires }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.location') }}</th>
+                  <td>{{ settings.location }}</td>
+                </tr>
+                <tr>
+                  <th scope="col">{{ $t('settings.protocol') }}</th>
+                  <td>{{ settings.protocol }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!--
+            <h4>{{ $t('content.admin.accordions.settings.security.label') }}</h4>
+            <p>{{ $t('content.admin.accordions.settings.security.content') }}</p>
+            <p>{{ $t('coming_soon') }}</p>
+            -->
+            <h4>{{ $t('content.admin.accordions.settings.api.label') }}</h4>
+            <p>{{ $t('content.admin.accordions.settings.api.content') }}</p>
+            <p>{{ $t('coming_soon') }}</p>
+          </div>
 
           <div ref="courses">
             <div class="row actions">
@@ -35,14 +83,12 @@
                     {{ $t('content.admin.accordions.courses.add.button') }}
                   </q-tooltip>
                 </button>
-                <!--
-                    <button class="big" @click="">
-                      <i>file_upload</i>
-                      <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
-                        {{ $t('content.admin.accordions.courses.add.upload.button') }}
-                      </q-tooltip>
-                    </button>
-                    -->
+                <button class="big" @click="">
+                  <i>file_download</i>
+                  <q-tooltip anchor="top middle" self="bottom middle" :offset="[0, 0]">
+                    {{ $t('content.admin.accordions.courses.add.upload.button') }}
+                  </q-tooltip>
+                </button>
               </div>
             </div>
 
@@ -173,6 +219,9 @@ export default {
     }),
     permissions () {
       return this.getPermissions()
+    },
+    settings () {
+      return this.getSettings()
     }
   },
   watch: {
@@ -252,6 +301,24 @@ export default {
       return this.tigris.role.retrieve().then(r => {
         return r.data
       })
+    },
+    getSettings () {
+      let settings = {
+        account: {
+          id: '',
+          type: ''
+        },
+        count: {
+          users: 0,
+          courses: 0
+        },
+        environment: '',
+        expires: new Date().toString(),
+        location: '',
+        name: '',
+        protocol: ''
+      }
+      return settings
     },
     openModal (name, action, model, obj) {
       if (action) {
@@ -358,4 +425,7 @@ export default {
 .fade-leave-to /* .fade-leave-active below version 2.1.8 */
   opacity 0
   transform translateY(30px)
+.settings-table
+  th
+    text-align left
 </style>

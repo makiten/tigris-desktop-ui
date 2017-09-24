@@ -1,5 +1,23 @@
 export default {
+  'language': 'Language',
   'lang': 'English (US)',
+  'settings': {
+    'account_type': 'Account Type',
+    'account_id': 'Account ID',
+    'cancel': 'Cancel Subscription',
+    'courses': 'Number of Courses',
+    'environment': 'Environment',
+    'expires': 'Good until',
+    'location': 'Location',
+    'name': 'Registered to',
+    'protocol': 'Protocol',
+    'users': 'Number of Users'
+  },
+  'enviroments': {
+    'dev': 'Development',
+    'test': 'Test',
+    'prod': 'Production'
+  },
   'assessments': {
     'answer': {
       'heading': 'What Kind of Answer?',
@@ -46,7 +64,7 @@ export default {
   },
   'buttons': {
     'add': 'Add {n}',
-    'cancel': 'Cancel',
+    'cancel': 'Cancel{item}',
     'close': 'Close',
     'draft': 'Save as Draft',
     'delete': 'Delete{item}',

@@ -1,5 +1,22 @@
 export default {
+  'language': '言葉',
   'lang': '日本語',
+  'settings': {
+    'account_type': 'アカウントタイプ',
+    'account_id': 'アカウントID',
+    'cancel': '定期購読解除',
+    'courses': 'コース個数',
+    'expires': '予約購読期限の日付け',
+    'location': 'アドレス',
+    'name': '登録会社',
+    'protocol': 'プロトコル',
+    'users': 'ユーザー人数'
+  },
+  'statuses': {
+    'dev': '開発中',
+    'test': 'テスト中',
+    'prod': 'プロダクション中'
+  },
   'buttons': {
     'add': '{n}を作る',
     'cancel': 'キャンセル',

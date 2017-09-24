@@ -6,13 +6,78 @@
           <q-toolbar-title :padding="1">
             <span class="mobile-only vertical-middle">{{app.label}}</span>
             <img class="desktop-only vertical-middle" src="~assets/jogral-logo-web-white.svg">
-            <big class="inline-block vertical-middle" style="padding-left:1vw">Tigris</big>
+            <span class="inline-block vertical-middle" style="padding-left:1vw">Tigris</span>
             <small class="inline-block vertical-bottom" style="padding-left:0.1vw">β</small>
           </q-toolbar-title>
         </div>
-        <div class="auto text-center">
+        <div class="auto text-center lt-md">
+          <locale-picker v-model="locale" />
         </div>
-        <div class="auto text-right">
+        <div class="auto text-right lt-md">
+          <button class="big">
+            <i>account_circle</i>
+            <q-popover ref="popover">
+              <div class="list item-delimiter highlight">
+                <div class="item item-link" @click="$router.push({name: 'admin'})" v-if="auth.admin">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.admin') }}</a>
+                  </div>
+                </div>
+                <div class="item item-link" v-if="auth !== null" @click="openModalClosePopover('accountModal', $refs.popover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.account') }}</a>
+                  </div>
+                </div>
+                <div class="item item-link" @click="$router.replace({path: '/login'})" v-if="auth === null">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.login') }}</a>
+                  </div>
+                </div>
+                <div class="item item-link" @click="logout()" v-else>
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.logout') }}</a>
+                  </div>
+                </div>
+              </div>
+            </q-popover>
+            <q-tooltip anchor="center left" self="center right" :offset="[0, 0]">
+              <strong>{{ $t('header.nav.account') }}</strong>
+            </q-tooltip>
+          </button>
+          <button class="big">
+            <i>more_horiz</i>
+            <q-popover ref="aboutPopover">
+              <div class="list item-delimiter highlight">
+                <div class="item item-link" @click="openModalClosePopover('aboutModal', $refs.aboutPopover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.about.label') }}</a>
+                  </div>
+                </div>
+                <!--
+                <div class="item item-link" @click="openModalClosePopover('licenseModal', $refs.aboutPopover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.license.label') }}</a>
+                  </div>
+                </div>
+                <div class="item item-link" @click="openModalClosePopover('privacyModal', $refs.aboutPopover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.privacy.label') }}</a>
+                  </div>
+                </div>
+                <div class="item item-link" @click="openModalClosePopover('termsModal', $refs.aboutPopover)">
+                  <div class="item-content">
+                    <a>{{ $t('header.nav.terms.label') }}</a>
+                  </div>
+                </div>
+                -->
+              </div>
+            </q-popover>
+            <q-tooltip anchor="center left" self="center right" :offset="[0, 0]">
+              <strong>{{ $t('header.nav.tooltips.more') }}</strong>
+            </q-tooltip>
+          </button>
+        </div>
+        <div class="auto text-right gt-sm">
           <button class="big" @click="$router.push({path: '/'})">
             <i>home</i>
             <q-tooltip anchor="center left" self="center right" :offset="[0, 0]">
@@ -79,6 +144,7 @@
                     <a>{{ $t('header.nav.about.label') }}</a>
                   </div>
                 </div>
+                <!--
                 <div class="item item-link" @click="openModalClosePopover('licenseModal', $refs.aboutPopover)">
                   <div class="item-content">
                     <a>{{ $t('header.nav.license.label') }}</a>
@@ -94,6 +160,7 @@
                     <a>{{ $t('header.nav.terms.label') }}</a>
                   </div>
                 </div>
+                -->
               </div>
             </q-popover>
             <q-tooltip anchor="center left" self="center right" :offset="[0, 0]">
@@ -105,20 +172,27 @@
     </div>
 
     <dashboard :auth="auth" :enrollments="enrollments" :recommended="courses.recommended" :token="token" v-if="$route.fullPath.toLowerCase() == '/'" class="layout-view" />
-    <router-view :auth="auth" :label="$t('header.nav.tooltips.toc')" :token="token" class="layout-view" v-else></router-view>
+    <router-view :auth="auth" :label="$t('header.nav.tooltips.toc')" :notifications="notifications" :token="token" class="layout-view" v-else></router-view>
 
     <div class="toolbar" slot="footer">
-      <div class="row fit">
-        <div>
-          <strong>&copy;{{currentYear}} Jogral, L.L.C.</strong>
-        </div>
-        <div class="auto text-right vertical-top">
-          <q-select
-             type="list"
-             v-model="locale"
-             @input="$i18n.set($event)"
-             :options="localeOpts"></q-select>
-        </div>
+      <q-toolbar-title :padding="0" class="gt-sm">
+        &copy;{{currentYear}} Jogral, L.L.C.
+      </q-toolbar-title>
+      <div class="auto flex justify-end gt-sm">
+        <locale-picker v-model="locale" />
+      </div>
+      <div class="auto lt-md">
+        <q-tabs slot="navigation">
+          <q-tab icon="home" route="/" exact>{{ $t('header.nav.tooltips.dashboard') }}</q-tab>
+          <q-tab icon="school" route="/courses" exact>{{ $t('header.nav.tooltips.course') }}</q-tab>
+          <q-tab icon="notifications_none" route="/notifications" v-if="unreadNotifications === 0">
+            {{ $t('header.nav.tooltips.notifications.label') }}
+          </q-tab>
+          <q-tab icon="notifications_active" route="/notifications" v-else>
+            {{ $t('header.nav.tooltips.notifications.label') }}
+            <span class="circular label bg-secondary">{{ unreadNotifications }}</span>
+          </q-tab>
+        </q-tabs>
       </div>
     </div>
 
@@ -144,7 +218,7 @@
 
     <notifications :auth="auth" :notifications="notifications" ref="notificationsModal" />
 
-    <account :auth="auth" ref="accountModal" />
+    <account :auth="auth" :tigris="tigris" ref="accountModal" @refresh="refreshAuth" @toast="sendToast" />
   </q-layout>
 </template>
 
@@ -160,6 +234,7 @@ import Dashboard from './generic-partials/Dashboard'
 import Notifications from './generic-partials/Notifications'
 import CourseCard from './courses/CourseCard'
 import GenericModal from './modals/GenericModal'
+import LocalePicker from './generic-partials/LocalePicker'
 
 export default {
   props: ['currentYear'],
@@ -169,7 +244,6 @@ export default {
       courses: {},
       enrollments: {},
       locale: this.$i18n.locale(),
-      localeOpts: this._i18nOptions(),
       notifications: [],
       nextUrl: '',
       tigris: {}
@@ -299,15 +373,17 @@ export default {
     Dashboard,
     Notifications,
     CourseCard,
-    GenericModal
+    GenericModal,
+    LocalePicker
   }
 }
 </script>
 
 <style lang="stylus">
-.notifications
-  span.label
-    top 0vh
+.gt-sm
+  .notifications
+    span.label
+      top 0vh
 .lang-picker
   margin-right 1vw
 .toolbar
