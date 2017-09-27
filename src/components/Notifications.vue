@@ -98,8 +98,8 @@ export default {
       Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
         this.tigris = tigris
       }).catch(e => {
-          console.error(e)
-          this.$router.replace({path: '/logout'})
+        console.error(e)
+        this.$router.replace({path: '/logout'})
       })
     },
     userMessage (notification) {

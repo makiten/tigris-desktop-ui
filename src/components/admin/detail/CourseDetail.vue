@@ -130,12 +130,12 @@
                 <div>
                   <div class="lt-md">
                     <button class="primary big full-width clear" @click="close">
-                      {{ $t('buttons.cancel') }}
+                      {{ $t('buttons.cancel', {item: ''}) }}
                     </button>
                   </div>
                   <div class="gt-sm">
                     <button class="primary big round clear" @click="close">
-                      {{ $t('buttons.cancel') }}
+                      {{ $t('buttons.cancel', {item: ''}) }}
                     </button>
                   </div>
                 </div>

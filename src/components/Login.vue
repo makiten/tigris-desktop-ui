@@ -155,6 +155,14 @@ import { Loading } from 'quasar'
 import { Tigris } from '../api'
 import LocalePicker from './generic-partials/LocalePicker'
 
+function load (options) {
+  Loading.show(options)
+}
+
+function finish () {
+  Loading.hide()
+}
+
 export default {
   name: 'login',
   props: ['currentYear'],
@@ -225,6 +233,7 @@ export default {
         } else {
           this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
           this.$store.commit({ type: 'token/initialize', token: tigris._token })
+          finish()
           if (tigris.token !== null) {
             this.$router.replace({name: 'index'})
           } else {
@@ -235,9 +244,7 @@ export default {
           }
         }
       }).catch(e => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(e)
-        }
+        if (DEV) { console.error(e) }
         this.error = true
       })
     },
@@ -245,12 +252,15 @@ export default {
       window.location.href = url
     },
     login () {
+      load({
+        spinner: 'pie',
+        spinnerColor: '#027be3',
+        spinnerSize: 220
+      })
       if (this.org.useSso === true) {
         this._goToSsoUrl(this.org.loginUrl)
       } else {
-        Loading.show()
         this._doApiAuth(this.creds)
-        Loading.hide()
       }
     },
     logout () {
