@@ -72,7 +72,7 @@
       <div class="row">
         <div class="auto">
           <div class="stacked-label">
-            <mavon-editor v-model="form.content" :language="'en'" default_open="edit" previewtoggle="true" />
+            <mavon-editor v-model="form.content" :language="'en'" default_open="edit" previewtoggle="true" @imgAdd="imgAdd" @imgDel="imgDel" />
             <label>{{ $t('content.admin.module.detail.form.content.name') }}</label>
             <small v-html="$t('content.admin.module.detail.form.content.info')"></small>
           </div>
@@ -157,6 +157,7 @@ export default {
         is_active: true,
         creator: ''
       },
+      imgs: {},
       uploadUrl: 'https://azure.microsoft.com'
     }
   },
@@ -213,6 +214,12 @@ export default {
         return r.data.result
       })
     },
+    imgAdd (pos, $file) {
+      this.imgs[pos] = $file
+    },
+    imgDel (pos) {
+      delete this.imgs[pos]
+    },
     removeModule (tigris) {
       return tigris.module.destroy(this.module.id).then(r => {
         return r.data.result
@@ -223,6 +230,11 @@ export default {
       const data = {module: form}
       return tigris.module.update(this.course.id, this.module.id, data).then(r => {
         return r.data.result
+      })
+    },
+    uploadImg (tigris, img) {
+      return tigris.util.upload(img).then(r => {
+        return r.data
       })
     },
     cancel () {
@@ -259,6 +271,11 @@ export default {
       }
     },
     save (quit) {
+      for (var k in this.imgs) {
+        this.uploadImg(this.tigris, this.imgs[k]).then(data => {
+          if (data) console.log('Uploaded')
+        })
+      }
       if (this.action === 'add') {
         this.addModule(this.tigris, this.form).then(module => {
           this.form = this._.cloneDeep(this.blankForm)

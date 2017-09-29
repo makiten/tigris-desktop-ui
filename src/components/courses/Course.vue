@@ -92,7 +92,7 @@
       </q-tooltip>
     </button>
 
-    <q-modal ref="toc" :content-css="{minWidth: '60vw', minHeight: '30vh'}">
+    <q-modal ref="toc" :content-css="{minWidth: '60vw', minHeight: '300px'}">
       <q-layout>
         <div class="toolbar" slot="header">
           <q-toolbar-title :padding="1">
@@ -102,17 +102,19 @@
             <i>close</i>
           </button>
         </div>
-        <div class="list platform-delimiter full-width">
-          <template v-for="(module, i) in modules">
-            <div class="item item-delimiter item-link"
-                 @click="goToModule(module.slug)">
-              <div class="item-primary">{{ i + 1 }}</div>
-              <div class="item-content has-secondary">
-                <div>{{ module.title }}</div>
+        <div class="scroll">
+          <div class="list platform-delimiter full-width">
+            <template v-for="(module, i) in modules">
+              <div class="item item-delimiter item-link"
+                   @click="goToModule(module.slug)">
+                <div class="item-primary">{{ i + 1 }}</div>
+                <div class="item-content has-secondary">
+                  <div>{{ module.title }}</div>
+                </div>
+                <i class="item-secondary">class</i>
               </div>
-              <i class="item-secondary">class</i>
-            </div>
-          </template>
+            </template>
+          </div>
         </div>
       </q-layout>
     </q-modal>

@@ -264,6 +264,10 @@ export default {
     }
   },
   watch: {
+    locale (val) {
+      this.$i18n.set(val)
+      this.locale = val
+    },
     '$route': function (val) {
       this._onCreated(this.auth.id, this.token)
     }

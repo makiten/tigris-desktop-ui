@@ -1,5 +1,5 @@
 # Set up builds for node
-FROM node:alpine AS build-env
+FROM node:8-alpine AS build-env
 MAINTAINER Jogral <code@jogral.io>
 
 WORKDIR /opt/app

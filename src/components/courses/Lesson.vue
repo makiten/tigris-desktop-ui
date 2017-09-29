@@ -11,7 +11,7 @@ import marked from 'marked'
 
 export default {
   name: 'lesson',
-  props: ['module'],
+  props: ['auth', 'course', 'enrollment', 'module', 'token'],
   computed: {
     content () {
       if (this.module.content) {

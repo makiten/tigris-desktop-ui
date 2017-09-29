@@ -1,6 +1,6 @@
 <template>
   <div class="auto">
-    <h4>{{ question }}</h4>
+    <h4 v-html="question"></h4>
     <p>{{ $t('content.courses.module.quiz.types.ma.instructions') }}</p>
     <div class="list item-delimiter">
       <label class="item" v-for="(v, k) in choices">

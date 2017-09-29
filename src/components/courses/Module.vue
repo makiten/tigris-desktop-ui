@@ -50,10 +50,20 @@
 </template>
 
 <script>
+import { Loading } from 'quasar'
 import { Tigris } from '../../api'
 import { mapActions, mapGetters } from 'vuex'
 import Lesson from './Lesson.vue'
 import Quiz from './assessments/Quiz.vue'
+
+function load (options) {
+  Loading.show(options)
+}
+
+function finish () {
+  Loading.hide()
+}
+
 export default {
   name: 'module',
   props: ['course', 'modules', 'token'],
@@ -74,8 +84,12 @@ export default {
   mounted () {
     // Update progress
   },
+  beforeCreate () {
+    load()
+  },
   created () {
     this._onCreated()
+    finish()
   },
   watch: {
     '$route' (to, from) {

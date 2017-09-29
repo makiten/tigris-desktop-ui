@@ -292,6 +292,10 @@ export default {
     }
   },
   watch: {
+    locale (val) {
+      this.$i18n.set(val)
+      this.locale = val
+    }
   },
   created () {
     if (Loading.isActive()) {

@@ -30,7 +30,7 @@ module.exports = {
     polyfill: 'babel-polyfill',
     app: './src/main.js'
   },
-  //entry: ['babel-polyfill', './src/main.js'],
+  // entry: ['babel-polyfill', './src/main.js'],
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: config[env.prod ? 'build' : 'dev'].publicPath,

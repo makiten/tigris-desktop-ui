@@ -26,7 +26,7 @@
 
             <div class="content bg-white">
               <div ref="tab-current">
-                <div class="row gutter no-margin">
+                <div class="row gutter lt-md-column">
                   <div v-if="typeof enrollments.in_progress === 'undefined' || enrollments.in_progress.length === 0" class="auto text-center">
                     <p>
                       {{ $t('content.dashboard.empty') }}
@@ -44,7 +44,7 @@
                       </button>
                     </div>
                   </div>
-                  <div class="width-1of3 sm-auto" v-for="enrollment in enrollments.in_progress" v-else>
+                  <div class="width-1of3 sm-auto sm-wrap" v-for="enrollment in enrollments.in_progress" v-else>
                     <course-card :course="enrollment.course" :currentUrl="enrollment.progress.modules.current.slug" :status="'in-progress'" :tigris="tigris" v-if="typeof enrollment.progress.modules !== 'undefined'" />
                     <course-card :course="enrollment.course" :status="'in-progress'" :tigris="tigris" v-else/>
                   </div>
@@ -52,13 +52,13 @@
               </div>
 
               <div ref="tab-complete">
-                <div class="row gutter no-margin lt-md-column">
+                <div class="row gutter lt-md-column">
                   <div v-if="typeof enrollments.completed === 'undefined' || enrollments.completed.length === 0" class="auto text-center">
                     <p>
                       {{ $t('content.dashboard.empty') }}
                     </p>
                   </div>
-                  <div class="width-1of3 sm-auto" v-for="enrollment in enrollments.completed" v-else>
+                  <div class="width-1of3 sm-auto sm-wrap" v-for="enrollment in enrollments.completed" v-else>
                     <course-card :course="enrollment.course" :status="'completed'" :tigris="tigris" />
                   </div>
                 </div>

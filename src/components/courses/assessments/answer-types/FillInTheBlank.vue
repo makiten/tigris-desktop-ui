@@ -4,13 +4,13 @@
       <h4>{{ $t('content.courses.module.quiz.types.fitb.question') }}</h4>
       <p>{{ $t('content.courses.module.quiz.types.fitb.instructions') }}</p>
       <p>
-        {{questionPreBlank}}
+        <span v-html="questionPreBlank"></span>
         <input ref="input"
                type="text"
                v-bind:value="value"
                @input="setValue($event.target.value)"
                :placeholder="$t('content.courses.module.quiz.types.fitb.placeholder')">
-        {{questionPostBlank}}
+        <span v-html="questionPostBlank"></span>
       </p>
     </div>
   </div>

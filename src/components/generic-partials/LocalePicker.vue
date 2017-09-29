@@ -2,7 +2,7 @@
   <q-select
      type="list"
      v-bind:value="value"
-     @input="$i18n.set($event)"
+     @input="setValue($event)"
      :options="localeOpts"></q-select>
 </template>
 
@@ -22,6 +22,9 @@ export default {
       let opts = []
       keys.forEach(k => { opts.push({ value: k, label: this.$store.state.i18n.translations[k].lang }) })
       return opts
+    },
+    setValue ($e) {
+      this.$emit('input', $e)
     }
   }
 }

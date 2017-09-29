@@ -11,9 +11,7 @@
         <i>edit</i>
       </button>
     </div>
-    <div class="card-content">
-      {{ course.description }}
-    </div>
+    <div class="card-content" v-html="truncate(course.description, 80)"></div>
     <div class="card-actions flex items-end">
       <div class="text-primary">
         <button @click="modules()">
@@ -86,6 +84,13 @@ export default {
         }
         this.$emit('delete', 'negative', this.$t('content.admin.course.toasts.negative', {c: this.course.title}))
       })
+    },
+    truncate (value, length) {
+      if (value.length > length) {
+        return value.substring(0, length - 3) + '...'
+      } else {
+        return value
+      }
     }
   },
   components: {
@@ -115,7 +120,7 @@ button
       i
         color darken($primary, 55%)
   .card-content
-    height 6vh
+    height 8vh
   .card-actions
     vertical-align bottom
 </style>
