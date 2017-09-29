@@ -92,7 +92,7 @@
       </q-tooltip>
     </button>
 
-    <q-modal ref="toc" :content-css="{minWidth: '60vw', minHeight: '300px'}">
+    <q-modal ref="toc" :content-css="{minWidth: '60vw'}">
       <q-layout>
         <div class="toolbar" slot="header">
           <q-toolbar-title :padding="1">
@@ -102,7 +102,7 @@
             <i>close</i>
           </button>
         </div>
-        <div class="scroll">
+        <div class="scroll full-width">
           <div class="list platform-delimiter full-width">
             <template v-for="(module, i) in modules">
               <div class="item item-delimiter item-link"

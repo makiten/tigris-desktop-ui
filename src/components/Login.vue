@@ -252,16 +252,13 @@ export default {
       window.location.href = url
     },
     login () {
-      load({
-        spinner: 'pie',
-        spinnerColor: '#027be3',
-        spinnerSize: 220
-      })
+      load({ spinner: 'facebook' })
       if (this.org.useSso === true) {
         this._goToSsoUrl(this.org.loginUrl)
       } else {
         this._doApiAuth(this.creds)
       }
+      finish()
     },
     logout () {
       this.$store.commit({ type: 'token/destroy' })

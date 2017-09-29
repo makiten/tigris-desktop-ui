@@ -51,7 +51,7 @@
         {{ course.title | truncate(30)}}
       </div>
       <div class="card-content">
-        {{ course.description | truncate }}
+        {{ course.teaser | truncate }}
       </div>
       <div class="action row no-gutter">
         <div class="auto text-center">

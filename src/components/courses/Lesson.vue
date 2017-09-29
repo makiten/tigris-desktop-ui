@@ -7,7 +7,16 @@
 
 <script>
 // import VueMarked from 'vue-marked'
+import { Loading } from 'quasar'
 import marked from 'marked'
+
+function load (options) {
+  Loading.show(options)
+}
+
+function finish () {
+  Loading.hide()
+}
 
 export default {
   name: 'lesson',
@@ -26,6 +35,12 @@ export default {
         return ''
       }
     }
+  },
+  created () {
+    load({ spinner: 'facebook' })
+  },
+  mounted () {
+    this.$nextTick(function () { finish() })
   },
   data: () => ({
   })

@@ -236,6 +236,10 @@ import CourseCard from './courses/CourseCard'
 import GenericModal from './modals/GenericModal'
 import LocalePicker from './generic-partials/LocalePicker'
 
+function finish () {
+  Loading.hide()
+}
+
 export default {
   props: ['currentYear'],
   data () {
@@ -358,11 +362,10 @@ export default {
     }
   },
   mounted () {
-    if (Loading.isActive()) {
-      Loading.hide()
-    }
+    this.$nextTick(function () { finish() })
   },
   created () {
+    if (Loading.isActive()) { finish() }
     if (this.token && this.auth) {
       this._onCreated(this.auth.id, this.token)
     } else {
