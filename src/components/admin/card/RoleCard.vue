@@ -56,6 +56,7 @@ export default {
 button
   padding 0.25vh 0vw
 div.card.role-card
+  min-height 142px
   .card-title
     padding-top 0.1vh
     padding-bottom 0.1vh

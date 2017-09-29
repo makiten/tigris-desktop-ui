@@ -13,8 +13,8 @@
       </div>
 
       <h4>{{ $t('content.courses.list.headings.all') }}</h4>
-      <div class="row gutter lt-md-column">
-        <div class="width-1of4 sm-auto sm-wrap" v-for="course in courses">
+      <div class="row gutter lt-md-column" v-for="n in Math.ceil(courses.length / 4)">
+        <div class="width-1of4 sm-auto sm-wrap" v-for="course in courses.slice(((n - 1) * 4), (n * 4))">
           <course-card :course="course" :status="''" :tigris="tigris" />
         </div>
       </div>

@@ -1,5 +1,5 @@
 <template>
-  <q-modal ref="inviteUser" :content-css="{minWidth: '40vw', minHeight: '55vh'}">
+  <q-modal ref="inviteUser" :content-css="{minWidth: '55vw', minHeight: '65vh'}">
     <q-layout>
       <div class="full-width scroll">
         <div class="row">
