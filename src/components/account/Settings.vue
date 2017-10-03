@@ -21,7 +21,7 @@
               <button @click="updateUser" class="secondary big full-width" v-if="!$v.user.$error || !$v.user.$dirty">
                 {{ $t('content.modals.account.settings.forms.username.button') }}
               </button>
-              <button @click="updateUser" class="secondary big full-width" disabled v-else>
+              <button class="secondary big full-width" disabled v-else>
                 {{ $t('content.modals.account.settings.forms.username.button') }}
               </button>
             </div>
@@ -29,7 +29,7 @@
               <button @click="updateUser" class="secondary big round" v-if="!$v.user.$error || !$v.user.$dirty">
                 {{ $t('content.modals.account.settings.forms.username.button') }}
               </button>
-              <button @click="updateUser" class="secondary big round" disabled v-else>
+              <button class="secondary big round" disabled v-else>
                 {{ $t('content.modals.account.settings.forms.username.button') }}
               </button>
             </div>

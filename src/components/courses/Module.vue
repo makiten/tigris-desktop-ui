@@ -46,14 +46,54 @@
         </button>
       </div>
     </div>
+
+    <button class="primary circular shadow-3 absolute-bottom-right" style="right:20px; bottom:20px;" @click="$refs.toc.open()" v-if="$route.fullPath.substring($route.fullPath.length - 4) !== 'exam'">
+      <i>list</i>
+      <q-tooltip anchor="center left" self="center right" :offset="[-10, 0]">
+        {{ $t('header.nav.tooltips.toc') }}
+      </q-tooltip>
+    </button>
+
+    <q-modal ref="toc" :content-css="{minWidth: '60vw', minHeight: '80vh'}">
+      <q-layout>
+        <div class="toolbar" slot="header">
+          <q-toolbar-title :padding="1">
+            {{ course.title }}
+          </q-toolbar-title>
+          <button @click="$refs.toc.close()">
+            <i>close</i>
+          </button>
+        </div>
+        <div class="scroll full-width">
+          <div class="list platform-delimiter full-width">
+            <div v-for="(module, i) in modules" class="item item-delimiter item-link" @click="goToModule(module.slug)">
+              <div class="item-primary">{{ i + 1 }}</div>
+              <div class="item-content has-secondary">
+                <div>{{ module.title }}</div>
+              </div>
+              <i class="item-secondary">class</i>
+            </div>
+          </div>
+        </div>
+      </q-layout>
+    </q-modal>
   </div>
 </template>
 
 <script>
+import { Loading } from 'quasar'
 import { Tigris } from '../../api'
 import { mapActions, mapGetters } from 'vuex'
 import Lesson from './Lesson.vue'
 import Quiz from './assessments/Quiz.vue'
+
+function load (options) {
+  Loading.show(options)
+}
+
+function finish () {
+  Loading.hide()
+}
 
 export default {
   name: 'module',
@@ -78,11 +118,15 @@ export default {
   beforeCreate () {
   },
   created () {
+    load({ spinner: 'facebook' })
     this._onCreated()
+    finish()
   },
   watch: {
     '$route' (to, from) {
+      load({ spinner: 'facebook' })
       this._onCreated()
+      finish()
     }
   },
   methods: {
@@ -113,12 +157,14 @@ export default {
             const moduleSlug = this.$route.params.moduleName.toLowerCase()
             this.getModule(tigris, course.id, moduleSlug).then(module => {
               this.module = module
+              return module
+            }).then(module => {
               this.getQuiz(module.id).then(r => {
                 this.quizExists = !!r.data
               })
               if (enrollment) {
                 const progress = enrollment.progress
-                progress.modules = {current: {id: module.id, slug: module.slug}}
+                progress.modules.current = {id: module.id, slug: module.slug}
                 const data = {fields: {progress: progress}}
                 this.updateEnrollment(tigris, enrollment.id, data).then(r => {
                   if (r === 1) {
@@ -155,17 +201,17 @@ export default {
     },
     continueCourse () {
       const nextIndex = this.modules.findIndex(m => m.id === this.module.id) + 1
+      let enrollmentToSend = this.enrollment
       let completed
       if (!this.enrollment.progress.modules.completed) {
         completed = []
       } else {
         completed = this.enrollment.progress.modules.completed
       }
-      completed.push(this.enrollment.progress.modules.current.id)
+      completed.push(this.module.id)
       completed = completed.filter((item, i, arr) => { return arr.indexOf(item) === i })
-      this.enrollment.progress.modules.completed = completed.sort()
-      this.enrollment.progress.modules.current = {}
-      let enrollmentToSend = this.enrollment
+      enrollmentToSend.progress.modules.completed = completed.sort()
+      enrollmentToSend.progress.modules.current = {}
       enrollmentToSend.course_id = this.course.id
       delete enrollmentToSend.course
       let data
@@ -187,7 +233,6 @@ export default {
           }).catch(e => { console.error(e) })
         })
       } else {
-        console.log(nextIndex)
         const nextUrl = this.modules[nextIndex].slug
         data = {fields: enrollmentToSend}
         this.updateEnrollment(this.tigris, enrollmentToSend.id, data).then(result => {
@@ -216,6 +261,9 @@ export default {
       return this.tigris.quiz.retrieve(null, moduleId).then(r => {
         return r.data
       }).catch(e => {})
+    },
+    goToModule (slug) {
+      this.$refs.toc.close(() => this.$router.push({ name: 'module', params: { moduleName: slug } }))
     },
     updateEnrollment (tigris, enrollmentId, data) {
       return tigris.user.update(this.auth.id, enrollmentId, data).then(r => {

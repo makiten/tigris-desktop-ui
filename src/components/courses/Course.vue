@@ -39,7 +39,7 @@
               <div class="item-content has-secondary">
                 {{ module.title }}
               </div>
-              <i :class="'item-secondary ' + $t('result.success.class')" v-if="enrollment.completed_on || enrollment.progress && enrollment.progress.modules.completed.indexOf(module.id) >= 0">{{ $t('result.success.icon') }}</i>
+              <i :class="'item-secondary ' + $t('result.success.class')" v-if="enrollment.completed_on || _.get(enrollment, 'progress.modules.completed', []).indexOf(module.id) >= 0">{{ $t('result.success.icon') }}</i>
             </router-link>
           </template>
           <template v-if="hasExam">
@@ -84,40 +84,6 @@
       </div>
     </div>
     <router-view :course="course" :modules="modules" :token="token" class="layout-view" v-else />
-
-    <button class="primary circular shadow-3 absolute-bottom-right" style="right:20px; bottom:20px;" @click="$refs.toc.open()" v-if="$route.fullPath.substring($route.fullPath.length - 4) !== 'exam'">
-      <i>list</i>
-      <q-tooltip anchor="center left" self="center right" :offset="[-10, 0]">
-        {{ $t('header.nav.tooltips.toc') }}
-      </q-tooltip>
-    </button>
-
-    <q-modal ref="toc" :content-css="{minWidth: '60vw'}">
-      <q-layout>
-        <div class="toolbar" slot="header">
-          <q-toolbar-title :padding="1">
-            {{ course.title }}
-          </q-toolbar-title>
-          <button @click="$refs.toc.close()">
-            <i>close</i>
-          </button>
-        </div>
-        <div class="scroll full-width">
-          <div class="list platform-delimiter full-width">
-            <template v-for="(module, i) in modules">
-              <div class="item item-delimiter item-link"
-                   @click="goToModule(module.slug)">
-                <div class="item-primary">{{ i + 1 }}</div>
-                <div class="item-content has-secondary">
-                  <div>{{ module.title }}</div>
-                </div>
-                <i class="item-secondary">class</i>
-              </div>
-            </template>
-          </div>
-        </div>
-      </q-layout>
-    </q-modal>
   </div>
 </template>
 
@@ -208,7 +174,6 @@ export default {
       this.$router.push({ name: 'module', params: { moduleName: module.slug } })
     },
     goToModule (slug) {
-      this.$refs.toc.close()
       this.$router.push({ name: 'module', params: { moduleName: slug } })
     }
   },

@@ -353,6 +353,7 @@ export default {
       popover.close()
     },
     refreshAuth () {
+      this.$refs.accountModal.close()
       this._onCreated(this.auth.id, this.token)
     },
     sendToast (type, statement) {

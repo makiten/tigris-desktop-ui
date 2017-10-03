@@ -26,7 +26,7 @@
           <h4>{{ message.heading }}</h4>
         </div>
         <div class="auto text-right">
-          <button @click="$refs.quizModal.close()">
+          <button @click="continueCourse">
             <i>close</i>
           </button>
         </div>
@@ -52,7 +52,7 @@
           <h4 v-else>{{ $t('content.courses.module.quiz.headings.incorrect') }}</h4>
         </div>
         <div class="auto text-right">
-          <button @click="$refs.quizModal.close()">
+          <button @click="continueCourse">
             <i>close</i>
           </button>
         </div>
@@ -101,17 +101,17 @@ export default {
   },
   methods: {
     continueCourse () {
+      let enrollmentToSend = this.enrollment
       let completed
       if (!this.enrollment.progress.modules.completed) {
         completed = []
       } else {
         completed = this.enrollment.progress.modules.completed
       }
-      completed.push(this.enrollment.progress.modules.current.id)
+      completed.push(this.module.id)
       completed = completed.filter((item, i, arr) => { return arr.indexOf(item) === i })
-      this.enrollment.progress.modules.completed = completed.sort()
-      this.enrollment.progress.modules.current = {}
-      var enrollmentToSend = this.enrollment
+      enrollmentToSend.progress.modules.completed = completed.sort()
+      enrollmentToSend.progress.modules.current = {}
       enrollmentToSend.course_id = this.course.id
       if (this.nextUrl === 'done') {
         enrollmentToSend.completed_on = new Date()

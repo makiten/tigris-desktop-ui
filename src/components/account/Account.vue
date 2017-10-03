@@ -57,11 +57,9 @@ export default {
     },
     refreshAuth () {
       this.$emit('refresh')
-      this.close()
     },
     sendToast (type, message) {
       this.$emit('toast', type, message)
-      this.close()
     }
   },
   components: {
