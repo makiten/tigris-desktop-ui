@@ -399,4 +399,6 @@ export default {
     margin-top 1vh
   button.big
     padding 0.8vh 0.2vw 0
+    i
+      color #fff
 </style>

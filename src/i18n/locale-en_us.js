@@ -18,6 +18,24 @@ export default {
     'test': 'Test',
     'prod': 'Production'
   },
+  'user': {
+    'title': 'User Activity',
+    'types': {
+      'enrollment': 'Enrollment',
+      'test': 'Test'
+    },
+    'descriptions': {
+      'completed': '{name} <strong>completed</strong> {course}.',
+      'registered': '{name} <strong>registered for</strong> {course}.',
+      'test': '{name} <strong>scored {score}</strong> on test for {course}.'
+    },
+    'columns': {
+      'type': 'Type of Action',
+      'timestamp': 'Date',
+      'moment': 'How Long Ago?',
+      'description': 'Description'
+    }
+  },
   'assessments': {
     'answer': {
       'heading': 'What Kind of Answer?',
