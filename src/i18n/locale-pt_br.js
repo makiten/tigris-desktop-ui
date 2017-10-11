@@ -17,6 +17,38 @@ export default {
     'test': 'Em Teste',
     'prod': 'Em Produção'
   },
+  'user': {
+    'table': {
+      'name': 'Nome Completo',
+      'format': '{firstname} {lastname}',
+      'username': 'Nome de Usuário',
+      'email': 'Endereço de Email',
+      'created': 'Date de Criação',
+      'roles': 'Papeis'
+    },
+    'title': 'Atividade',
+    'allCols': 'Todas as Colunas',
+    'search': 'Pesquisar',
+    'types': {
+      'enrollment': 'Registo',
+      'test': 'Teste'
+    },
+    'descriptions': {
+      'completed': '{name} <strong>completou</strong> {course}.',
+      'registered': '{name} <strong>registrou para</strong> {course}.',
+      'test': 'A nota de {name} <strong>foi {score}</strong> no teste do curso {course}.'
+    },
+    'columns': {
+      'type': 'Tipo da Ação',
+      'timestamp': 'Dato',
+      'moment': 'Quanto tempo?',
+      'description': 'Descrição'
+    },
+    'messages': {
+      'no_data': '<i>warning</i> Sem informação para mostrar.',
+      'no_data_after_filtering': '<i>warning</i> Sem resultados. Favor atualize os seus termos de pesquisa.'
+    }
+  },
   'assessments': {
     'answer': {
       'heading': 'Qual Tipo de Resposta?',

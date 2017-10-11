@@ -17,6 +17,38 @@ export default {
     'test': 'Test',
     'prod': 'Production'
   },
+  'user': {
+    'table': {
+      'name': 'Full Name',
+      'format': '{firstname} {lastname}',
+      'username': 'Username',
+      'email': 'Email Address',
+      'created': 'Created On',
+      'roles': 'Roles'
+    },
+    'title': 'User Activity',
+    'allCols': 'All Columns',
+    'search': 'Search',
+    'types': {
+      'enrollment': 'Enrollment',
+      'test': 'Test'
+    },
+    'descriptions': {
+      'completed': '{name} <strong>completed</strong> {course}.',
+      'registered': '{name} <strong>registered for</strong> {course}.',
+      'test': '{name} <strong>scored {score}</strong> on test for {course}.'
+    },
+    'columns': {
+      'type': 'Type of Action',
+      'timestamp': 'Date',
+      'moment': 'How Long Ago?',
+      'description': 'Description'
+    },
+    'messages': {
+      'no_data': '<i>warning</i> No data available to show.',
+      'no_data_after_filtering': '<i>warning</i> No results. Please refine your search terms.'
+    }
+  },
   'assessments': {
     'answer': {
       'heading': 'What Kind of Answer?',

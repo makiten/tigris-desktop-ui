@@ -19,7 +19,17 @@ export default {
     'prod': 'Production'
   },
   'user': {
+    'table': {
+      'name': 'Full Name',
+      'format': '{firstname} {lastname}',
+      'username': 'Username',
+      'email': 'Email Address',
+      'created': 'Created On',
+      'roles': 'Roles'
+    },
     'title': 'User Activity',
+    'allCols': 'All Columns',
+    'search': 'Search',
     'types': {
       'enrollment': 'Enrollment',
       'test': 'Test'
@@ -34,6 +44,10 @@ export default {
       'timestamp': 'Date',
       'moment': 'How Long Ago?',
       'description': 'Description'
+    },
+    'messages': {
+      'no_data': '<i>warning</i> No data available to show.',
+      'no_data_after_filtering': '<i>warning</i> No results. Please refine your search terms.'
     }
   },
   'assessments': {

@@ -15,6 +15,26 @@
         <hr>
         <div class="row gutter">
           <div>
+            <table class="q-table flipped responsive">
+              <thead>
+                <tr>
+                  <th>{{ $t('user.table.name') }}</th>
+                  <th>{{ $t('user.table.username') }}</th>
+                  <th>{{ $t('user.table.email') }}</th>
+                  <th>{{ $t('user.table.created') }}</th>
+                  <th>{{ $t('user.table.roles') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ $t('user.table.format', {firstname: name.first, lastname: name.last}) }}</td>
+                  <td>{{ user.shortname }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ userCreated }}</td>
+                  <td>{{ user.roles }}</td>
+                </tr>
+              </tbody>
+            </table>
             <button @click="" class="">
             </button>
           </div>
@@ -23,7 +43,8 @@
         <q-data-table
            :data="data"
            :config="config"
-           :columns="columns">
+           :columns="columns"
+           @refresh="refresh">
 
         </q-data-table>
       </div>
@@ -53,14 +74,14 @@ export default {
         {
           label: this.$t('user.columns.timestamp'),
           field: 'timestamp',
-          width: '100px',
+          width: '120px',
           filter: true,
           sort: 'date'
         },
         {
           label: this.$t('user.columns.moment'),
           field: 'moment',
-          width: '100px',
+          width: '90px',
           filter: true,
           sort: 'moment'
         },
@@ -74,12 +95,17 @@ export default {
       ],
       config: {
         rowHeight: '50px',
+        // refresh: true,
         noHeader: false,
         columnPicker: false,
         title: this.$t('user.title'),
         messages: {
-          noData: '',
-          noDataAfterFiltering: ''
+          noData: this.$t('user.messages.no_data'),
+          noDataAfterFiltering: this.$t('user.messages.no_data_after_filtering')
+        },
+        labels: {
+          allCols: this.$t('user.allCols'),
+          search: this.$t('user.search')
         }
       },
       data: [],
@@ -87,9 +113,37 @@ export default {
     }
   },
   watch: {
-    tigris (val) { this._load() }
+    tigris (val) { this._load() },
+    '$store.state.i18n.locale': function (val) {
+      moment.locale(val)
+      this.config.title = this.$t('user.title')
+      this.config.messages = {
+        noData: this.$t('user.messages.no_data'),
+        noDataAfterFiltering: this.$t('user.messages.no_data_after_filtering')
+      }
+      this.config.labels = {
+        allCols: this.$t('user.allCols'),
+        search: this.$t('user.search')
+      }
+      this.columns[0].label = this.$t('user.columns.type')
+      this.columns[1].label = this.$t('user.columns.timestamp')
+      this.columns[2].label = this.$t('user.columns.moment')
+      this.columns[3].label = this.$t('user.columns.description')
+      this._load()
+    }
   },
-  computed: {},
+  computed: {
+    name () {
+      let name = {
+          first: (this.user.first_name) ? this.user.first_name : '-',
+          last: (this.user.first_name) ? this.user.first_name : '-'
+      }
+      return name
+    },
+    userCreated () {
+      return moment(this.user.created_on, moment.ISO_8601).format('llll')
+    }
+  },
   created () {
     if (this.tigris.user) {
       this._onCreated()
@@ -156,6 +210,7 @@ export default {
       })
     },
     _onCreated () {
+      console.log(this.$i18n)
       this._load()
     },
     edit () {
@@ -165,6 +220,9 @@ export default {
       return this.tigris.user.retrieve(null, null, {shortname: this.userId}).then(r => {
         return r.data
       })
+    },
+    refresh (done) {
+      done()
     },
     sendToast (type, msg) {
       Toast.create[type]({
