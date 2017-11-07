@@ -47,9 +47,16 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'profile',
-  props: ['auth', 'tigris'],
+  props: ['tigris'],
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
+    })
+  },
   data () {
     return {
       form: {

@@ -98,7 +98,14 @@
           </div>
           <div class="row">
             <div class="layout-padding auto">
-              <module-detail @send="sendToast" @save-module="updateModules" @delete-module="removeModules" @close="switchViewTo" :action="action" :auth="auth" :course="course" :module="currentModule" :tigris="tigris" />
+              <module-detail @send="sendToast"
+                             @save-module="updateModules"
+                             @delete-module="removeModules"
+                             @close="switchViewTo"
+                             :action="action"
+                             :course="course"
+                             :module="currentModule"
+                             :tigris="tigris" />
             </div>
           </div>
         </div>
@@ -114,7 +121,12 @@
           </div>
           <div class="row">
             <div class="layout-padding auto">
-              <question @save="sendToast" @close="switchViewTo" :action="action" :module="currentModule" :partial="false" :tigris="tigris" />
+              <question @save="sendToast"
+                        @close="switchViewTo"
+                        :action="action"
+                        :module="currentModule"
+                        :partial="false"
+                        :tigris="tigris" />
             </div>
           </div>
         </div>
@@ -125,12 +137,13 @@
 
 <script>
 import { Toast } from 'quasar'
+import { mapGetters } from 'vuex'
 import ModuleDetail from '../detail/ModuleDetail'
 import Question from '../assessments/Question'
 
 export default {
   name: 'modules-list',
-  props: ['auth', 'course', 'tigris'],
+  props: ['course', 'tigris'],
   data () {
     return {
       action: 'edit',
@@ -140,7 +153,11 @@ export default {
       view: 'list'
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser'
+    })
+  },
   watch: {
     course (val) {
       this._onCreated()

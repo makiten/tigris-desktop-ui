@@ -85,21 +85,22 @@
 </template>
 
 <script>
-import { Tigris } from '../../api'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import CourseCard from '../courses/CourseCard'
 import Search from './Search'
 export default {
   name: 'dashboard',
-  props: ['auth', 'enrollments', 'recommended', 'token'],
+  props: ['enrollments', 'recommended', 'tigris'],
   data () {
     return {
-      search: { model: '', results: [] },
-      tigris: {}
+      search: { model: '', results: [] }
     }
   },
   computed: {
-    ...mapGetters({})
+    ...mapState({
+      auth: state => state.auth.user,
+      token: state => state.token.token
+    })
   },
   watch: {
     recommended (val) {
@@ -107,14 +108,10 @@ export default {
     }
   },
   methods: {
-    _onCreated (authId, token) {
-      Tigris.initializeWithToken(authId, token).then(tigris => {
-        this.tigris = tigris
-      }).catch(e => {})
+    _onCreated () {
     }
   },
   created () {
-    this._onCreated(this.auth.id, this.token)
   },
   components: {
     CourseCard,

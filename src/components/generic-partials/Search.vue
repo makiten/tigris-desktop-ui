@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import CourseCard from '../courses/CourseCard'
 export default {
   name: 'search',
@@ -38,7 +37,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([])
   },
   watch: {
   },

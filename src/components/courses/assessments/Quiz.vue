@@ -76,6 +76,7 @@
 
 <script>
 import { Tigris } from '../../../api'
+import { mapGetters } from 'vuex'
 import MultipleAnswer from './answer-types/MultipleAnswer'
 import MultipleChoice from './answer-types/MultipleChoice'
 // import Terminal from './answer-types/Terminal'
@@ -83,7 +84,7 @@ import FillInTheBlank from './answer-types/FillInTheBlank'
 import QuizModal from './QuizModal'
 export default {
   name: 'quiz',
-  props: ['auth', 'course', 'enrollment', 'module', 'token'],
+  props: ['course', 'enrollment', 'module'],
   data: () => ({
     quiz: { data: { messages: { } } },
     choice: '',
@@ -93,6 +94,10 @@ export default {
     tigris: {}
   }),
   computed: {
+    ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
+    })
   },
   watch: {
     choice (val) {

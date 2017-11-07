@@ -166,9 +166,9 @@
           </div>
         </div>
 
-        <role-detail ref="groupModal" @add="addRole" @edit="editRole" :action="action" :auth="auth" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
-        <modules-list @reset-search="resetCourseSearch" :auth="auth" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
-        <course-detail @add="addCard" @open="openModal" @delete="removeCard" @save="updateCard" :action="action" :auth="auth" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
+        <role-detail ref="groupModal" @add="addRole" @edit="editRole" :action="action" modal="$refs.groupModal" :role="toEdit.role" :tigris="tigris" />
+        <modules-list @reset-search="resetCourseSearch" :course="toEdit.course" ref="modulesList" :tigris="tigris" :view="moduleView" />
+        <course-detail @add="addCard" @open="openModal" @delete="removeCard" @save="updateCard" :action="action" :course="toEdit.course" ref="courseDetail" :tigris="tigris" />
         <invite-user @send-toast="sendToast" ref="inviteUser" :tigris="tigris" />
         <user-detail @reset-search="resetSearch" @send-toast="sendToast" :user="toEdit.user" ref="userDetail" :tigris="tigris" />
         <exam ref="exam" @refresh="refresh" @send-toast="sendToast" :course="toEdit.course" :tigris="tigris" />
@@ -178,7 +178,6 @@
 </template>
 
 <script>
-import { Tigris } from '../../api'
 import { mapActions, mapGetters } from 'vuex'
 import { Utils, Toast } from 'quasar'
 import CourseCard from './card/CourseCard'
@@ -214,8 +213,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      auth: 'auth/auth',
-      token: 'token/token'
+      auth: 'auth/getUser',
+      token: 'token/getToken'
     }),
     permissions () {
       return this.getPermissions()
@@ -234,19 +233,27 @@ export default {
       if (!this.auth.admin) {
         this.$router.replace({ path: '/forbidden' })
       }
-      Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
-        this.tigris = tigris
-      }).then(r => {
-        this.getRoles().then(roles => {
-          this.roles = roles
-          this._getCourses().then(courses => {
-            this.courses = courses
-          }).then(e => {
-            this._getUsers().then(users => {
-              this.users = users
-            })
-          })
+      this.$store.dispatch({
+        type: 'auth/refresh',
+        user: this.auth,
+        token: this.token
+      }).then(tigris => {
+        this.$store.dispatch({
+          type: 'token/initialize',
+          token: tigris._token
         })
+        this.tigris = tigris
+      }).then(() => {
+        return this.getRoles()
+      }).then(roles => {
+        this.roles = roles
+        return this._getCourses()
+      }).then(courses => {
+        this.courses = courses
+      }).then(() => {
+        return this._getUsers()
+      }).then(users => {
+        this.users = users
       })
     },
     _getCourses () {

@@ -29,7 +29,7 @@
           </dd>
         </dl>
         <hr>
-        <p>{{ course.long_description }}</p>
+        <p v-html="course.long_description"></p>
         <div class="list module-list item-delimiter">
           <template v-for="(module, index) in modules">
             <router-link tag="div" class="item item-link" :to="{ name: 'module', params: { moduleName: module.slug } }">
@@ -83,7 +83,7 @@
         </div>
       </div>
     </div>
-    <router-view :course="course" :modules="modules" :token="token" class="layout-view" v-else />
+    <router-view :course="course" :modules="modules" class="layout-view" v-else />
   </div>
 </template>
 
@@ -93,7 +93,7 @@ import { mapActions, mapGetters } from 'vuex'
 // import axios from 'axios'
 export default {
   name: 'course',
-  props: ['token'],
+  props: [],
   data () {
     return {
       course: {},
@@ -105,7 +105,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      auth: 'auth/auth'
+      auth: 'auth/getUser',
+      token: 'token/getToken'
     })
   },
   watch: {
@@ -141,8 +142,8 @@ export default {
         })
         // this.goToFirstModule()
       }).catch(e => {
-        this.$router.replace({path: '/login'})
-        // console.error(e)
+        // this.$router.replace({path: '/login'})
+        console.error(e)
       })
     },
     getCourse (tigris) {

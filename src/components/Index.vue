@@ -171,8 +171,15 @@
       </div>
     </div>
 
-    <dashboard :auth="auth" :enrollments="enrollments" :recommended="courses.recommended" :token="token" v-if="$route.fullPath.toLowerCase() == '/'" class="layout-view" />
-    <router-view :auth="auth" :label="$t('header.nav.tooltips.toc')" :notifications="notifications" :token="token" class="layout-view" v-else></router-view>
+    <dashboard :enrollments="enrollments"
+               :recommended="courses.recommended"
+               :tigris="tigris"
+               v-if="$route.fullPath.toLowerCase() == '/'"
+               class="layout-view" />
+    <router-view :label="$t('header.nav.tooltips.toc')"
+                 :notifications="notifications"
+                 :tigris="tigris"
+                 class="layout-view" v-else></router-view>
 
     <div class="toolbar" slot="footer">
       <q-toolbar-title :padding="0" class="gt-sm">
@@ -216,15 +223,15 @@
       </div>
     </generic-modal>
 
-    <notifications :auth="auth" :notifications="notifications" ref="notificationsModal" />
+    <notifications :notifications="notifications" ref="notificationsModal" />
 
-    <account :auth="auth" :tigris="tigris" ref="accountModal" @refresh="refreshAuth" @toast="sendToast" />
+    <account :tigris="tigris" ref="accountModal" @refresh="refreshAuth" @toast="sendToast" />
   </q-layout>
 </template>
 
 <script>
-import { Loading, Toast } from 'quasar'
-import { Tigris } from '../api'
+import { Toast } from 'quasar'
+// import { Tigris } from '../api'
 import { mapActions, mapGetters } from 'vuex'
 import Account from './account/Account'
 import Admin from './admin/Admin'
@@ -235,10 +242,7 @@ import Notifications from './generic-partials/Notifications'
 import CourseCard from './courses/CourseCard'
 import GenericModal from './modals/GenericModal'
 import LocalePicker from './generic-partials/LocalePicker'
-
-function finish () {
-  Loading.hide()
-}
+import Loader from '../loader.js'
 
 export default {
   props: ['currentYear'],
@@ -255,8 +259,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      auth: 'auth/auth',
-      token: 'token/token'
+      auth: 'auth/getUser',
+      token: 'token/getToken'
     }),
     unreadNotifications () {
       const unread = this.notifications.reduce(function (s, e) {
@@ -272,44 +276,38 @@ export default {
       this.$i18n.set(val)
       this.locale = val
     },
-    '$route': function (val) {
-      this._onCreated(this.auth.id, this.token)
+    '$route': function (to, from) {
+      this._onCreated(this.auth, this.token)
     }
   },
   methods: {
     ...mapActions([
     ]),
-    _i18nOptions () {
-      const keys = Object.keys(this.$store.state.i18n.translations)
-      let opts = []
-      keys.forEach(k => { opts.push({ value: k, label: this.$store.state.i18n.translations[k].lang }) })
-      return opts
+    _verifyLoggedIn () {
+      if (this.auth && this.token) {
+        this._onCreated(this.auth, this.token)
+      } else {
+        console.log(this.auth, this.token)
+        // this.logout()
+      }
     },
-    _onCreated (id, token) {
-      Tigris.initializeWithToken(id, token).then(tigris => {
-        this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
-        this.$store.commit({ type: 'token/initialize', token: tigris._token })
+    _onCreated (auth, token) {
+      this.$store.dispatch({ type: 'auth/refresh', user: auth, token: token }).then(tigris => {
+        this.$store.dispatch({ type: 'token/initialize', token: tigris._token })
         this.tigris = tigris
-        if (this.auth.id) {
-          this.getUserCourses().then(courses => {
-            this.courses = courses
-            this.getRecommendedCourses().then(r => {
-              this.courses.recommended = r
-              this.INTERVAL_2e4$getUserNotifications().then(notifications => {
-                this.notifications = notifications
-                if (Loading.isActive()) {
-                  Loading.hide()
-                }
-              })
-            })
-          })
-        } else {
-          this.logout()
-        }
+      }).then(() => {
+        return this.getUserCourses()
+      }).then(courses => {
+        this.courses = courses
+        return this.getRecommendedCourses()
+      }).then(r => {
+        this.courses.recommended = r
+        return this.INTERVAL_2e4$getUserNotifications()
+      }).then(notifications => {
+        this.notifications = notifications
+        this.hideLoader()
       }).catch(e => {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error(e)
-        }
+        if (DEV) { console.error(e) }
         this.logout()
       })
     },
@@ -319,12 +317,10 @@ export default {
       })
     },
     logout () {
-      this.$store.commit({ type: 'token/destroy' })
-      this.$store.commit({ type: 'auth/destroy' })
-      if (Loading.isActive()) {
-        Loading.hide()
-      }
-      this.$router.replace({ path: '/login' })
+      this.$store.dispatch('token/destroy')
+      this.$store.dispatch('auth/destroy')
+      this.hideLoader()
+      this.$router.replace('/login')
     },
     getRecommendedCourses () {
       return this.tigris.course.retrieve({ type: 2 }).then(r => {
@@ -354,24 +350,29 @@ export default {
     },
     refreshAuth () {
       this.$refs.accountModal.close()
-      this._onCreated(this.auth.id, this.token)
+      this._onCreated(this.token)
     },
     sendToast (type, statement) {
       Toast.create[type]({
         html: statement
       })
+    },
+    showLoader () {
+      Loader.show()
+    },
+    hideLoader () {
+      Loader.hide()
     }
   },
   mounted () {
-    this.$nextTick(function () { finish() })
+    this.$nextTick(function () { this.hideLoader() })
+  },
+  beforeCreate () {
   },
   created () {
-    if (Loading.isActive()) { finish() }
-    if (this.token && this.auth) {
-      this._onCreated(this.auth.id, this.token)
-    } else {
-      this.logout()
-    }
+    this.showLoader()
+    if (this.auth && this.token) this._onCreated(this.auth, this.token)
+    else this.logout()
   },
   components: {
     Account,

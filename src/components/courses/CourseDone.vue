@@ -22,16 +22,23 @@
 
 <script>
 // import { Tigris } from '../../api'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'done',
-  props: ['auth', 'enrollment', 'token'],
+  props: ['enrollment'],
   data: () => ({
     dashboard: '',
     slug: '',
     content: '',
     errors: []
   }),
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
+    })
+  },
   watch: {
     enrollment (val) {
       this._onCreated()

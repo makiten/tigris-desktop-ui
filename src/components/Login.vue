@@ -43,6 +43,9 @@
                   <button class="secondary round big" disabled v-else>
                     {{ $t('buttons.reset_password') }}
                   </button>
+                  <button class="big round primary clear" @click="forgot.view = false">
+                    {{ $t('buttons.cancel', {item: ''}) }}
+                  </button>
                 </div>
               </transition>
             </div>
@@ -150,18 +153,11 @@
 
 <script>
 import { email, required, minLength } from 'vuelidate/lib/validators'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapState } from 'vuex'
+import Loader from '../loader'
 import { Loading } from 'quasar'
 import { Tigris } from '../api'
 import LocalePicker from './generic-partials/LocalePicker'
-
-function load (options) {
-  Loading.show(options)
-}
-
-function finish () {
-  Loading.hide()
-}
 
 export default {
   name: 'login',
@@ -204,44 +200,31 @@ export default {
       }
     }
   },
-  computed: mapGetters({
-    auth: 'auth/auth',
-    // i18n: 'auth/auth',
-    token: 'token/token'
-  }),
+  computed: {
+    ...mapState({
+      auth: state => state.auth,
+      token: state => state.token
+    })
+  },
   methods: {
     ...mapActions([
     ]),
-    _i18nOptions () {
-      const keys = Object.keys(this.$store.state.i18n.translations)
-      let opts = []
-      keys.forEach(k => { opts.push({ value: k, label: this.$store.state.i18n.translations[k].lang }) })
-      return opts
-    },
     _checkOrRedirectToDashboard () {
       if (this.$route.name === 'logout') {
         this.logout()
       }
-      if (this.token !== null) {
-        this.$router.replace({name: 'index'})
+      if (this.auth && this.token) {
+        // this.$router.replace({name: 'index'})
       }
     },
     _doApiAuth (creds) {
-      Tigris.initialize(creds).then(tigris => {
-        if (!tigris._token || !tigris._token._user) {
-          throw tigris
+      this.$store.dispatch({ type: 'auth/initialize', creds: creds }).then(tigris => {
+        this.$store.dispatch({ type: 'token/initialize', token: tigris._token })
+        this.hideLoader()
+        if (tigris.token) {
+          this.$router.replace({name: 'index'})
         } else {
-          this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
-          this.$store.commit({ type: 'token/initialize', token: tigris._token })
-          finish()
-          if (tigris.token !== null) {
-            this.$router.replace({name: 'index'})
-          } else {
-            if (process.env.NODE_ENV !== 'production') {
-              console.error('Wrong')
-            }
-            this.errors.push({ code: '002', message: 'User is not valid.' })
-          }
+          this.errors.push({ code: '002', message: 'User is not valid.' })
         }
       }).catch(e => {
         if (DEV) { console.error(e) }
@@ -249,20 +232,20 @@ export default {
       })
     },
     _goToSsoUrl (url) {
+      this.hideLoader()
       window.location.href = url
     },
     login () {
-      load({ spinner: 'facebook' })
+      this.showLoader() // { spinner: 'facebook' })
       if (this.org.useSso === true) {
         this._goToSsoUrl(this.org.loginUrl)
       } else {
         this._doApiAuth(this.creds)
       }
-      finish()
     },
     logout () {
-      this.$store.commit({ type: 'token/destroy' })
-      this.$store.commit({ type: 'auth/destroy' })
+      this.$store.dispatch({ type: 'token/destroy' })
+      this.$store.dispatch({ type: 'auth/destroy' })
       // Display message
     },
     requestReset () {
@@ -279,13 +262,19 @@ export default {
           this.forgot.submitted = true
         }
       }).catch(e => {
-        if (process.env.NODE_ENV !== 'production') { console.error(e) }
+        if (DEV) { console.error(e) }
       })
     },
     switchSso (val) {
       const org = this.org
       org.useSso = val
       this.org = org
+    },
+    hideLoader () {
+      Loader.hide()
+    },
+    showLoader () {
+      Loader.show()
     }
   },
   watch: {
@@ -296,9 +285,8 @@ export default {
   },
   created () {
     if (Loading.isActive()) {
-      Loading.hide()
+      this.hideLoader()
     }
-    this._i18nOptions()
     this._checkOrRedirectToDashboard()
   },
   components: {

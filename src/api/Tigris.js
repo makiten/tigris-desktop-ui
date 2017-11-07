@@ -38,7 +38,7 @@ export default class Tigris {
       const tigris = new Tigris(t)
       tigris._setResources()
       return tigris
-    }).catch(e => { return e })
+    }).catch(e => e)
   }
 
   static initialize ({ username, password }) {

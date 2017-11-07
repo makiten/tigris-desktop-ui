@@ -109,11 +109,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 
 export default {
   name: 'role-detail',
-  props: ['action', 'auth', 'role', 'tigris'],
+  props: ['action', 'role', 'tigris'],
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser'
+    })
+  },
   data () {
     return {
       blankForm: {
@@ -128,8 +134,6 @@ export default {
       },
       permOptions: []
     }
-  },
-  computed: {
   },
   watch: {
     action (val) {

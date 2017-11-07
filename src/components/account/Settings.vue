@@ -103,10 +103,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { required, sameAs, minLength } from 'vuelidate/lib/validators'
 export default {
   name: 'settings',
-  props: ['auth', 'tigris'],
+  props: ['tigris'],
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
+    })
+  },
   data () {
     return {
       password: {

@@ -80,7 +80,7 @@
 
 <script>
 import { Tigris } from '../../../api'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import MultipleAnswer from './answer-types/MultipleAnswer'
 import MultipleChoice from './answer-types/MultipleChoice'
 // import Terminal from './answer-types/Terminal'
@@ -104,8 +104,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      auth: 'auth/auth'
+    ...mapState({
+      auth: 'auth'
     })
   },
   methods: {

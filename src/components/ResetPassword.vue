@@ -98,21 +98,15 @@ export default {
       }
     }
   },
-  computed: mapGetters({
-    auth: 'auth/auth',
-    token: 'token/token'
-  }),
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
+    })
+  },
   methods: {
     ...mapActions([
     ]),
-    _doApiAuth (tigris) {
-      this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
-      this.$store.commit({ type: 'token/initialize', token: tigris._token })
-      if (tigris.token !== null) {
-        this.sendToast('positive', this.$t('result.success.message'))
-        this.$router.replace({name: 'index'})
-      }
-    },
     _onCreated () {
       this._processToken(this.$route.params.token).then(t => {
         this.emailToken = t
@@ -125,15 +119,23 @@ export default {
         emailToken.valid = data['valid?']
         emailToken.email = data.email
         emailToken.id = data.id
-        console.log(emailToken)
         return emailToken
       })
     },
     finalize () {
       if (!(this.form.password1 === '' || this.form.password2 === '')) {
-        Tigris.finalize(this.emailToken.id, this.emailToken.email, this.form.password1).then(tigris => {
-          this._doApiAuth(tigris)
-        }).catch(e => { console.error(e) })
+        this.$store.dispatch({
+          type: 'auth/finalize',
+          id: this.emailToken.id,
+          email: this.emailToken.email,
+          password: this.form.password1
+        }).then(tigris => {
+          this.$store.dispatch({ type: 'token/initialize', token: tigris._token })
+          if (tigris.token) {
+            this.sendToast('positive', this.$t('result.success.message'))
+            this.$router.replace({name: 'index'})
+          }
+        }).catch(e => { if (DEV) { console.error(e) } })
       }
     },
     sendToast (type, msg) {

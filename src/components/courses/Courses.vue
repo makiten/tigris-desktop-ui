@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view :course="course" :token="token" v-if="'courseName' in $route.params"></router-view>
+    <router-view :course="course" v-if="'courseName' in $route.params"></router-view>
     <div class="layout-padding full-width" v-else>
       <h1>{{ $t('content.courses.list.headings.page') }}</h1>
 
@@ -24,13 +24,12 @@
 
 <script>
 import { Utils } from 'quasar'
-import { Tigris } from '../../api'
 import { mapActions, mapGetters } from 'vuex'
 import CourseCard from './CourseCard'
 import Search from '../generic-partials/Search'
 export default {
   name: 'courses',
-  props: ['auth', 'token'],
+  props: ['tigris'],
   data () {
     return {
       course: {},
@@ -39,18 +38,30 @@ export default {
         model: '',
         results: []
       },
-      terms: '',
-      tigris: {}
+      terms: ''
     }
   },
   watch: {
+    tigris (val) {
+      this._onCreated()
+    }
   },
   computed: {
     ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
     })
   },
   methods: {
     ...mapActions([]),
+    _onCreated () {
+      this.getCourses().then(c => {
+        this.courses = c
+      }).catch(e => {
+        if (DEV) console.error(e)
+        this.logout()
+      })
+    },
     _parseCourses (courses) {
       return courses.map(c => {
         return {
@@ -61,16 +72,19 @@ export default {
         }
       })
     },
-    getCourses (tigris) {
-      return tigris.course.retrieve({ type: 1 }).then(r => {
-        return r.data
-      })
+    getCourses () {
+      return this.tigris.course.retrieve({ type: 1 }).then(r => r.data)
+    },
+    logout () {
+      this.$store.dispatch('token/destroy')
+      this.$store.dispatch('auth/destroy')
+      this.$router.replace({path: '/login'})
     },
     searchCourse (terms, done) {
       done(Utils.filter(terms, {field: 'label', list: this._parseCourses(this.courses)}))
     },
     selectedCourse (item) {
-      const course = this.courses.filter(c => { return c.slug === item.value })[0]
+      const course = this.courses.filter(c => c.slug === item.value)[0]
       this.terms.course = ''
       this.$router.push({ name: 'course', params: { courseName: course.slug } })
     }
@@ -78,17 +92,7 @@ export default {
   mounted () {
   },
   created () {
-    // this.$store.commit({ type: 'auth/initialize', auth: tigris._token._user })
-    // this.$store.commit({ type: 'token/initialize', token: tigris._token })
-    Tigris.initializeWithToken(this.auth.id, this.token).then(tigris => {
-      this.tigris = tigris
-      this.getCourses(tigris).then(c => {
-        this.courses = c
-      })
-    }).catch(e => {
-      console.error(e)
-      this.$router.replace({path: '/logout'})
-    })
+    // if (this.tigris) this._onCreated()
   },
   components: {
     CourseCard,

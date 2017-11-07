@@ -26,14 +26,14 @@ const store = new Vuex.Store({
   actions,
   getters,
   modules: {
-    auth,
-    token
+    auth: auth,
+    token: token
   },
   strict: debug,
   plugins: [vuexLocalStorage.plugin]
 })
 
-Vue.use(vuexI18n.plugin, store, 'i18n')
+Vue.use(vuexI18n.plugin, store) // 'i18n')
 
 for (var k in Locales) {
   if (Locales.hasOwnProperty(k)) {

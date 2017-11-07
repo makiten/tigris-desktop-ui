@@ -31,8 +31,8 @@
         </button>
       </div>
       <hr>
-      <transition name="module-quiz-fade" mode="out-in">
-        <component :is="view" :auth="auth" :course="course" :enrollment="enrollment" :module="module" :token="token"></component>
+      <transition name="module-quiz-fade" mode="out-in" v-on:after-leave="hideLoader">
+        <component :is="view" :course="course" :enrollment="enrollment" :module="module"></component>
       </transition>
       <div class="flex justify-center" v-if="quizExists">
         <button class="primary round big" @click="view = 'quiz'" v-if="view === 'lesson'">
@@ -81,23 +81,15 @@
 </template>
 
 <script>
-import { Loading } from 'quasar'
+import Loader from '../../loader.js'
 import { Tigris } from '../../api'
 import { mapActions, mapGetters } from 'vuex'
 import Lesson from './Lesson.vue'
 import Quiz from './assessments/Quiz.vue'
 
-function load (options) {
-  Loading.show(options)
-}
-
-function finish () {
-  Loading.hide()
-}
-
 export default {
   name: 'module',
-  props: ['course', 'modules', 'token'],
+  props: ['course', 'modules'],
   data: () => ({
     view: 'lesson',
     module: { title: '' },
@@ -108,8 +100,8 @@ export default {
   }),
   computed: {
     ...mapGetters({
-      auth: 'auth/auth'
-      // token: 'token/token'
+      auth: 'auth/getUser',
+      token: 'token/getToken'
     })
   },
   mounted () {
@@ -118,15 +110,13 @@ export default {
   beforeCreate () {
   },
   created () {
-    load({ spinner: 'facebook' })
+    this.showLoader()
     this._onCreated()
-    finish()
   },
   watch: {
     '$route' (to, from) {
-      load({ spinner: 'facebook' })
+      this.showLoader()
       this._onCreated()
-      finish()
     }
   },
   methods: {
@@ -269,6 +259,12 @@ export default {
       return tigris.user.update(this.auth.id, enrollmentId, data).then(r => {
         return r.data.result
       })
+    },
+    showLoader () {
+      Loader.show()
+    },
+    hideLoader () {
+      Loader.hide()
     }
   },
   components: {

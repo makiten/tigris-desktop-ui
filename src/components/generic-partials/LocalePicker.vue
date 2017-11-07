@@ -7,20 +7,30 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'locale-picker',
   props: ['value'],
+  computed: {
+    ...mapState({
+      i18n: 'i18n'
+    })
+  },
   data () {
     return {
       // locale: this.$i18n.locale(),
-      localeOpts: this._i18nOptions()
+      localeOpts: {}
     }
+  },
+  created () {
+    this.localeOpts = this._i18nOptions()
   },
   methods: {
     _i18nOptions () {
-      const keys = Object.keys(this.$store.state.i18n.translations)
+      const keys = Object.keys(this.i18n.translations)
       let opts = []
-      keys.forEach(k => { opts.push({ value: k, label: this.$store.state.i18n.translations[k].lang }) })
+      keys.forEach(k => { opts.push({ value: k, label: this.i18n.translations[k].lang }) })
       return opts
     },
     setValue ($e) {

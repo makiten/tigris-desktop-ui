@@ -1,31 +1,39 @@
+const SET_TOKEN = 'SET_TOKEN'
+const DESTROY_TOKEN = 'DESTROY_TOKEN'
+
 // initial state
 const state = {
   token: null
 }
 
-// getters
-const getters = {
-  token: state => state.token
-}
-
-// actions
-const actions = {
-}
-
 // mutations
 const mutations = {
-  initialize (state, { token }) {
+  [SET_TOKEN] (state, { token }) {
     state.token = token
   },
-  destroy (state) {
+  [DESTROY_TOKEN] (state) {
     state.token = null
   }
 }
 
+// actions
+const actions = {
+  initialize ({ state, commit }, { token }) {
+    commit(SET_TOKEN, { token: token })
+  },
+  destroy ({ state, commit }) {
+    commit(DESTROY_TOKEN)
+  }
+}
+
+const getters = {
+  getToken: state => state.token
+}
+
 export default {
   namespaced: true,
-  state,
-  getters,
-  actions,
-  mutations
+  state: state,
+  actions: actions,
+  getters: getters,
+  mutations: mutations
 }

@@ -35,12 +35,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import CourseDetail from '../detail/CourseDetail'
 import ModuleDetail from '../detail/ModuleDetail'
 
 export default {
   name: 'admin-course-card',
-  props: ['auth', 'course', 'index', 'tigris'],
+  props: ['course', 'index', 'tigris'],
   data () {
     return {
     }
@@ -53,6 +54,11 @@ export default {
         return value
       }
     }
+  },
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser'
+    })
   },
   watch: {
     course (val) {

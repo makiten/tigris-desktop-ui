@@ -128,6 +128,7 @@
 
 <script>
 import { Utils } from 'quasar'
+import { mapGetters } from 'vuex'
 import { required, minLength } from 'vuelidate/lib/validators'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
@@ -136,7 +137,7 @@ const touchMap = new WeakMap()
 
 export default {
   name: 'module-detail',
-  props: ['action', 'auth', 'course', 'module', 'tigris'],
+  props: ['action', 'course', 'module', 'tigris'],
   data () {
     return {
       form: {
@@ -157,8 +158,7 @@ export default {
         is_active: true,
         creator: ''
       },
-      imgs: {},
-      uploadUrl: 'https://azure.microsoft.com'
+      imgs: {}
     }
   },
   validations: {
@@ -177,7 +177,11 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser'
+    })
+  },
   watch: {
     'form.title': Utils.debounce(function (val) {
       this.tigris.util.slugify({val: val}).then(r => {

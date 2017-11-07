@@ -87,7 +87,7 @@
 <script>
 export default {
   name: 'notifications',
-  props: ['auth', 'notifications'],
+  props: ['notifications'],
   data () {
     return {
       msg: {

@@ -70,10 +70,17 @@
 
 <script>
 import { Tigris } from '../api'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'notifications',
-  props: ['auth', 'notifications', 'token'],
+  props: ['notifications'],
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
+    })
+  },
   data () {
     return {
       msg: {

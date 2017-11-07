@@ -155,13 +155,14 @@
 
 <script>
 import { Utils } from 'quasar'
+import { mapGetters } from 'vuex'
 import { required, minLength } from 'vuelidate/lib/validators'
 
 const touchMap = new WeakMap()
 
 export default {
   name: 'course-detail',
-  props: ['action', 'auth', 'course', 'tigris'],
+  props: ['action', 'course', 'tigris'],
   data () {
     return {
       form: {
@@ -208,7 +209,11 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser'
+    })
+  },
   watch: {
     'form.title': Utils.debounce(function (val) {
       this.tigris.util.slugify({val: val}).then(r => {

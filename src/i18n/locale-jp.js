@@ -57,6 +57,7 @@ export default {
     'delete': '{item}を削除',
     'edit': '{item}を変更',
     'publish': '発売',
+    'return': '戻る',
     'reset_password': 'パスワード再設定',
     'save': 'セーブする'
   },

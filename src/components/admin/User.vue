@@ -135,8 +135,8 @@ export default {
   computed: {
     name () {
       let name = {
-          first: (this.user.first_name) ? this.user.first_name : '-',
-          last: (this.user.first_name) ? this.user.first_name : '-'
+        first: (this.user.first_name) ? this.user.first_name : '-',
+        last: (this.user.first_name) ? this.user.first_name : '-'
       }
       return name
     },

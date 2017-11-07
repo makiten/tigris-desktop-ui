@@ -23,10 +23,10 @@
             </q-tabs>
             <div>
               <div ref="settings">
-                <settings :auth="auth" :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
+                <settings :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
               </div>
               <div ref="profile">
-                <profile :auth="auth"  :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
+                <profile :tigris="tigris" @toast="sendToast" @refresh="refreshAuth" />
               </div>
             </div>
           </div>
@@ -37,12 +37,19 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Profile from './Profile'
 import Settings from './Settings'
 
 export default {
   name: 'account',
-  props: ['auth', 'tigris'],
+  props: ['tigris'],
+  computed: {
+    ...mapGetters({
+      auth: 'auth/getUser',
+      token: 'token/getToken'
+    })
+  },
   data () {
     return {
 

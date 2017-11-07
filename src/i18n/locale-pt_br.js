@@ -107,6 +107,7 @@ export default {
   'forgot_password': {
     'error': 'O email não é válido.',
     'heading': 'Entre o Endereço de Email',
+    'return': 'Voltar',
     'instructions': 'Por favor coloque o endereço de email ligado a sua conta.',
     'result': 'Com certeza! Nós vamos mandar as instruções de reinício da sua conta para esse email!',
     'email_message': {

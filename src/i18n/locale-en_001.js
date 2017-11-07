@@ -101,6 +101,7 @@ export default {
     'delete': 'Delete{item}',
     'edit': 'Edit{item}',
     'publish': 'Publish',
+    'return': 'Return',
     'reset_password': 'Reset Password',
     'save': 'Save'
   },
@@ -515,7 +516,7 @@ export default {
       },
       'module': {
         'actions': {
-          'read': 'Read the Module',
+          'read': 'View the Module',
           'quiz': 'Take the Quiz'
         },
         'quiz': {
