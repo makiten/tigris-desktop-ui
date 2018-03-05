@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@kazupon/vue-i18n-loader": "^0.1.1",
-    "auth0-js": "^8.10.1",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
