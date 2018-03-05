@@ -18,7 +18,7 @@
     "fastclick": "^1.0.6",
     "highlight.js": "^9.12.0",
     "lodash": "^4.17.4",
-    "marked": "^0.3.6",
+    "marked": "^0.3.17",
     "material-design-icons": "^3.0.1",
     "mavon-editor": "^2.3.0",
     "moment": "^2.19.1",
