@@ -1,0 +1,28 @@
+query Users {
+  users {
+    edges {
+      node {
+        id
+        username
+        firstName
+        lastName
+        email
+        isActive
+      }
+    }
+  }
+},
+query UsersByEmail($email: String!) {
+  users(email: $email) {
+    edges {
+      node {
+        id
+        username
+        firstName
+        lastName
+        email
+        isActive
+      }
+    }
+  }
+}

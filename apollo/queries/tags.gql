@@ -1,0 +1,10 @@
+{
+  tags {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}

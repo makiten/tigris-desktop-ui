@@ -1,0 +1,18 @@
+mutation AddUpdateUser(
+  $email: String!,
+  $password: String!
+) {
+  CreateUser(
+    email: $email,
+    password: $password
+  ) {
+    id
+    email
+  }
+},
+query User($id: ID!) {
+  user(id: $id) {
+    id
+    email
+  }
+}

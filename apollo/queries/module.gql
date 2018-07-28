@@ -1,0 +1,31 @@
+mutation AddUpdateModule(
+  $title: String!,
+  $slug: String,
+  $content: String!,
+  $order_index: Int,
+  $course: Course!,
+  $status: String,
+  $creator: User! 
+) {
+  upsertModule(
+    title: $title,
+    slug: $slug,
+    content: $content,
+    order_index: $order_index,
+    course: $course,
+    status: $status,
+    creator: $creator
+  ) {
+    id
+    title
+    slug
+  }
+},
+query Module($id: ID!) {
+  module(id: $id) {
+    id
+    title
+    slug
+    status
+  }
+}

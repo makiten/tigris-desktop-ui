@@ -1,0 +1,82 @@
+mutation AddUpdateCourse(
+  $title: String!,
+  $slug: String,
+  $description: String!,
+  $long_description: String!
+  $tags: [Tag],
+  $status: String,
+  $creator: User!
+) {
+  upsertCourse(
+    title: $title,
+    slug: $slug,
+    description: $description,
+    long_description: $long_description,
+    tags: $tags,
+    status: $status,
+    creator: $creator
+  ) {
+    id
+    title
+    slug
+    image
+  }
+},
+query Course($id: ID!) {
+  course(id: $id) {
+    id
+    title
+    slug
+    teaser
+    description
+    longDescription
+    tags {
+      edges {
+        node {
+          id
+          name
+        }
+      }
+    }
+    image
+    status
+    created
+    updated
+    creator {
+      id
+    }
+    moduleSet {
+      edges {
+        node {
+          id
+          title
+          slug
+          status
+        }
+      }
+    }
+  }
+},
+query CourseBySlug($slug: String!) {
+  courses(slug_Iexact: $slug) {
+    edges {
+      node {
+        id
+        title
+        slug
+        description
+        longDescription
+        tags {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
+        image
+        status
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+query Modules {
+  modules {
+    edges {
+      node {
+        id
+        title
+        slug
+        course
+        status
+      }
+    }
+  }
+},
+query ModulesByCourse($course: ID!) {
+  modules(course: $course) {
+    edges {
+      node {
+        id
+        title
+        slug
+        course {
+          id
+        }
+        orderIndex
+        status
+      }
+    }
+  }
+},
+query ModulesBySlug($slug: String!) {
+  modules(slug: $slug) {
+    edges {
+      node {
+        id
+        title
+        slug
+        content
+        course {
+          id
+        }
+        status
+      }
+    }
+  }
+}

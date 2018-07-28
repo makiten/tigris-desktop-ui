@@ -1,0 +1,53 @@
+query Quizzes {
+  quizzes {
+    edges {
+      node {
+        id
+        module {
+          id
+        }
+      }
+    }
+  }
+},
+query QuizByModule($module: ID!) {
+  quizzes(module: $module) {
+    edges {
+      node {
+        id
+        module {
+          id
+        }
+      }
+    }
+  }
+},
+query QuizQuestions($quiz: ID!) {
+  questions(quiz: $quiz, quiz_or_exam: "Q") {
+    edges {
+      node {
+        id
+        assessment {
+          id
+        }
+        question_type
+        value
+        status
+      }
+    }
+  }
+},
+query QuizAnswers($question: ID!) {
+  answers(question: $question) {
+    edges {
+      node {
+        id
+        question {
+          id
+        }
+        value
+        correct
+      }
+    }
+  }
+}

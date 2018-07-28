@@ -1,0 +1,19 @@
+{
+  courses {
+    edges {
+      node {
+        id
+        title
+        slug
+        teaser
+        image
+        status
+        created
+        updated
+        creator {
+          id
+        }
+      }
+    }
+  }
+}
