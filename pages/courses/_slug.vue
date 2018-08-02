@@ -12,7 +12,7 @@
     <hr>
     <div>
       <strong class="mr-2">{{ $t('course.tags') }}</strong>
-      <v-chip color="deep-orange" text-color="white" v-for="tag in course.tags.edges" :key="tag.node.id">
+      <v-chip color="deep-orange" text-color="white" v-if="course.tags" v-for="tag in course.tags.edges" :key="tag.node.id">
         {{ tag.node.name }}
       </v-chip>
     </div>

@@ -1,127 +1,141 @@
 <template>
-  <form v-on:submit.prevent>
-    <v-layout class="mb-4" row>
-      <v-text-field
-         v-model="form.title"
-         :error-messages="titleErrors"
-         :label="text.title.name"
-         :placeholder="text.title.placeholder"
-         :hint="text.title.info"
-         persistent-hint
-         required
-         @input="$v.form.title.$touch()"
-         @blur="$v.form.title.$touch()"
-         />
-    </v-layout>
-    <v-layout class="mb-4" row>
-      <v-text-field
-         v-model="form.description"
-         :error-messages="descriptionErrors"
-         :label="text.description.name"
-         :placeholder="text.description.placeholder"
-         :hint="text.description.info"
-         persistent-hint
-         required
-         @input="$v.form.description.$touch()"
-         @blur="$v.form.description.$touch()"
-         />
-    </v-layout>
-    <v-layout class="mb-4" row>
-      <v-text-field
-         v-model="form.long_description"
-         :error-messages="long_descriptionErrors"
-         :label="text.long_description.name"
-         :placeholder="text.long_description.placeholder"
-         :hint="text.long_description.info"
-         persistent-hint
-         required
-         @input="$v.form.long_description.$touch()"
-         @blur="$v.form.long_description.$touch()"
-         />
-    </v-layout>
-    <v-layout class="mb-4" row>
-      <v-text-field
-         v-model="form.slug"
-         :error-messages="slugErrors"
-         :label="text.slug.name"
-         :placeholder="text.slug.placeholder"
-         :hint="text.slug.info"
-         persistent-hint
-         required
-         @input="$v.form.slug.$touch()"
-         @blur="$v.form.slug.$touch()"
-         />
-    </v-layout>
-    <v-layout class="mb-4" row>
-      <v-combobox
-         v-model="form.tags"
-         :label="text.tags.name"
-         :placeholder="text.tags.placeholder"
-         :hint="text.tags.info"
-         :item-text="getItemText"
-         :item-value="getItemValue"
-         :items="tags"
-         persistent-hint
-         multiple
-         chips
-         @input="$v.form.tags.$touch()"
-         />
-    </v-layout>
-    <v-layout class="mb-4" row>
-      <dropzone
-         id="foo"
-         ef="el"
-         :options="thumbOptions"
-         :destroyDropzone="true"
-         />
-      <!--
-      <upload-btn
-         v-model="form.thumbnail"
-         :title="text.thumbnail.name"
-         color="deep-orange"
-         :fileChangedCallback="fileChanged"
-         flat>
-      </upload-btn>
-      -->
-    </v-layout>
-    <v-layout row>
-      <v-flex xs12 text-xs-center>
-        <v-btn
-           color="indigo"
-           dark
-           depressed
-           large
-           @click="upsert(true)"
-           >
-          <template v-if="add">
-            {{ $t('course.buttons.add') }}
-          </template>
-          <template v-else>
-            {{ $t('course.buttons.edit') }}
-          </template>
-        </v-btn>
-        <template v-if="course && course.status === 'U'">
+  <v-container fluid grid-list-md>
+    <form v-on:submit.prevent>
+      <v-layout class="mb-4" row wrap>
+        <v-flex d-flex xs12>
+          <v-text-field
+             v-model="form.title"
+             :error-messages="titleErrors"
+             :label="text.title.name"
+             :placeholder="text.title.placeholder"
+             :hint="text.title.info"
+             persistent-hint
+             required
+             @input="$v.form.title.$touch()"
+             @blur="$v.form.title.$touch()"
+             />
+        </v-flex>
+      </v-layout>
+      <v-layout class="mb-4" row wrap>
+        <v-flex d-flex xs12>
+          <v-text-field
+             v-model="form.description"
+             :error-messages="descriptionErrors"
+             :label="text.description.name"
+             :placeholder="text.description.placeholder"
+             :hint="text.description.info"
+             persistent-hint
+             required
+             @input="$v.form.description.$touch()"
+             @blur="$v.form.description.$touch()"
+             />
+        </v-flex>
+      </v-layout>
+      <v-layout class="mb-4" row wrap>
+        <v-flex d-flex xs12>
+          <v-text-field
+             v-model="form.long_description"
+             :error-messages="long_descriptionErrors"
+             :label="text.long_description.name"
+             :placeholder="text.long_description.placeholder"
+             :hint="text.long_description.info"
+             persistent-hint
+             required
+             @input="$v.form.long_description.$touch()"
+             @blur="$v.form.long_description.$touch()"
+             />
+        </v-flex>
+      </v-layout>
+      <v-layout class="mb-4" row wrap>
+        <v-flex d-flex xs12>
+          <v-text-field
+             v-model="form.slug"
+             :error-messages="slugErrors"
+             :label="text.slug.name"
+             :placeholder="text.slug.placeholder"
+             :hint="text.slug.info"
+             persistent-hint
+             required
+             @input="$v.form.slug.$touch()"
+             @blur="$v.form.slug.$touch()"
+             />
+        </v-flex>
+      </v-layout>
+      <v-layout class="mb-4" row wrap>
+        <v-flex d-flex xs12>
+          <v-combobox
+             v-model="form.tags"
+             :label="text.tags.name"
+             :placeholder="text.tags.placeholder"
+             :hint="text.tags.info"
+             :item-text="getItemText"
+             :item-value="getItemValue"
+             :items="tags"
+             persistent-hint
+             multiple
+             chips
+             @input="$v.form.tags.$touch()"
+             />
+        </v-flex>
+      </v-layout>
+      <v-layout class="mb-4" row wrap>
+        <v-flex d-flex xs12>
+          <dropzone
+             id="foo"
+             ef="el"
+             :options="thumbOptions"
+             :destroyDropzone="true"
+             />
+          <!--
+              <upload-btn
+                 v-model="form.thumbnail"
+                 :title="text.thumbnail.name"
+                 color="deep-orange"
+                 :fileChangedCallback="fileChanged"
+                 flat>
+              </upload-btn>
+              -->
+        </v-flex>
+      </v-layout>
+      <v-layout row wrap>
+        <v-flex d-flex xs12 text-xs-center>
           <v-btn
-             color="deep-orange"
+             color="indigo"
              dark
              depressed
              large
-             @click="upsert"
+             @click="upsert(true)"
              >
-            {{ $t('course.buttons.draft') }}
+            <template v-if="add">
+              {{ $t('course.buttons.add') }}
+            </template>
+            <template v-else>
+              {{ $t('course.buttons.edit') }}
+            </template>
           </v-btn>
-        </template>
-        <v-btn
-           color="grey"
-           flat
-           large
-           @click="cancel"
-           >
-          {{ $t('course.buttons.cancel') }}
-        </v-btn>
-      </v-flex>
-    </v-layout>
-  </form>
+          <template v-if="course && course.status === 'U'">
+            <v-btn
+               color="deep-orange"
+               dark
+               depressed
+               large
+               @click="upsert"
+               >
+              {{ $t('course.buttons.draft') }}
+            </v-btn>
+          </template>
+          <v-btn
+             color="grey"
+             flat
+             large
+             @click="cancel"
+             >
+            {{ $t('course.buttons.cancel') }}
+          </v-btn>
+        </v-flex>
+      </v-layout>
+    </form>
+  </v-container>
 </template>
 
 <script>

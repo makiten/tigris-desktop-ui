@@ -1,4 +1,4 @@
-mutation AddUpdateUser(
+mutation AddUser(
   $email: String!,
   $password: String!
 ) {
@@ -10,9 +10,52 @@ mutation AddUpdateUser(
     email
   }
 },
+mutation DeleteUser($id: ID!) {
+  DeleteUser(id: $id) {
+    is_active
+  }
+},
+mutation UndeleteUser($id: ID!) {
+  UndeleteUser(id: $id) {
+    is_active
+  }
+},
+mutation UpdatePassword(
+  $id: ID!,
+  $password: String!
+) {
+  UpdatePassword(
+    id: $id,
+    password: $password
+  ) {
+    id
+    email
+  }
+},
+mutation UpdateUser(
+  $id: ID!,
+  $username: String,
+  $email: String,
+  $first_name: String,
+  $last_name: String,
+  $phone_number: String
+) {
+  UpdateUser(
+    id: $id,
+    username: $username,
+    email: $email,
+    first_name: $first_name,
+    last_name: $last_name,
+    phone_number: $phone_number
+  ) {
+    id
+    email
+  }
+},
 query User($id: ID!) {
   user(id: $id) {
     id
     email
+    username
   }
 }

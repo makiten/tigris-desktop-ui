@@ -8,11 +8,14 @@
       <v-btn to="/" icon nuxt>
         <v-icon>home</v-icon>
       </v-btn>
+      <v-btn to="/admin" icon nuxt>
+        <v-icon>build</v-icon>
+      </v-btn>
+      <v-btn to="/courses" icon nuxt>
+        <v-icon>school</v-icon>
+      </v-btn>
       <v-btn icon @click.stop="drawer = !drawer">
         <v-icon>note</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>school</v-icon>
       </v-btn>
       <v-dialog
          v-model="dialog"
@@ -41,7 +44,7 @@
     </v-toolbar>
 
     <v-content>
-      <v-container>
+      <v-container fluid>
         <nuxt/>
       </v-container>
     </v-content>

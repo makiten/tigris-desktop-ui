@@ -1,5 +1,7 @@
 <template>
   <div v-if="course">
+    <h2>{{ $t('course.forms.add_edit.headers.edit') }}</h2>
+    <v-divider />
     <t-course-form :course="course" @return="$router.push({ path: '/admin/courses' })"/>
   </div>
 </template>

@@ -1,0 +1,12 @@
+mutation DeleteTag($name: String!) {
+  DeleteTag(name: $name) {
+    id
+    name
+  }
+},
+query Tag($name: String!) {
+  tag(name: $name) {
+    id
+    name
+  }
+}

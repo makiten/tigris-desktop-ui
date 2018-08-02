@@ -1,6 +1,7 @@
 export default {
   name: 'English (US)',
   admin: {
+    name: 'Admin',
     home: 'Home',
     courses: {},
     settings: {},
@@ -17,10 +18,7 @@ export default {
   course: {
     nav: {
       admin: {
-        add: 'Add',
-        edit: 'Edit',
-        delete: 'Delete',
-        view: 'View'
+        list: 'Course List'
       },
       student: {
         go: 'Go to Class',
@@ -35,7 +33,14 @@ export default {
       edit: 'Save'
     },
     forms: {
+      search: {
+        label: 'Search for a course'
+      },
       add_edit: {
+        headers: {
+          add: 'Add Course',
+          edit: 'View Course'
+        },
         title: {
           name: 'Course Title',
           placeholder: 'My New Course',
@@ -99,11 +104,117 @@ export default {
     tags: 'Tags:',
     toc: 'Table of Contents'
   },
+  module: {
+    forms: {
+      add_edit: {
+        headers: {
+          add: 'Add Module',
+          edit: 'View Module'
+        },
+        title: {
+          name: 'Module Title',
+          placeholder: 'My New Module',
+          info: 'What do you want to call this module?',
+          validation: {
+            required: 'Title is required.',
+            minLength: 'Title field requires at least 5 characters.'
+          }
+        },
+        description: {
+          name: 'Short Description.',
+          placeholder: 'Learn something specific in this module.',
+          info: 'Give a really short description of the module.',
+          errors: {
+            required: 'Description is required.'
+          }
+        },
+        slug: {
+          name: 'URL-Friendly Permalink',
+          placeholder: 'my-new-module',
+          info: 'This will be your URL. Something like <code>friendly-module-title</code>.',
+          validation: {
+            required: 'Permalink is required.',
+            isUnique: 'Permalink already exists.'
+          }
+        },
+        content: {
+          name: 'Content',
+          info: 'The module content.'
+        }
+      }
+    }
+  },
   users: {
-    name: 'Users'
+    name: 'Users',
+    nav: {
+      admin: {
+        list: 'User List'
+      }
+    },
+    forms: {
+      search: {
+        label: 'Search for a user'
+      },
+      password: {
+        submit: 'Update Password'
+      },
+      add_edit: {
+        headers: {
+          add: 'Add User',
+          edit: 'View User'
+        },
+        email: {
+          name: 'E-mail Address',
+          placeholder: 'me@email.com',
+          info: 'Your e-mail address.'
+        },
+        username: {
+          name: 'Username',
+          placeholder: 'alena-dq4',
+          info: 'A username you can use instead of your email address.'
+        },
+        name: {
+          first: {
+            name: 'First Name',
+            placeholder: 'Alena',
+            info: 'Your first name.'
+          },
+          last: {
+            name: 'Last Name',
+            placeholder: 'Santeem',
+            info: 'Your last name.'
+          }
+        },
+        phone: {
+          name: 'Phone Number',
+          placeholder: '##########',
+          info: 'Your phone number.'
+        }
+      }
+    }
   },
   general: {
+    close: 'Close',
     logout: 'Log out',
+    buttons: {
+      cancel: 'Cancel',
+      save_draft: 'Save as Draft',
+      save: 'Save and Publish',
+      delete: 'Delete'
+    },
+    nav: {
+      add: 'Add',
+      edit: 'Edit',
+      delete: 'Delete',
+      view: 'View',
+      search: 'Search',
+      user: 'Edit User Profile',
+      security: 'Security/Password'
+    },
+    search: {
+      user: 'Search for Users',
+      course: 'Search Courses'
+    },
     profile: 'Profile',
     settings: 'Settings',
     status: {

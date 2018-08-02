@@ -12,8 +12,22 @@ query Users {
     }
   }
 },
-query UsersByEmail($email: String!) {
+query UsersByEmail($email: String) {
   users(email: $email) {
+    edges {
+      node {
+        id
+        username
+        firstName
+        lastName
+        email
+        isActive
+      }
+    }
+  }
+},
+query UsersByUsername($username: String) {
+  users(username: $username) {
     edges {
       node {
         id

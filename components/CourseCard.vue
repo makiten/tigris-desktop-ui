@@ -24,7 +24,7 @@
              v-if="admin">
             <v-icon>view_module</v-icon>
           </v-btn>
-          <span>{{ $t('course.nav.admin.view') }}</span>
+          <span>{{ $t('general.nav.view') }}</span>
         </v-tooltip>
         <v-tooltip bottom>
           <v-btn
@@ -36,7 +36,7 @@
              >
             <v-icon>edit</v-icon>
           </v-btn>
-          <span>{{ $t('course.nav.admin.edit') }}</span>
+          <span>{{ $t('general.nav.edit') }}</span>
         </v-tooltip>
         <v-spacer/>
         <v-tooltip bottom>
@@ -49,7 +49,7 @@
              >
             <v-icon>delete</v-icon>
           </v-btn>
-          <span>{{ $t('course.nav.admin.delete') }}</span>
+          <span>{{ $t('general.nav.delete') }}</span>
         </v-tooltip>
       </template>
       <template v-else>

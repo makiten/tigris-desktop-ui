@@ -1,11 +1,11 @@
 <template>
   <div v-if="courses">
     <v-layout row>
-      <v-flex xs12 md3 v-for="course in courses.edges" :key="course.node.title">
+      <v-flex xs12 md3 v-for="course in courses" :key="course.title">
         <t-course-card
            admin
            color="light"
-           :course="course.node"
+           :course="course"
            img-src="https://lorempixel.com/600/300/food/5/"
            img-height="200px" />
       </v-flex>
@@ -15,7 +15,7 @@
          v-model="coursePage"
          total-visible="6"
          color="indigo"
-         :length="Math.ceil(courses.edges.length / 4)"
+         :length="Math.ceil(courses.length / 4)"
          circle />
     </div>
   </div>
@@ -30,13 +30,19 @@ export default {
   },
   data () {
     return {
-      coursePage: 1
+      coursePage: 1,
+      courses: []
     }
   },
   apollo: {
-    courses: {
+    allCourses: {
       prefetch: true,
-      query: courses
+      query: courses,
+      result ({ data, loading }) {
+        if (!loading) {
+          this.courses = data.courses.edges.map(n => n.node)
+        }
+      }
     }
   },
   components: {

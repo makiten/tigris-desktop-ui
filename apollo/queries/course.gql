@@ -3,9 +3,9 @@ mutation AddUpdateCourse(
   $slug: String,
   $description: String!,
   $long_description: String!
-  $tags: [Tag],
+  $tags: [TagNode],
   $status: String,
-  $creator: User!
+  $creator: UserNode!
 ) {
   upsertCourse(
     title: $title,

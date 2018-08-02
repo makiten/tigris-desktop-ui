@@ -37,8 +37,24 @@
       </v-chip>
     </h1>
 
+    <p v-html="course.description"></p>
+    <v-divider/>
+
     <v-layout row>
-      <h2>{{ $t('course.module.list') }}</h2>
+      <h2>
+        {{ $t('course.module.list') }}
+        <v-tooltip bottom>
+          <v-btn
+             flat
+             icon
+             color="indigo"
+             slot="activator"
+             @click.stop="addModule"
+             >
+            <v-icon>add</v-icon>
+          </v-btn>
+        </v-tooltip>
+      </h2>
 
       <v-list>
         <template v-for="(module, index) in modules">
@@ -53,6 +69,26 @@
         </template>
       </v-list>
     </v-layout>
+
+    <v-dialog
+       v-model="moduleDialog"
+       fullscreen
+       scrollable
+       >
+      <v-card>
+        <v-toolbar dark flat color="indigo">
+          <v-btn
+             flat
+             icon
+             @click.native="moduleDialog = false"
+             >
+            <v-icon>close</v-icon>
+          </v-btn>
+          <v-toolbar-title>{{ $t('module.forms.add_edit.headers.add') }}</v-toolbar-title>
+        </v-toolbar>
+        <t-module-form :course-id="course.id" add @submit="closeModuleDialog = false" @return="closeModuleDialog" />
+      </v-card>
+    </v-dialog>
   </div>
   <p v-else>{{ $t('course.not_found') }}</p>
 </template>
@@ -60,12 +96,14 @@
 <script>
 import { Course } from '~/apollo/queries/course.gql'
 import { ModulesByCourse } from '~/apollo/queries/modules.gql'
+import TModuleForm from '~/components/ModuleForm.vue'
 
 export default {
   data () {
     return {
       course: {},
-      modules: {}
+      modules: {},
+      moduleDialog: false
     }
   },
   apollo: {
@@ -91,6 +129,17 @@ export default {
         }
       }
     }
+  },
+  methods: {
+    addModule () {
+      this.moduleDialog = true
+    },
+    closeModuleDialog () {
+      this.moduleDialog = false
+    }
+  },
+  components: {
+    TModuleForm
   }
 }
 </script>

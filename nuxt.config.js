@@ -17,10 +17,12 @@ module.exports = {
   },
   plugins: [
     '~/plugins/vuetify.js',
-    '~/plugins/vuelidate.js'
+    '~/plugins/vuelidate.js',
+    { src: '~/plugins/simplemde.js', ssr: false }
   ],
   css: [
-    '~/assets/style/app.styl'
+    '~/assets/style/app.styl',
+    'simplemde/dist/simplemde.min.css'
   ],
   /*
   ** Customize the progress bar color
