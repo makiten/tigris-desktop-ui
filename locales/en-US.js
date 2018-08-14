@@ -193,6 +193,14 @@ export default {
       }
     }
   },
+  auth: {
+    login: 'Login to Tigris',
+    logout: '',
+    form: {
+      username: 'Username',
+      password: 'Password'
+    }
+  },
   general: {
     close: 'Close',
     logout: 'Log out',
@@ -200,6 +208,8 @@ export default {
       cancel: 'Cancel',
       save_draft: 'Save as Draft',
       save: 'Save and Publish',
+      login: 'Login',
+      forgot_password: 'Forgot your password?',
       delete: 'Delete'
     },
     nav: {
